@@ -23,7 +23,7 @@ public class Candidate extends User{
     private TrainingStatus status = TrainingStatus.THEORY;
 
     @Column
-    private boolean theoryCompleted;
+    private boolean theoryCompleted = false;
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
