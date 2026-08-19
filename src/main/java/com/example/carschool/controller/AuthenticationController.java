@@ -60,6 +60,7 @@ public class AuthenticationController {
     }
 
 
+    @PostMapping("/login")
     public ResponseEntity<SignInResponseDTO> signin(@RequestBody SignInDTO dto){
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));

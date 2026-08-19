@@ -1,0 +1,123 @@
+.login-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  padding-top: 80px;
+}
+
+.login-component {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 80px);
+  padding: 40px 20px;
+}
+
+.login-card {
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 20px;
+  padding: 50px;
+  max-width: 450px;
+  width: 100%;
+  border: 1px solid rgba(214, 251, 79, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.5s ease-out;
+}
+
+
+
+.login-title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.login-title h1 {
+  color: rgb(214, 251, 79);
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.divider {
+  width: 15%;
+  border: none;
+  border-top: 4px solid rgb(214, 251, 79);
+  border-radius: 5px;
+  margin: 20px auto 30px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.email,
+.password {
+  padding: 14px 18px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: white;
+  transition: all 0.3s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.email::placeholder,
+.password::placeholder {
+  color: #64748b;
+}
+
+.email:focus,
+.password:focus {
+  border-color: rgb(214, 251, 79);
+  box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+  border: none;
+  border-radius: 12px;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(214, 251, 79, 0.3);
+  background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+}
+
+.login-btn:active:not(:disabled) {
+  transform: translateY(0px);
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
