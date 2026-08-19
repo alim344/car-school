@@ -1,0 +1,142 @@
+.category-card {
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(214, 251, 79, 0.1);
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  width: calc(33.33% - 30px); 
+  min-width: 250px; 
+}
+
+
+
+.card-image-wrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2332, #2a3a4a);
+  position: relative;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.category-card:hover .card-image {
+  transform: scale(1.08);
+}
+
+.card-icon-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a2332, #2a3a4a);
+}
+
+.card-icon {
+  font-size: 64px;
+  line-height: 1;
+}
+
+.card-category-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  color: rgb(214, 251, 79);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(214, 251, 79, 0.2);
+}
+
+.card-content {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-description {
+  color: #c8d6e5;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex: 1;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-label {
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.detail-value {
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.detail-value.price {
+  color: rgb(214, 251, 79);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.card-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+  border: none;
+  border-radius: 25px;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  margin-top: auto;
+}
+
+
+
+
+.card-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(214, 251, 79, 0.3);
+  background: linear-gradient(135deg, #c0a04e, #b13131);;
+}
+
+.card-btn:active {
+  transform: scale(0.98);
+}
