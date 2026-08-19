@@ -1,0 +1,46 @@
+.category-groups {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.category-group {
+  margin-bottom: 60px;
+}
+
+.category-group:last-child {
+  margin-bottom: 0;
+}
+
+.group-title {
+  text-align: center;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 40px;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.group-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: rgb(214, 251, 79);
+  margin: 12px auto 0;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.category-group:hover .group-title::after {
+  width: 100px;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}

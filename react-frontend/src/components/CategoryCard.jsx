@@ -1,6 +1,9 @@
 import '../style/CategoryCard.css';
+import { useNavigate } from 'react-router-dom';
 
-export default function CategoryCard({ category, image, description, vehicles, duration, price, age }) {
+export default function CategoryCard({ category, image, description, vehicles, duration, price, age,showRegisterButton = false}) {
+  const navigate = useNavigate();
+  
   return (
     <div className="category-card">
      
@@ -30,7 +33,7 @@ export default function CategoryCard({ category, image, description, vehicles, d
             <span className="detail-value price">{price}</span>
           </div>
         </div>
-        <button className="card-btn">Register Now →</button>
+        {showRegisterButton ? (<button className='card-btn' onClick={() => navigate('/register')}>Register Now</button>) : null}
       </div>
     </div>
   );
