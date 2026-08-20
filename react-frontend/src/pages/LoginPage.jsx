@@ -30,6 +30,9 @@ export default function LoginPage(){
         try{
             const response = await axios.post('http://localhost:8080/auth/login', UserData);
             const role = response.data.role;
+            const token = response.data.token;
+
+            localStorage.setItem('token',token);
 
             if(role == "ROLE_CANDIDATE"){
                 navigate('/candidate_main');

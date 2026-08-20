@@ -25,6 +25,8 @@ export default function InstructorLayout({ children }) {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('userToken'); 
+    localStorage.clear();
     navigate('/login');
   };
 
