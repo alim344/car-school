@@ -15,10 +15,16 @@ public class PracticalClass {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalDateTime scheduledStartTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalDateTime scheduledEndTime;
+
+    @Column
+    private LocalDateTime actualStartTime;
+
+    @Column
+    private LocalDateTime actualEndTime;
 
     @ManyToOne
     @JoinColumn(name = "instructor_id",nullable = false)
