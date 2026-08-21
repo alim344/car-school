@@ -2,19 +2,20 @@ package com.example.carschool.service;
 
 import com.example.carschool.dto.EndClassDTO;
 import com.example.carschool.dto.InterruptionClassDTO;
-import com.example.carschool.model.ClassStatus;
-import com.example.carschool.model.InterruptionReason;
-import com.example.carschool.model.PracticalClass;
-import com.example.carschool.model.Route;
+import com.example.carschool.dto.PracticalClassDTO;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.PracticalClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PracticalClassService {
@@ -30,7 +31,7 @@ public class PracticalClassService {
     }
 
     @Transactional
-    public PracticalClass startClass(Long id){
+    public void startClass(Long id){
         PracticalClass practicalClass = findById(id);
 
         if(practicalClass.getClassStatus() == ClassStatus.STARTED){
@@ -39,7 +40,7 @@ public class PracticalClassService {
 
         practicalClass.setClassStatus(ClassStatus.STARTED);
         practicalClass.setActualStartTime(LocalDateTime.now());
-        return practicalClassRepository.save(practicalClass);
+        practicalClassRepository.save(practicalClass);
     }
 
     @Transactional
@@ -94,6 +95,31 @@ public class PracticalClassService {
     }
 
 
+    public List<PracticalClass> findByInstructor(Instructor instructor){
+        return practicalClassRepository.findByInstructor(instructor);
+    }
+
+    public List<PracticalClass> getTodayInstructorClasses(Instructor instructor){
+
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<PracticalClass> pc = practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor, startOfDay, endOfDay);
+        return pc;
+
+    }
+
+    public void cancelClass(Long classId){
+        PracticalClass practicalClass = findById(classId);
+
+        if(practicalClass == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"PracticalClass not found with id: " + classId);
+        }
+
+        practicalClass.setClassStatus(ClassStatus.CANCELLED);
+        practicalClassRepository.save(practicalClass);
+    }
 
 
 

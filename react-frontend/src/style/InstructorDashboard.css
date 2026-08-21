@@ -1,0 +1,177 @@
+.dashboard-page{
+    min-height: 120vh;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.dashboard-cards{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 34px;
+    margin-bottom: 50px;
+}
+
+.card{
+    padding: 10px;
+    color: rgb(214, 251, 79);
+    background: linear-gradient(145deg, #1a2332, #243447);
+    border-radius: 12px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    
+}
+
+.card-component {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width:300px;
+  gap: 12px;
+}
+
+.card-title h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(214, 251, 79, 0.668);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-number h3 {
+  font-size: 36px;
+  font-weight: 700;
+  color: rgb(214, 251, 79);
+  margin: 0;
+  
+}
+
+.divider{
+  width: 15%;
+  border: none;
+  border-top: 4px solid rgb(214, 251, 79);
+  border-radius: 5px;
+  margin-top: 0px;
+}
+
+-------------------------------
+.classes{
+    display: flex;
+    padding: 10px;
+    margin: 10px;
+    flex-direction: column;
+}
+
+.class-section{
+    margin:30px;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 15px;
+    border:1px solid rgba(214, 251, 79, 0.668);
+    border-radius: 12px;
+
+    background-color: #243447;
+}
+
+.class-header{
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(214, 251, 79);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.canceled-header{
+    font-size: 20px;
+    font-weight: 600;
+    color: rgb(223, 32, 32);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.class-section:hover{
+    border:1px solid rgba(214, 251, 79);
+}
+
+
+.class-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 12px;
+}
+
+.class-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background:#c1c6cc;
+    border-radius: 10px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    color: rgb(10, 5, 46);
+}
+
+.class-card-name {
+    font-weight: 500;
+    flex: 1;
+    font-size: 20px;
+}
+
+.class-card-times {
+    display: flex;
+    gap: 6px;
+    color: rgb(10, 5, 46);
+    font-size: 16px;
+    font-weight: 550;
+    margin: 0 16px;
+}
+
+.class-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.class-card-location {
+    color: rgb(10, 5, 46);
+    font-size: 17px;
+    margin-top: 4px;
+    margin-right: 10px;
+}
+
+.start-btn, .cancel-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.start-btn {
+    background: rgb(214, 251, 79);
+    color: #1a2332;
+}
+
+.cancel-btn {
+    background: transparent;
+    border: 1px solid #1a2332;;
+    color: #1a2332;
+}
+
+.cancel-btn:hover{
+    background:linear-gradient(135deg, #c0a04e, #b13131) ;
+}
+
+.empty-state {
+    color: rgba(214, 251, 79, 0.4);
+    font-size: 14px;
+    font-style: italic;
+    margin-top: 8px;
+}

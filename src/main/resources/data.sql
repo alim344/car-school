@@ -98,3 +98,67 @@ INSERT INTO route (name, description, path_geo_json) VALUES
 ('Veternik - Kružni Tok & Satellite Suburban Roads',
  'Suburban roundabout navigation, merging onto main transit roads, and navigating school zone speed limits.',
  '{"type":"LineString","coordinates":[[19.7750,45.2520],[19.7820,45.2550],[19.7880,45.2510],[19.7800,45.2480],[19.7750,45.2520]]}');
+
+
+
+
+DROP TABLE practical_class CASCADE;
+
+
+
+----------------------------------------------------------------------------------
+
+
+-- Instructor: Vladimir Jovanovic (id = 3)
+-- Assumes route ids 1-20 correspond to the order routes were inserted.
+-- Assumes candidate_id references the user id directly.
+
+INSERT INTO practical_class
+(scheduled_start_time, scheduled_end_time, actual_start_time, actual_end_time,
+ instructor_id, candidate_id, class_status, route_id, grade, comment, remarks,
+ interruption_reason, interruption_note)
+VALUES
+
+-- === ENDED classes (already happened this morning) ===
+
+-- Lena Reljic
+('2026-08-20 08:00:00', '2026-08-20 09:30:00',
+ '2026-08-20 08:02:00', '2026-08-20 09:28:00',
+ 3, 1, 'ENDED', 1, 4,
+ 'Good control on the boulevard loop, confident with lane changes.',
+ 'Needs to work on mirror checks before merging.',
+ NULL, NULL),
+
+
+
+-- Aleksandra Begovic
+('2026-08-20 12:00:00', '2026-08-20 13:30:00',
+ '2026-08-20 12:00:00', '2026-08-20 13:35:00',
+ 3, 4, 'ENDED', 8, 5,
+ 'Excellent handling of the roundabout and pedestrian crossings near the station.',
+ 'Ready to move on to highway driving next session.',
+ NULL, NULL),
+
+-- === ACCEPTED classes (upcoming later today) ===
+
+-- Katarina Masovic
+('2026-08-20 15:00:00', '2026-08-20 16:30:00',
+ NULL, NULL,
+ 3, 5, 'ACCEPTED', NULL, 0, NULL, NULL,
+ NULL, NULL),
+
+-- Sara Sapundzija
+('2026-08-20 17:00:00', '2026-08-20 18:30:00',
+ NULL, NULL,
+ 3, 6, 'ACCEPTED', NULL, 0, NULL, NULL,
+ NULL, NULL),
+
+-- Ana Budimirovic
+('2026-08-20 19:00:00', '2026-08-20 20:30:00',
+ NULL, NULL,
+ 3, 7, 'ACCEPTED', NULL, 0, NULL, NULL,
+ NULL, NULL);
+
+
+
+

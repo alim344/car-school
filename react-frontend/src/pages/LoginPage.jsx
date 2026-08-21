@@ -32,7 +32,7 @@ export default function LoginPage(){
             const role = response.data.role;
             const token = response.data.token;
 
-            localStorage.setItem('token',token);
+            localStorage.setItem('userToken',token);
 
             if(role == "ROLE_CANDIDATE"){
                 navigate('/candidate_main');

@@ -42,7 +42,7 @@ public class PracticalClass {
     @JoinColumn(name = "route_id",nullable = true)
     private Route route;
 
-    @Column(nullable = false)
+    @Column
     private Integer grade;
 
     @Column(length = 600)
@@ -56,5 +56,8 @@ public class PracticalClass {
 
     @Column(length = 500)
     private String interruptionNote;
+
+    @Column
+    private String location;
 
 }
