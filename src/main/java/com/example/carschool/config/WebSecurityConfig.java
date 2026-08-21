@@ -72,7 +72,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/foo").permitAll()
-                .requestMatchers("/instructor/*","/practical-class/*").permitAll()
+                .requestMatchers("/instructor/*","/practical-class/*","/route/*").hasAuthority("ROLE_INSTRUCTOR")
                 .requestMatchers(
                         "/favicon.ico",
                         "/webjars/**",

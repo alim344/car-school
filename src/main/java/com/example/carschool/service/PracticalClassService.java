@@ -44,16 +44,17 @@ public class PracticalClassService {
     }
 
     @Transactional
-    public PracticalClass setRoute(Long id, Long routeId){
+    public PracticalClassDTO setRoute(Long id, Long routeId){
         PracticalClass practicalClass = findById(id);
 
         Route route = routeService.findById(routeId);
         practicalClass.setRoute(route);
-        return practicalClassRepository.save(practicalClass);
+        practicalClassRepository.save(practicalClass);
+       return new PracticalClassDTO(practicalClass);
     }
 
     @Transactional
-    public PracticalClass endClass(EndClassDTO dto){
+    public PracticalClassDTO endClass(EndClassDTO dto){
         PracticalClass pc = findById(dto.getId());
 
         if(pc.getClassStatus() != ClassStatus.STARTED){
@@ -65,7 +66,8 @@ public class PracticalClassService {
         pc.setComment(dto.getComment());
         pc.setGrade(dto.getGrade());
         pc.setRemarks(dto.getRemarks());
-        return practicalClassRepository.save(pc);
+        practicalClassRepository.save(pc);
+        return new PracticalClassDTO(pc);
     }
 
     @Transactional
