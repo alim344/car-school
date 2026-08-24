@@ -175,3 +175,31 @@
     font-style: italic;
     margin-top: 8px;
 }
+
+
+.interrupted-card {
+    background: #2d1b1b;
+    border-left: 4px solid #ef4444;
+    color: #f8fafc;
+}
+
+.interrupted-card .class-card-name {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+.interrupted-card .class-card-times {
+    color: #94a3b8;
+}
+
+.interruption-reason {
+    color: #f87171;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 12px;
+    background: rgba(239, 68, 68, 0.15);
+    border-radius: 6px;
+    margin-left: 12px;
+    white-space: nowrap;
+}
+

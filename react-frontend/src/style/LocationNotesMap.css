@@ -1,0 +1,234 @@
+
+.location-notes-container {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid #1a2332;
+  box-shadow: 0 0 5px rgba(24, 24, 23, 0.397); 
+  margin: 10px;
+}
+
+.map-section {
+  width: 100%;
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.map-header h3 {
+    color: #19212d;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.map-instruction {
+  color: #1e232a;
+  font-size: 20px;
+  font-style: italic;
+}
+
+.map-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.interactive-map {
+  height: 350px;
+  width: 100%;
+}
+
+.leaflet-container {
+  background: #1a2332;
+}
+
+.leaflet-tile-pane {
+  filter: brightness(0.7) contrast(1.1);
+}
+
+.note-marker {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.note-input-section {
+  margin-top: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 2px solid #3a4e71;
+  box-shadow: 0 0 5px rgba(70, 70, 44, 0.397); 
+}
+
+.note-input-section h4 {
+  color: #1a2332;
+  margin-bottom: 12px;
+  font-size: 18px;
+  margin: 5px;
+}
+
+.note-input-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.note-coord-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgb(13, 25, 10);
+  background: rgba(42, 18, 18, 0.05);
+  color: #1a2332;
+  font-size: 14px;
+  font-family: monospace;
+}
+
+.note-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgb(13, 25, 10);
+  background: rgba(235, 23, 23, 0.05);
+  color: #1a2332;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.note-textarea:focus {
+  border-color: rgb(214, 251, 79);
+  box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
+  outline: none;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.save-note-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background: rgb(214, 251, 79);
+  color: #0f172a;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-note-btn:hover:not(:disabled) {
+  
+  box-shadow: 0 4px 15px rgba(214, 251, 79, 0.3);
+}
+
+.save-note-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-note-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1px solid #1a2535;
+  background: transparent;
+  color: #1a2535;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-note-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.location-notes-list {
+  margin-top: 12px;
+}
+
+.location-notes-list h4 {
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.loading-notes {
+  color: #64748b;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.no-notes-message {
+  color: #64748b;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.location-note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: rgba(199, 218, 179, 0.901);
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 3px solid rgb(214, 251, 79);
+  border: 2px solid rgb(214, 251, 79);
+  transition: all 0.2s ease;
+}
+
+
+.note-content {
+  flex: 1;
+}
+
+.note-coords {
+  font-size: 11px;
+  color: #091425;
+  font-family: monospace;
+  margin-bottom: 4px;
+}
+
+.note-text {
+  color: #162334;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.note-time {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.delete-note-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.delete-note-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  transform: scale(1.1);
+}

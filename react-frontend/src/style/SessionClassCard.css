@@ -1,0 +1,445 @@
+.session-card{
+    display: flex;
+    flex-direction: column;
+    background:linear-gradient(145deg, #516a4e, #aee7af);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+     margin-bottom: 16px;
+     gap: 12px;
+}
+
+.name{
+    color: #19212d;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.front-card{
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.times{
+    font-weight: 600;
+    font-size: 25px;
+    color: #19212d;
+}
+
+.locationBordeer{
+    border: 1px solid rgba(214, 251, 79, 0.596);
+    box-shadow: 0 0 5px #1c2a1a;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: transparent;
+    margin-left: 10px;
+    width: fit-content;
+    
+}
+
+.location{
+    color: #19212d;
+    font-size: 18px;
+    font-weight: 550;
+    font-style: italic;
+}
+
+.route-card{
+    margin: 10px;
+    border: 2px solid #1a2332;
+    box-shadow: 0 0 5px rgba(24, 24, 23, 0.397); 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: #6e906a;
+}
+
+.route-word{
+    color: #19212d;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+
+
+.route-dropdown{
+    margin-right: 20px;
+    height: 36px;
+    border: 2px solid #1a2332;
+    border-radius: 20px;
+    padding: 5px;
+    box-shadow: 0 0 5px #1c2a1a;
+}
+
+.random-route-btn{
+    margin:10px;
+    width: 100px;
+    padding: 10px;
+    background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+    box-shadow: 0 0 5px #1c2a1a;
+    border: none;
+    border-radius: 12px;
+    color: #1f2937;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+.random-route-btn:hover{
+    box-shadow: 0 0 5px #6dad64;
+}
+
+
+.grade-remarks-section {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 0 5px rgba(24, 24, 23, 0.397); 
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background-color: transparent;
+    border: 2px solid #1f2937;
+    margin: 10px;
+}
+
+
+
+.section-title  {
+    color: #19212d;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.grade-remarks-section label {
+    color: #19212d;
+    font-size: 18px;
+    font-weight: 550;
+    display: block;
+    margin-bottom: 4px;
+    margin-left: 10px;
+}
+
+.grade-input,
+.remarks-input,
+.comment-input {
+    margin-bottom: 12px;
+}
+
+.grade-input:last-child,
+.remarks-input:last-child,
+.comment-input:last-child {
+    margin-bottom: 0;
+}
+
+.grade-select,
+.remarks-input-field,
+.comment-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0  0 2px #3f7035;
+    color: #0d1621;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    margin-bottom: 10px;
+}
+
+.grade-select:focus,
+.remarks-input-field:focus,
+.comment-textarea:focus {
+    border-color: rgb(214, 251, 79);
+    box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
+}
+
+.grade-select option {
+    background: #6e906a;
+    color: #19212d;
+    
+}
+
+.remarks-input-field::placeholder,
+.comment-textarea::placeholder {
+    color: #64748b;
+}
+
+.comment-textarea {
+    resize: vertical;
+}
+
+.interrupt-btn {
+    
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid #ef4444;
+    background: transparent;
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.interrupt-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.02);
+}
+
+.interrupt-btn:active {
+    transform: scale(0.98);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+
+
+.modal-content {
+    background: linear-gradient(145deg, #1a2332, #243447);
+    padding: 32px 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid rgba(214, 251, 79, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease;
+}
+
+.modal-content h3 {
+    color: #f8fafc;
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+.modal-content p {
+    color: #94a3b8;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.modal-confirm-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    background: rgb(214, 251, 79);
+    color: #0f172a;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-confirm-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(214, 251, 79, 0.3);
+}
+
+.modal-confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.modal-confirm-btn.interrupt {
+    background: #ef4444;
+    color: white;
+}
+
+.modal-confirm-btn.interrupt:hover:not(:disabled) {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
+}
+
+.modal-cancel-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modal-cancel-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.interrupt-form {
+    margin: 16px 0;
+}
+
+.interrupt-form .form-group {
+    margin-bottom: 16px;
+}
+
+.interrupt-form .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.interrupt-form .form-group label {
+    display: block;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.interrupt-select,
+.interrupt-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+}
+
+.interrupt-select:focus,
+.interrupt-textarea:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.interrupt-select option {
+    background: #1a2332;
+    color: #e2e8f0;
+}
+
+.interrupt-textarea {
+    resize: vertical;
+}
+
+.interrupt-textarea::placeholder {
+    color: #64748b;
+}
+
+.route-selector-wrapper {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.route-dropdown {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.route-dropdown:focus {
+    border-color: rgb(214, 251, 79);
+    box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
+}
+
+.route-dropdown option {
+    background: #1a2332;
+    color: #e2e8f0;
+}
+
+.random-route-btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(214, 251, 79, 0.15);
+    color: rgb(214, 251, 79);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.random-route-btn:hover:not(:disabled) {
+    background: rgba(214, 251, 79, 0.25);
+    transform: scale(1.02);
+}
+
+.random-route-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.selected-route-display {
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: rgba(214, 251, 79, 0.1);
+    border-radius: 6px;
+    color: #d6fb4f;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.class-card-actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.end-btn{
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 2px solid #2c9016;
+    background: #558e4845;
+    color: #2c9016;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+} 
+
+.end-btn:hover{
+    background: #2ff10345;
+    transform: scale(1.02);
+}
+

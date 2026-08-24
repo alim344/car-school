@@ -2,6 +2,7 @@ import NavBar from "../../components/NavBar";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import '../../style/InstructorDashboard.css'
+import SessionClassCard from "../../components/SessionClassCard";
 
 function InfoCard({title,number}){
 
@@ -75,18 +76,22 @@ function AcceptedClassCard({ pc, onStart, onCancel }) {
     );
 }
 
-function SessionClassCard({ pc }) {
+function InterruptedClassCard({ pc }) {
     return (
-        <div className="class-card session-card">
+        <div className="class-card interrupted-card">
             <div className="class-card-name">{pc.candidateName}</div>
             <div className="class-card-times">
                 <span>{formatTime(pc.scheduledStartTime)}</span>
                 <span className="time-separator">–</span>
                 <span>{formatTime(pc.scheduledEndTime)}</span>
             </div>
+            <div className="interruption-reason">
+                 {pc.interruptionReason || "Interrupted"}
+            </div>
         </div>
     );
 }
+
 
 export default function InstructorDashboard() {
   
@@ -143,6 +148,38 @@ export default function InstructorDashboard() {
         }));
     };
 
+    const refreshDashboard = async () => {
+
+        const fetchDashboard = async () => {
+
+            try{
+
+                
+                
+                setLoading(true);
+                const response = await axios.get('http://localhost:8080/instructor/dashboard',{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                 })
+
+                 setDashboardData(response.data);
+
+
+
+            }catch(error){
+                alert(error);
+                setError('Failed to load dashboard data.');
+            }finally {
+                setLoading(false);
+            }
+
+
+        }
+
+        await fetchDashboard();
+    };
+
 
     const handleStart = async (classId) => {
         try{
@@ -179,6 +216,16 @@ export default function InstructorDashboard() {
         }
     };
 
+    const handleEndClass = async () => {
+        await refreshDashboard();
+    };
+
+    const handleInterruptClass = async () => {
+        await refreshDashboard();
+    };
+
+
+
     if (loading) return <div className="loading">Loading dashboard...</div>;
     if (error) return <div className="error">{error}</div>;
 
@@ -195,7 +242,9 @@ export default function InstructorDashboard() {
     const canceledClasses = sortByStartTime(
         dashboardData.todayClasses.filter(pc => pc.classStatus === "CANCELLED")
     );
-
+  const interruptedClasses = sortByStartTime(
+        dashboardData.todayClasses.filter(pc => pc.classStatus === "BAD_END")
+    );
 
 
 
@@ -225,7 +274,8 @@ export default function InstructorDashboard() {
                                 <div className="empty-state">No active session</div>
                             )}
                             {sessionClasses.map(pc => (
-                                <SessionClassCard key={pc.id} pc={pc} />
+                                <SessionClassCard key={pc.id} pc={pc} onEndClass={handleEndClass}
+                                    onInterruptClass={handleInterruptClass}/>
                             ))}
                         </div>
                     </div>
@@ -276,6 +326,19 @@ export default function InstructorDashboard() {
                             ))}
                         </div>
                     </div>
+
+                    {interruptedClasses.length > 0 && (
+                        <div className="class-section">
+                            <div className="canceled-header">
+                                <span>Interrupted Classes</span>
+                            </div>
+                            <div className="class-list">
+                                {interruptedClasses.map(pc => (
+                                    <InterruptedClassCard key={pc.id} pc={pc} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
 
                 

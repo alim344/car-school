@@ -6,7 +6,6 @@ import com.example.carschool.dto.PracticalClassDTO;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.PracticalClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +13,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class PracticalClassService {
@@ -30,12 +29,24 @@ public class PracticalClassService {
         return practicalClassRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"PracticalClass not found with id: " + id));
     }
 
+
+    public boolean checkStartedClasses(Instructor instructor){
+        List<PracticalClass> practicalClasses = getTodayInstructorClasses(instructor);
+
+        return practicalClasses.stream().anyMatch(pc -> pc.getClassStatus() == ClassStatus.STARTED);
+
+    }
+
     @Transactional
-    public void startClass(Long id){
+    public void startClass(Long id, Instructor instructor){
         PracticalClass practicalClass = findById(id);
 
         if(practicalClass.getClassStatus() == ClassStatus.STARTED){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Class is already started");
+        }
+
+        if(checkStartedClasses(instructor)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"U cant start the class, when other classes are in session");
         }
 
         practicalClass.setClassStatus(ClassStatus.STARTED);
@@ -66,12 +77,18 @@ public class PracticalClassService {
         pc.setComment(dto.getComment());
         pc.setGrade(dto.getGrade());
         pc.setRemarks(dto.getRemarks());
+
+        if(dto.getRouteId() != null){
+            Route route = routeService.findById(dto.getRouteId());
+            pc.setRoute(route);
+        }
+
         practicalClassRepository.save(pc);
         return new PracticalClassDTO(pc);
     }
 
     @Transactional
-    public PracticalClass interruptClass(InterruptionClassDTO dto){
+    public PracticalClassDTO interruptClass(InterruptionClassDTO dto){
         PracticalClass pc = findById(dto.getClassId());
         if(pc.getClassStatus() != ClassStatus.STARTED){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Class hasnt started");
@@ -93,7 +110,8 @@ public class PracticalClassService {
             pc.setInterruptionReason(InterruptionReason.OTHER);
         }
         pc.setInterruptionNote(dto.getNote());
-        return practicalClassRepository.save(pc);
+        practicalClassRepository.save(pc);
+        return new PracticalClassDTO(pc);
     }
 
 
