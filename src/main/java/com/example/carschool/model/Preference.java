@@ -27,6 +27,9 @@ public class Preference {
     @Column
     private Double pickupLongitude;
 
+    @Column
+    private String locationName;
+
     @ManyToOne
     @JoinColumn(name = "candidate_id", nullable = false)
     private Candidate candidate;

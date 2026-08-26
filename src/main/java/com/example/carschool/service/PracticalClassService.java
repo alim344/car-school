@@ -141,6 +141,8 @@ public class PracticalClassService {
         practicalClassRepository.save(practicalClass);
     }
 
-
+    public void save(PracticalClass practicalClass){
+        practicalClassRepository.save(practicalClass);
+    }
 
 }

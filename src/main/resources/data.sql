@@ -162,3 +162,53 @@ VALUES
 
 
 
+
+-- Preference rows
+INSERT INTO preference (id, created_at, pickup_latitude, pickup_longitude, candidate_id) VALUES
+                                                                                             (1, '2026-08-25 09:00:00', 45.2671, 19.8335, 6),  -- Novi Sad center
+                                                                                             (2, '2026-08-25 09:05:00', 45.2551, 19.8452, 5),  -- Liman
+                                                                                             (3, '2026-08-25 09:10:00', 45.2455, 19.8060, 4),  -- Klisa
+                                                                                             (4, '2026-08-25 09:15:00', 45.2789, 19.8500, 7),  -- Detelinara
+                                                                                             (5, '2026-08-25 09:20:00', 45.2600, 19.8200, 1),  -- Grbavica
+                                                                                             (6, '2026-08-25 09:25:00', 45.2700, 19.7900, 8);  -- Novo Naselje
+
+
+-- TimePreference rows
+
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (1, '2026-08-31', '09:00:00', '12:00:00', 1),  -- Mon, 3h
+                                                                                (2, '2026-09-02', '14:00:00', '18:00:00', 1);  -- Wed, 4h
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (3, '2026-08-31', '10:00:00', '13:00:00', 2),  -- Mon, 3h
+                                                                                (4, '2026-09-03', '08:00:00', '10:00:00', 2);  -- Thu, 2h
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (5, '2026-09-01', '09:00:00', '15:00:00', 3),  -- Tue, 6h
+                                                                                (6, '2026-09-04', '16:00:00', '19:00:00', 3);  -- Fri, 3h
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (7, '2026-09-02', '15:00:00', '18:00:00', 4),  -- Wed, 3h
+                                                                                (8, '2026-09-05', '09:00:00', '11:00:00', 4);  -- Sat, 2h
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (9,  '2026-09-01', '11:00:00', '16:00:00', 5), -- Tue, 5h
+                                                                                (10, '2026-09-03', '13:00:00', '15:00:00', 5); -- Thu, 2h
+
+-- Candidate 8 (preference_id 6)
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (11, '2026-08-31', '07:00:00', '13:00:00', 6), -- Mon, 6h
+                                                                                (12, '2026-09-05', '09:00:00', '12:00:00', 6); -- Sat, 3h
+
+
+
+INSERT INTO preference (id, created_at, pickup_latitude, pickup_longitude, candidate_id) VALUES
+    (7, '2026-08-25 09:30:00', 45.2496, 19.8350, 2);  -- Novi Sad, Bulevar area
+
+INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALUES
+                                                                                (13, '2026-09-01', '13:00:00', '16:00:00', 7),  -- Tue, 3h -- overlaps with candidate 1's Tue slot (11-16) and candidate 4's Tue slot (9-15)
+                                                                                (14, '2026-09-04', '10:00:00', '14:00:00', 7);  -- Fri, 4h
+
+
+
