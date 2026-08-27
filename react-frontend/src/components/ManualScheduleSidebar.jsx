@@ -44,7 +44,6 @@ export default function ManualScheduleSidebar({
 
         onAddDraft(draft);
         setLocation("");
-        // Clear selected time after adding
         onTimeSelect(null, null);
     };
 
@@ -54,7 +53,7 @@ export default function ManualScheduleSidebar({
     return (
         <div className="manual-schedule-sidebar">
 
-            {/* HEADER */}
+            
             <div className="manual-sidebar-header">
                 <h2>Manual Schedule</h2>
                 <button
@@ -65,7 +64,7 @@ export default function ManualScheduleSidebar({
                 </button>
             </div>
 
-            {/* CANDIDATE SELECT */}
+           
             <div className="form-group">
                 <label>Candidate</label>
                 <select
@@ -86,7 +85,7 @@ export default function ManualScheduleSidebar({
                 </select>
             </div>
 
-            {/* SELECTED CANDIDATE INFO */}
+        
             {selectedCandidate && (
                 <div className="selected-candidate-info">
                     <strong>{selectedCandidate.name}</strong>
@@ -98,7 +97,7 @@ export default function ManualScheduleSidebar({
 
             
 
-            {/* SELECTED TIME DISPLAY */}
+       
             <div className="selected-time-display">
                 <div className="time-display-item">
                     <span className="time-label">Start Time</span>
@@ -122,7 +121,7 @@ export default function ManualScheduleSidebar({
 
            
 
-            {/* ADD TO DRAFT BUTTON */}
+        
             <button
                 className="add-draft-button"
                 onClick={handleAddDraft}
@@ -131,7 +130,7 @@ export default function ManualScheduleSidebar({
                 + Add to Draft
             </button>
 
-            {/* DRAFT CLASSES LIST */}
+       
             <div className="draft-classes-section">
                 <div className="draft-header">
                     <h3>Draft Classes</h3>
@@ -167,7 +166,7 @@ export default function ManualScheduleSidebar({
                 ))}
             </div>
 
-            {/* BOTTOM BUTTONS */}
+     
             <div className="manual-sidebar-buttons">
                 <button
                     className="cancel-manual-button"

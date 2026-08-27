@@ -147,9 +147,6 @@
 
 
 
-/* ================================================== */
-/* SIDEBAR STYLES */
-/* ================================================== */
 
 .schedule-sidebar {
     width: 280px;
@@ -165,7 +162,6 @@
     flex-direction: column;
 }
 
-/* Default view - Button */
 .sidebar-default {
     display: flex;
     flex-direction: column;
@@ -200,7 +196,6 @@
     transform: scale(0.98);
 }
 
-/* Create Form View in Sidebar */
 .sidebar-create-form {
     display: flex;
     flex-direction: column;
@@ -272,7 +267,6 @@
     transform: rotate(90deg);
 }
 
-/* Form styles inside sidebar */
 .sidebar-create-form .create-class-form {
     display: flex;
     flex-direction: column;
@@ -334,7 +328,6 @@
     cursor: pointer;
 }
 
-/* Form buttons */
 .sidebar-form-buttons {
     display: flex;
     gap: 10px;
@@ -547,9 +540,6 @@
 }
 
 
-/* ================================================== */
-/* MODAL OVERLAY - Shared for both modals */
-/* ================================================== */
 
 .class-modal-overlay {
     position: fixed;
@@ -567,29 +557,8 @@
     padding: 20px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
 
-@keyframes slideUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
 
-/* ================================================== */
-/* CLASS DETAIL MODAL (PracticalClassModal) */
-/* ================================================== */
 
 .class-modal {
     background: #ffffff;
@@ -681,12 +650,9 @@
     max-width: 60%;
 }
 
-/* Status color for the status field in modal */
 .class-info strong[style*="color"] {
-    /* Dynamic color will be applied via inline style if needed */
 }
 
-/* Scrollbar for class modal */
 .class-modal::-webkit-scrollbar {
     width: 6px;
 }
@@ -705,9 +671,7 @@
     background: #94a3b8;
 }
 
-/* ================================================== */
-/* CREATE CLASS MODAL */
-/* ================================================== */
+
 
 .create-class-modal {
     background: #ffffff;
@@ -866,7 +830,6 @@
     transform: translateY(0px);
 }
 
-/* Scrollbar for create class modal */
 .create-class-modal::-webkit-scrollbar {
     width: 6px;
 }
@@ -885,9 +848,7 @@
     background: #94a3b8;
 }
 
-/* ================================================== */
-/* SIDEBAR BUTTON STYLES (already in your CSS but keeping for reference) */
-/* ================================================== */
+
 
 .schedule-sidebar .create-class-button {
     width: 100%;
@@ -910,11 +871,6 @@
     transform: scale(0.98);
 }
 
-/* ================================================== */
-/* STATUS COLORS FOR PRACTICAL CLASS MODAL */
-/* ================================================== */
-
-/* Status - Pending */
 .class-info.status-pending {
     background: #fef3c7 !important;
     border-color: #f59e0b !important;
@@ -926,7 +882,6 @@
     font-weight: 700 !important;
 }
 
-/* Status - Accepted */
 .class-info.status-accepted {
     background: #dcfce7 !important;
     border-color: #22c55e !important;
@@ -938,7 +893,6 @@
     font-weight: 700 !important;
 }
 
-/* Status - Rejected */
 .class-info.status-rejected {
     background: #fef9c3 !important;
     border-color: #eab308 !important;
@@ -950,7 +904,7 @@
     font-weight: 700 !important;
 }
 
-/* Status - Started */
+
 .class-info.status-started {
     background: #d1ec39 !important;
     border-color: #9fa63e !important;
@@ -962,7 +916,7 @@
     font-weight: 700 !important;
 }
 
-/* Status - Ended */
+
 .class-info.status-ended {
     background: #f1f5f9 !important;
     border-color: #6b7280 !important;
@@ -974,7 +928,7 @@
     font-weight: 700 !important;
 }
 
-/* Status - Bad End */
+
 .class-info.status-bad_end {
     background: #fca5a5 !important;
     border-color: #991b1b !important;
@@ -986,7 +940,7 @@
     font-weight: 700 !important;
 }
 
-/* Status - Cancelled */
+
 .class-info.status-cancelled {
     background: #e2e8f0 !important;
     border-color: #64748b !important;
@@ -999,9 +953,7 @@
 }
 
 
-/* ================================================== */
-/* MAKE SCHEDULE MODAL */
-/* ================================================== */
+
 
 .make-schedule-modal {
     background: #ffffff;
@@ -1080,7 +1032,6 @@
     margin: 0;
 }
 
-/* Make Schedule Button in Sidebar */
 .make-schedule-button {
     width: 100%;
     padding: 12px 16px;
@@ -1123,9 +1074,7 @@
 .make-schedule-modal::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
-/* =========================================
-   MANUAL SCHEDULE SIDEBAR - IMPROVED
-========================================= */
+
 
 .manual-schedule-sidebar {
     display: flex;
@@ -1173,7 +1122,6 @@
     transform: rotate(90deg);
 }
 
-/* Candidate select */
 .manual-schedule-sidebar .form-group {
     display: flex;
     flex-direction: column;
@@ -1208,7 +1156,6 @@
     background: #ffffff;
 }
 
-/* Selected candidate info */
 .selected-candidate-info {
     display: flex;
     flex-direction: column;
@@ -1228,7 +1175,6 @@
     font-size: 0.8rem;
 }
 
-/* Instructions */
 .manual-instructions {
     padding: 12px;
     background: #f8fafc;
@@ -1239,7 +1185,6 @@
     border: 1px dashed #e2e8f0;
 }
 
-/* Selected time display */
 .selected-time-display {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1283,7 +1228,6 @@
     font-size: 0.8rem;
 }
 
-/* Location input */
 .manual-schedule-sidebar .form-group input[type="text"] {
     padding: 8px 12px;
     background: #f8fafc;
@@ -1304,7 +1248,6 @@
     background: #ffffff;
 }
 
-/* Add draft button */
 .add-draft-button {
     width: 100%;
     padding: 10px;
@@ -1333,7 +1276,6 @@
     transform: scale(0.98);
 }
 
-/* Draft list */
 .draft-classes-section {
     flex: 1;
     overflow-y: auto;
@@ -1444,7 +1386,6 @@
     color: #ef4444;
 }
 
-/* Bottom buttons */
 .manual-sidebar-buttons {
     display: flex;
     gap: 10px;

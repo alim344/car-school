@@ -38,6 +38,13 @@ public class ScheduleService {
         System.out.println("startTime = " + createClassDTO.getStartTime());
         System.out.println("endTime = " + createClassDTO.getEndTime());
 
+        boolean conflict = practicalClassService.classExists(instructor,createClassDTO.getEndTime(),createClassDTO.getStartTime());
+
+
+        if (conflict) {
+            throw new IllegalArgumentException(
+                    "Instructor already has a class during this time."
+            );}
         pc.setClassStatus(ClassStatus.PENDING);
         pc.setInstructor(instructor);
         pc.setScheduledStartTime(createClassDTO.getStartTime());

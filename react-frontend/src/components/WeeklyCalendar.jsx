@@ -8,7 +8,6 @@ export default function WeeklyCalendar({
     onEventClick,
     onTimeSelect
 }) {
-    // Actual classes + candidate preference blocks
     const allEvents = [
         ...preferenceEvents,
         ...events
@@ -53,7 +52,6 @@ export default function WeeklyCalendar({
 
             eventContent={(eventInfo) => {
 
-                // Don't render anything inside preference blocks
                 if (eventInfo.event.display === "background") {
                     return null;
                 }

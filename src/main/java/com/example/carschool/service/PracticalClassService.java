@@ -145,4 +145,15 @@ public class PracticalClassService {
         practicalClassRepository.save(practicalClass);
     }
 
+    public boolean classExists(Instructor instructor, LocalDateTime endTime, LocalDateTime startTime){
+        return
+                practicalClassRepository
+                        .existsByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(
+                                instructor,
+                                startTime,endTime
+                        );
+
+
+    }
+
 }

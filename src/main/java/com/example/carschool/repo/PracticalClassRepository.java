@@ -13,4 +13,10 @@ public interface PracticalClassRepository extends JpaRepository<PracticalClass, 
     List<PracticalClass> findByInstructor(Instructor instructor);
 
     List<PracticalClass> findByInstructorAndScheduledStartTimeBetween(Instructor instructor, LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+    boolean existsByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(
+            Instructor instructor,
+            LocalDateTime endTime,
+            LocalDateTime startTime
+    );
 }

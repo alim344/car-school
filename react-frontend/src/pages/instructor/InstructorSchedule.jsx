@@ -9,50 +9,35 @@ import "../../style/InstructorSchedule.css";
 
 export default function InstructorSchedule() {
 
-    // =========================================================
-    // EXISTING CLASSES
-    // =========================================================
+    
 
     const [classes, setClasses] = useState([]);
     const [selectedClass, setSelectedClass] = useState(null);
 
-    // =========================================================
-    // NORMAL CREATE CLASS
-    // =========================================================
+    
 
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [newClassStart, setNewClassStart] = useState(null);
     const [newClassEnd, setNewClassEnd] = useState(null);
 
-    // =========================================================
-    // MAKE SCHEDULE MODAL
-    // =========================================================
+  
 
     const [makeScheduleOpen, setMakeScheduleOpen] = useState(false);
 
-    // =========================================================
-    // MANUAL SCHEDULE
-    // =========================================================
+    
 
     const [manualMode, setManualMode] = useState(false);
     const [candidatePreferences, setCandidatePreferences] = useState([]);
     const [selectedCandidateEmail, setSelectedCandidateEmail] = useState("");
 
-    // =========================================================
-    // MANUAL DRAFT CLASSES
-    // =========================================================
+  
 
     const [manualDrafts, setManualDrafts] = useState([]);
 
-    // =========================================================
-    // TOKEN
-    // =========================================================
+ 
 
     const token = localStorage.getItem("userToken");
 
-    // =========================================================
-    // GET EXISTING CLASSES
-    // =========================================================
 
     useEffect(() => {
         fetch("http://localhost:8080/schedule/get-inst", {
@@ -74,9 +59,7 @@ export default function InstructorSchedule() {
             });
     }, [token]);
 
-    // =========================================================
-    // EXISTING CLASSES → FULLCALENDAR EVENTS
-    // =========================================================
+   
 
     const events = classes.map(cls => ({
         id: cls.id,
@@ -97,9 +80,7 @@ export default function InstructorSchedule() {
         }
     }));
 
-    // =========================================================
-    // MANUAL DRAFTS → FULLCALENDAR EVENTS
-    // =========================================================
+    
 
     const draftEvents = manualDrafts.map((draft, index) => ({
         id: `manual-draft-${index}`,
@@ -117,17 +98,13 @@ export default function InstructorSchedule() {
         }
     }));
 
-    // =========================================================
-    // FIND SELECTED CANDIDATE
-    // =========================================================
+   
 
     const selectedCandidate = candidatePreferences.find(
         candidate => candidate.candidateEmail === selectedCandidateEmail
     );
 
-    // =========================================================
-    // SELECTED CANDIDATE PREFERENCES
-    // =========================================================
+    
 
     const preferenceEvents =
         selectedCandidate?.prefDTOList?.map(pref => ({
@@ -141,9 +118,7 @@ export default function InstructorSchedule() {
             }
         })) || [];
 
-    // =========================================================
-    // ALL CALENDAR EVENTS
-    // =========================================================
+    
 
     const calendarEvents = [
         ...preferenceEvents,
@@ -151,9 +126,26 @@ export default function InstructorSchedule() {
         ...draftEvents
     ];
 
-    // =========================================================
-    // MAKE SCHEDULE
-    // =========================================================
+    const hasOverlap = (start, end) => {
+
+        const existingOverlap = classes.some(cls => {
+            const existingStart = new Date(cls.scheduledStartTime);
+            const existingEnd = new Date(cls.scheduledEndTime);
+
+            return start < existingEnd && end > existingStart;
+        });
+
+        const draftOverlap = manualDrafts.some(draft => {
+            const draftStart = new Date(draft.startTime);
+            const draftEnd = new Date(draft.endTime);
+
+            return start < draftEnd && end > draftStart;
+        });
+
+        return existingOverlap || draftOverlap;
+    };
+
+   
 
     const handleMakeSchedule = async (option) => {
         if (option === "manual") {
@@ -188,15 +180,17 @@ export default function InstructorSchedule() {
 
         if (option === "copy") {
             setMakeScheduleOpen(false);
-            // Copy functionality can be implemented later.
         }
     };
 
-    // =========================================================
-    // CALENDAR TIME SELECT
-    // =========================================================
+   
 
     const handleTimeSelect = (info) => {
+
+        if (hasOverlap(info.start, info.end)) {
+            alert("You already have a class scheduled during this time.");
+            return;
+        }
         if (manualMode) {
             setNewClassStart(info.start);
             setNewClassEnd(info.end);
@@ -208,15 +202,12 @@ export default function InstructorSchedule() {
         setCreateModalOpen(true);
     };
 
-    // Clear selected time (used by ManualScheduleSidebar)
     const handleClearTime = () => {
         setNewClassStart(null);
         setNewClassEnd(null);
     };
 
-    // =========================================================
-    // CALENDAR EVENT CLICK
-    // =========================================================
+  
 
     const handleEventClick = (info) => {
         if (info.event.display === "background") {
@@ -230,28 +221,21 @@ export default function InstructorSchedule() {
         setSelectedClass(info.event);
     };
 
-    // =========================================================
-    // ADD MANUAL DRAFT
-    // =========================================================
+   
 
     const handleAddManualDraft = (draft) => {
         setManualDrafts(prev => [...prev, draft]);
-        // Clear selected time after adding
         setNewClassStart(null);
         setNewClassEnd(null);
     };
 
-    // =========================================================
-    // REMOVE MANUAL DRAFT
-    // =========================================================
+   
 
     const handleRemoveManualDraft = (index) => {
         setManualDrafts(prev => prev.filter((_, i) => i !== index));
     };
 
-    // =========================================================
-    // SAVE MANUAL SCHEDULE
-    // =========================================================
+   
 
     const handleSaveManualSchedule = async () => {
         if (manualDrafts.length === 0) {
@@ -297,9 +281,7 @@ export default function InstructorSchedule() {
         }
     };
 
-    // =========================================================
-    // EXIT MANUAL MODE
-    // =========================================================
+    
 
     const handleExitManualMode = () => {
         if (manualDrafts.length > 0) {
@@ -319,9 +301,7 @@ export default function InstructorSchedule() {
         setNewClassEnd(null);
     };
 
-    // =========================================================
-    // HANDLE CANDIDATE SELECT
-    // =========================================================
+   
 
     const handleCandidateSelect = (email) => {
         setSelectedCandidateEmail(email);
@@ -329,9 +309,7 @@ export default function InstructorSchedule() {
         setNewClassEnd(null);
     };
 
-    // =========================================================
-    // HANDLE CREATE CLASS FROM MODAL
-    // =========================================================
+    
 
     const handleClassCreated = (newClass) => {
         if (manualMode) {
@@ -344,23 +322,17 @@ export default function InstructorSchedule() {
                 location: newClass.location
             });
         } else {
-            // Normal mode - add to classes directly
             setClasses(prev => [...prev, newClass]);
         }
         setCreateModalOpen(false);
     };
 
-    // =========================================================
-    // RENDER
-    // =========================================================
+   
 
     return (
         <div className="schedule-container">
 
-            {/* =================================================
-                CALENDAR
-            ================================================= */}
-
+           
             <div className="calendar-section">
                 <WeeklyCalendar
                     events={calendarEvents}
@@ -370,13 +342,9 @@ export default function InstructorSchedule() {
                 />
             </div>
 
-            {/* =================================================
-                SIDEBAR
-            ================================================= */}
-
+         
             <div className="schedule-sidebar">
 
-                {/* NORMAL SIDEBAR */}
                 {!manualMode && !createModalOpen && (
                     <div className="sidebar-default">
                         <h2>Schedule</h2>
@@ -399,7 +367,6 @@ export default function InstructorSchedule() {
                     </div>
                 )}
 
-                {/* NORMAL CREATE CLASS FORM */}
                 {createModalOpen && !manualMode && (
                     <div className="sidebar-create-form">
                         <CreateClassModal
@@ -412,7 +379,6 @@ export default function InstructorSchedule() {
                     </div>
                 )}
 
-                {/* MANUAL SCHEDULE SIDEBAR */}
                 {manualMode && (
                     <ManualScheduleSidebar
                         candidatePreferences={candidatePreferences}
@@ -431,18 +397,14 @@ export default function InstructorSchedule() {
                 )}
             </div>
 
-            {/* =================================================
-                PRACTICAL CLASS MODAL
-            ================================================= */}
+          
 
             <PracticalClassModal
                 selectedClass={selectedClass}
                 onClose={() => setSelectedClass(null)}
             />
 
-            {/* =================================================
-                MAKE SCHEDULE MODAL
-            ================================================= */}
+          
 
             <MakeScheduleModal
                 isOpen={makeScheduleOpen}
@@ -450,9 +412,7 @@ export default function InstructorSchedule() {
                 onSelect={handleMakeSchedule}
             />
 
-            {/* =================================================
-                NORMAL CREATE CLASS MODAL (when in manual mode)
-            ================================================= */}
+          
 
             {createModalOpen && manualMode && (
                 <CreateClassModal
