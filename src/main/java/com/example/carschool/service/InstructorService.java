@@ -8,6 +8,8 @@ import com.example.carschool.repo.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,9 +27,14 @@ public class InstructorService {
 
     public InstructorDashboardDTO getDashboardInfo(String instructorEmail) {
 
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+
         Instructor instructor = findByEmail(instructorEmail);
         Integer studentNum = instructor.getCandidates().size();
-        List<PracticalClass> pc = practicalClassService.getTodayInstructorClasses(instructor);
+        List<PracticalClass> pc = practicalClassService.getPeriodInstructorClasses(instructor, startOfDay, endOfDay);
         Integer classesTodayNum = pc.size();
         Integer requestNum = 1;
 

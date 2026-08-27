@@ -31,7 +31,11 @@ public class PracticalClassService {
 
 
     public boolean checkStartedClasses(Instructor instructor){
-        List<PracticalClass> practicalClasses = getTodayInstructorClasses(instructor);
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<PracticalClass> practicalClasses = getPeriodInstructorClasses(instructor, startOfDay, endOfDay);
 
         return practicalClasses.stream().anyMatch(pc -> pc.getClassStatus() == ClassStatus.STARTED);
 
@@ -119,15 +123,13 @@ public class PracticalClassService {
         return practicalClassRepository.findByInstructor(instructor);
     }
 
-    public List<PracticalClass> getTodayInstructorClasses(Instructor instructor){
 
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay();
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
 
-        List<PracticalClass> pc = practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor, startOfDay, endOfDay);
+
+    public List<PracticalClass> getPeriodInstructorClasses(Instructor instructor,LocalDateTime startTime,LocalDateTime endTime){
+
+        List<PracticalClass> pc = practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor, startTime, endTime);
         return pc;
-
     }
 
     public void cancelClass(Long classId){

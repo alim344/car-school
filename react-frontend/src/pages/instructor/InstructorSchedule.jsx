@@ -179,7 +179,65 @@ export default function InstructorSchedule() {
         }
 
         if (option === "copy") {
-            setMakeScheduleOpen(false);
+            try {
+                const [copyResponse, prefsResponse] = await Promise.all([
+                    fetch("http://localhost:8080/schedule/copy", {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }),
+
+                    fetch("http://localhost:8080/schedule/candidate-prefs", {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                ]);
+
+                if (!copyResponse.ok) {
+                    throw new Error(`Copy HTTP ${copyResponse.status}`);
+                }
+
+                if (!prefsResponse.ok) {
+                    throw new Error(`Preferences HTTP ${prefsResponse.status}`);
+                }
+
+                const copiedClasses = await copyResponse.json();
+                const preferences = await prefsResponse.json();
+
+                console.log("Copied classes:", copiedClasses);
+                console.log("Candidate preferences:", preferences);
+
+                const drafts = copiedClasses.map(cls => {
+                    const candidate = preferences.find(
+                        c => c.candidateEmail === cls.candidateEmail
+                    );
+
+                    return {
+                        candidateEmail: cls.candidateEmail,
+                        candidateName: candidate?.name || cls.candidateEmail,
+                        startTime: cls.startTime,
+                        endTime: cls.endTime,
+                        location: cls.location || ""
+                    };
+                });
+
+                setCandidatePreferences(preferences);
+                setManualDrafts(drafts);
+
+                setManualMode(true);
+                setMakeScheduleOpen(false);
+
+                setSelectedCandidateEmail("");
+                setNewClassStart(null);
+                setNewClassEnd(null);
+
+            } catch (error) {
+                console.error("Error copying schedule:", error);
+                alert("Could not copy the schedule.");
+            }
+
+            return;
         }
     };
 
@@ -313,7 +371,6 @@ export default function InstructorSchedule() {
 
     const handleClassCreated = (newClass) => {
         if (manualMode) {
-            // Add as draft
             handleAddManualDraft({
                 candidateEmail: newClass.candidateEmail,
                 candidateName: newClass.candidateName,
@@ -352,7 +409,7 @@ export default function InstructorSchedule() {
                             className="make-schedule-button"
                             onClick={() => setMakeScheduleOpen(true)}
                         >
-                            📅 Make Schedule
+                             Make Schedule
                         </button>
                         <button
                             className="create-class-button"

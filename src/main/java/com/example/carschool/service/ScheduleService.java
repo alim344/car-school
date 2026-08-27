@@ -9,6 +9,10 @@ import com.example.carschool.model.PracticalClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +38,7 @@ public class ScheduleService {
 
     public PracticalClassDTO createAClass(CreateClassDTO createClassDTO, Instructor instructor) {
         PracticalClass pc = new PracticalClass();
-        System.out.println("candidateEmail = " + createClassDTO.getCandidateEmail());
-        System.out.println("startTime = " + createClassDTO.getStartTime());
-        System.out.println("endTime = " + createClassDTO.getEndTime());
+
 
         boolean conflict = practicalClassService.classExists(instructor,createClassDTO.getEndTime(),createClassDTO.getStartTime());
 
@@ -72,5 +74,33 @@ public class ScheduleService {
 
         return practicalClassDTOList;
     }
+
+
+    public List<CreateClassDTO> copySchedule(Instructor instructor) {
+        List<CreateClassDTO> ClassDTOList = new ArrayList<>();
+
+        LocalDate today = LocalDate.now();
+
+        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
+
+        LocalDateTime start = startOfWeek.atStartOfDay();
+        LocalDateTime end = endOfWeek.atTime(LocalTime.MAX);
+
+        List<PracticalClass> practicalClasses = practicalClassService.getPeriodInstructorClasses(instructor,start,end);
+
+        for(PracticalClass pc : practicalClasses){
+            start = pc.getScheduledStartTime();
+            end = pc.getScheduledEndTime();
+            pc.setScheduledStartTime(start.plusWeeks(1));
+            pc.setScheduledEndTime(end.plusWeeks(1));
+            ClassDTOList.add(new CreateClassDTO(pc));
+
+        }
+
+        return ClassDTOList;
+
+    }
+
 
 }

@@ -1,4 +1,4 @@
-export default function PracticalClassModal({ selectedClass, onClose }) {
+export default function PracticalClassModal({ selectedClass, onClose}) {
 
     if (!selectedClass) {
         return null;
@@ -98,6 +98,7 @@ export default function PracticalClassModal({ selectedClass, onClose }) {
                         </strong>
                     </div>
 
+                    
                 </div>
 
             </div>

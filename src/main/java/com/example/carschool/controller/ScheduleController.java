@@ -77,4 +77,12 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.createManualSchedule(dtos,instructor));
     }
 
+    @GetMapping("/copy")
+    public ResponseEntity<List<CreateClassDTO>> copySchedule(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(scheduleService.copySchedule(instructor));
+    }
+
 }

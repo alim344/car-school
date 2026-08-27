@@ -3,6 +3,7 @@ package com.example.carschool.repo;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.PracticalClass;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface PracticalClassRepository extends JpaRepository<PracticalClass, 
             LocalDateTime endTime,
             LocalDateTime startTime
     );
+
+
 }
