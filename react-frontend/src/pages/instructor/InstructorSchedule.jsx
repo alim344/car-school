@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import PracticalClassModal from "../../components/PracticalClassModal";
+import CreateClassModal from "../../components/CreateClassModal";
 
 import "../../style/InstructorSchedule.css";
 
@@ -9,6 +11,10 @@ export default function InstructorSchedule() {
 
     const [classes, setClasses] = useState([]);
     const [selectedClass, setSelectedClass] = useState(null);
+
+    const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [newClassStart, setNewClassStart] = useState(null);
+    const [newClassEnd, setNewClassEnd] = useState(null);
 
     const token = localStorage.getItem("userToken");
 
@@ -48,149 +54,93 @@ export default function InstructorSchedule() {
     }));
 
     return (
-        <div className="instructor-calendar">
+        <div className="schedule-container">
 
-            <FullCalendar
-                plugins={[timeGridPlugin, interactionPlugin]}
-                initialView="timeGridWeek"
-                events={events}
-                height="auto"
-                slotMinTime="07:00:00"
-                slotMaxTime="22:00:00"
-                allDaySlot={false}
+            <div className="schedule-header">
 
-                slotLabelFormat={{
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false
-                }}
+                <h2>Create Schedule</h2>
 
-                eventTimeFormat={{
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false
-                }}
-
-                eventContent={(eventInfo) => (
-                    <div className="calendar-event">
-                        <div className="calendar-event-time">
-                            {eventInfo.timeText}
-                        </div>
-
-                        <div className="calendar-event-name">
-                            {eventInfo.event.title}
-                        </div>
-
-                        <div className="calendar-event-status">
-                            {eventInfo.event.extendedProps.status}
-                        </div>
-                    </div>
-                )}
-
-                eventClick={(info) => {
-                    setSelectedClass(info.event);
-                }}
-            />
-
-           
-
-            {selectedClass && (
-                <div
-                    className="class-modal-overlay"
-                    onClick={() => setSelectedClass(null)}
+                <button
+                    className="create-class-button"
+                    onClick={() => {
+                        setNewClassStart(null);
+                        setNewClassEnd(null);
+                        setCreateModalOpen(true);
+                    }}
                 >
-                    <div
-                        className="class-modal"
-                        onClick={(e) => e.stopPropagation()}
-                    >
+                    + Create a Class
+                </button>
 
-                        <div className="class-modal-header">
-                            <h2>
-                                {selectedClass.title}
-                            </h2>
+            </div>
+            <div className="instructor-calendar">
 
-                            <button
-                                className="class-modal-close"
-                                onClick={() => setSelectedClass(null)}
-                            >
-                                ×
-                            </button>
+                <FullCalendar
+                    plugins={[timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridWeek"
+                    events={events}
+                    height="auto"
+                    slotMinTime="07:00:00"
+                    slotMaxTime="22:00:00"
+                    allDaySlot={false}
+
+                    select={(info) => {
+                        setNewClassStart(info.start);
+                        setNewClassEnd(info.end);
+                        setCreateModalOpen(true);
+                    }}
+
+                    slotLabelFormat={{
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    }}
+
+                    eventTimeFormat={{
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    }}
+
+                    eventContent={(eventInfo) => (
+                        <div className="calendar-event">
+                            <div className="calendar-event-time">
+                                {eventInfo.timeText}
+                            </div>
+
+                            <div className="calendar-event-name">
+                                {eventInfo.event.title}
+                            </div>
+
+                            <div className="calendar-event-status">
+                                {eventInfo.event.extendedProps.status}
+                            </div>
                         </div>
+                    )}
 
-                        <div className="class-modal-body">
+                    eventClick={(info) => {
+                        setSelectedClass(info.event);
+                    }}
+                />
 
-                            <div className="class-info">
-                                <span>Time</span>
-                                <strong>
-                                    {selectedClass.start?.toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        hour12: false
-                                    })}
-                                    {" - "}
-                                    {selectedClass.end?.toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                        hour12: false
-                                    })}
-                                </strong>
-                            </div>
+            
+                <PracticalClassModal
+                    selectedClass={selectedClass}
+                    onClose={() => setSelectedClass(null)}
+                />
 
-                            <div className="class-info">
-                                <span>Status</span>
-                                <strong>
-                                    {selectedClass.extendedProps.status}
-                                </strong>
-                            </div>
+                <CreateClassModal
+                    key={`${newClassStart}-${newClassEnd}`}
+                    isOpen={createModalOpen}
+                    initialStart={newClassStart}
+                    initialEnd={newClassEnd}
+                    onClose={() => setCreateModalOpen(false)}
+                    onCreated={(newClass) => {
+                        setClasses(prev => [...prev, newClass]);
+                    }}
+                />
+                            
 
-                            <div className="class-info">
-                                <span>Candidate email</span>
-                                <strong>
-                                    {selectedClass.extendedProps.candidateEmail || "-"}
-                                </strong>
-                            </div>
-
-                            <div className="class-info">
-                                <span>Location</span>
-                                <strong>
-                                    {selectedClass.extendedProps.location || "-"}
-                                </strong>
-                            </div>
-
-                            <div className="class-info">
-                                <span>Route ID</span>
-                                <strong>
-                                    {selectedClass.extendedProps.routeId || "-"}
-                                </strong>
-                            </div>
-
-                            <div className="class-info">
-                                <span>Grade</span>
-                                <strong>
-                                    {selectedClass.extendedProps.grade ?? "-"}
-                                </strong>
-                            </div>
-
-                            <div className="class-info">
-                                <span>Comment</span>
-                                <strong>
-                                    {selectedClass.extendedProps.comment || "-"}
-                                </strong>
-                            </div>
-
-                            <div className="class-info">
-                                <span>Remarks</span>
-                                <strong>
-                                    {selectedClass.extendedProps.remarks || "-"}
-                                </strong>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            )}
-
+            </div>
         </div>
     );
 }

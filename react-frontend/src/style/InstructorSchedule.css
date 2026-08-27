@@ -468,3 +468,206 @@
 .class-info strong[style*="color"] {
   /* This will be dynamically colored */
 }
+
+
+
+
+/* ================================================== */
+/* SCHEDULE CONTAINER & HEADER */
+/* ================================================== */
+
+.schedule-container {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Header Section */
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  margin-bottom: 20px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 20px;
+  border: 1px solid rgba(214, 251, 79, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.schedule-header h2 {
+  color: rgb(214, 251, 79);
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+/* Create Class Button */
+.create-class-button {
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+  border: none;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 12px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-class-button:hover {
+  background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(214, 251, 79, 0.3);
+}
+
+.create-class-button:active {
+  transform: translateY(0px);
+}
+
+/* ================================================== */
+/* CREATE CLASS MODAL */
+/* ================================================== */
+
+.create-class-modal {
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 20px;
+  padding: 0;
+  max-width: 450px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba(214, 251, 79, 0.15);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8);
+  animation: slideUp 0.3s ease-out;
+}
+
+.create-class-form {
+  padding: 20px 28px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Form Groups */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group select,
+.form-group input {
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+  font-family: inherit;
+  width: 100%;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  border-color: rgb(214, 251, 79);
+  box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.form-group select option {
+  background: #1a2332;
+  color: #e2e8f0;
+}
+
+.form-group input::placeholder {
+  color: #64748b;
+}
+
+.form-group input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+.form-group input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+.create-class-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.create-class-buttons button {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  letter-spacing: 0.5px;
+}
+
+.create-class-buttons button[type="button"] {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.create-class-buttons button[type="button"]:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.create-class-buttons button[type="submit"] {
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+  color: #1f2937;
+  font-weight: 700;
+}
+
+.create-class-buttons button[type="submit"]:hover {
+  background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(214, 251, 79, 0.3);
+}
+
+.create-class-buttons button[type="submit"]:active {
+  transform: translateY(0px);
+}
+
+.create-class-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.create-class-modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.create-class-modal::-webkit-scrollbar-thumb {
+  background: rgba(214, 251, 79, 0.2);
+  border-radius: 3px;
+}
+
+.create-class-modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(214, 251, 79, 0.3);
+}
