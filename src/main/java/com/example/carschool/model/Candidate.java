@@ -31,7 +31,8 @@ public class Candidate extends User{
     @JoinColumn(name = "instructor_id")
     private Instructor instructor;
 
-
+    @Column
+    private String location;
 
 
 }
