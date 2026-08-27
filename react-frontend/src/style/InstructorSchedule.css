@@ -1123,3 +1123,377 @@
 .make-schedule-modal::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+/* =========================================
+   MANUAL SCHEDULE SIDEBAR - IMPROVED
+========================================= */
+
+.manual-schedule-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    gap: 12px;
+}
+
+.manual-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.manual-sidebar-header h2 {
+    margin: 0;
+    color: #172554;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.manual-close-button {
+    background: #f1f5f9;
+    border: none;
+    color: #64748b;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.manual-close-button:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+/* Candidate select */
+.manual-schedule-sidebar .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.manual-schedule-sidebar .form-group label {
+    color: #475569;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.manual-schedule-sidebar .form-group select {
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    color: #1e293b;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.manual-schedule-sidebar .form-group select:focus {
+    border-color: #172554;
+    box-shadow: 0 0 0 3px rgba(23, 37, 84, 0.1);
+    background: #ffffff;
+}
+
+/* Selected candidate info */
+.selected-candidate-info {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    background: #f0f7ff;
+    border-radius: 8px;
+    border-left: 4px solid #172554;
+}
+
+.selected-candidate-info strong {
+    color: #172554;
+    font-size: 0.95rem;
+}
+
+.selected-candidate-info span {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+/* Instructions */
+.manual-instructions {
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    border: 1px dashed #e2e8f0;
+}
+
+/* Selected time display */
+.selected-time-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.time-display-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-display-item .time-label {
+    color: #94a3b8;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-display-item .time-value {
+    color: #1e293b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.time-display-item .time-value.placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+/* Location input */
+.manual-schedule-sidebar .form-group input[type="text"] {
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    color: #1e293b;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.manual-schedule-sidebar .form-group input[type="text"]:focus {
+    border-color: #172554;
+    box-shadow: 0 0 0 3px rgba(23, 37, 84, 0.1);
+    background: #ffffff;
+}
+
+/* Add draft button */
+.add-draft-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #172554;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-draft-button:hover:not(:disabled) {
+    background: #1e3a8a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 37, 84, 0.3);
+}
+
+.add-draft-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.add-draft-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* Draft list */
+.draft-classes-section {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.draft-classes-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.draft-classes-section::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 3px;
+}
+
+.draft-classes-section::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.draft-classes-section::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.draft-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.draft-header h3 {
+    margin: 0;
+    color: #172554;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.draft-header .draft-count {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.no-drafts {
+    color: #94a3b8;
+    font-size: 13px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.draft-class-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.draft-class-item:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.draft-class-item .draft-class-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.draft-class-item .draft-class-info .draft-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.draft-class-item .draft-class-info .draft-time {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.draft-class-item .draft-class-info .draft-location {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.draft-class-item .remove-draft-button {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.draft-class-item .remove-draft-button:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+/* Bottom buttons */
+.manual-sidebar-buttons {
+    display: flex;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 2px solid #f1f5f9;
+}
+
+.manual-sidebar-buttons .cancel-manual-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.manual-sidebar-buttons .cancel-manual-button:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.manual-sidebar-buttons .save-schedule-button {
+    flex: 2;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #172554;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.manual-sidebar-buttons .save-schedule-button:hover:not(:disabled) {
+    background: #1e3a8a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 37, 84, 0.3);
+}
+
+.manual-sidebar-buttons .save-schedule-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.manual-sidebar-buttons .save-schedule-button:active:not(:disabled) {
+    transform: scale(0.98);
+}

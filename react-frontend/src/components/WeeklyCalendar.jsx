@@ -4,9 +4,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 
 export default function WeeklyCalendar({
     events,
+    preferenceEvents = [],
     onEventClick,
     onTimeSelect
 }) {
+    // Actual classes + candidate preference blocks
+    const allEvents = [
+        ...preferenceEvents,
+        ...events
+    ];
+
     return (
         <FullCalendar
             plugins={[
@@ -16,9 +23,10 @@ export default function WeeklyCalendar({
 
             initialView="timeGridWeek"
 
-            events={events}
+            events={allEvents}
 
             selectable={true}
+            selectMirror={true}
 
             select={onTimeSelect}
 
@@ -43,23 +51,31 @@ export default function WeeklyCalendar({
                 hour12: false
             }}
 
-            eventContent={(eventInfo) => (
-                <div className="calendar-event">
+            eventContent={(eventInfo) => {
 
-                    <div className="calendar-event-time">
-                        {eventInfo.timeText}
+                // Don't render anything inside preference blocks
+                if (eventInfo.event.display === "background") {
+                    return null;
+                }
+
+                return (
+                    <div className="calendar-event">
+
+                        <div className="calendar-event-time">
+                            {eventInfo.timeText}
+                        </div>
+
+                        <div className="calendar-event-name">
+                            {eventInfo.event.title}
+                        </div>
+
+                        <div className="calendar-event-status">
+                            {eventInfo.event.extendedProps.status}
+                        </div>
+
                     </div>
-
-                    <div className="calendar-event-name">
-                        {eventInfo.event.title}
-                    </div>
-
-                    <div className="calendar-event-status">
-                        {eventInfo.event.extendedProps.status}
-                    </div>
-
-                </div>
-            )}
+                );
+            }}
         />
     );
 }
