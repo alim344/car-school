@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import WeeklyCalendar from "../../components/WeeklyCalendar";
 import PracticalClassModal from "../../components/PracticalClassModal";
 import CreateClassModal from "../../components/CreateClassModal";
+import MakeScheduleModal from "../../components/MakeScheduleModal";
 
 import "../../style/InstructorSchedule.css";
 
@@ -13,6 +14,8 @@ export default function InstructorSchedule() {
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [newClassStart, setNewClassStart] = useState(null);
     const [newClassEnd, setNewClassEnd] = useState(null);
+
+    const [makeScheduleOpen, setMakeScheduleOpen] = useState(false);
 
     const token = localStorage.getItem("userToken");
 
@@ -50,6 +53,18 @@ export default function InstructorSchedule() {
         }
     }));
 
+    const handleMakeSchedule = (option) => {
+        console.log("Selected option:", option);
+        
+        
+        if (option === 'manual') {
+            setMakeScheduleOpen(false);
+        } else if (option === 'copy') {
+            setMakeScheduleOpen(false);
+        }
+    };
+
+
     return (
         <div className="schedule-container">
 
@@ -70,10 +85,16 @@ export default function InstructorSchedule() {
             {/* Sidebar with two views */}
             <div className="schedule-sidebar">
                 
-                {/* View 1: Button (default) */}
                 {!createModalOpen && (
                     <div className="sidebar-default">
                         <h2>Schedule</h2>
+                         <button
+                            className="make-schedule-button"
+                            onClick={() => setMakeScheduleOpen(true)}
+                        >
+                            📅 Make Schedule
+                        </button>
+
                         <button
                             className="create-class-button"
                             onClick={() => {
@@ -108,6 +129,13 @@ export default function InstructorSchedule() {
             <PracticalClassModal
                 selectedClass={selectedClass}
                 onClose={() => setSelectedClass(null)}
+            />
+
+
+            <MakeScheduleModal
+                isOpen={makeScheduleOpen}
+                onClose={() => setMakeScheduleOpen(false)}
+                onSelect={handleMakeSchedule}
             />
 
         </div>

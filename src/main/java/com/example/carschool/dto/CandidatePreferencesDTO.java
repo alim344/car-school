@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class CandidatePreferencesDTO {
 
-
+    private String name;
     private String candidateEmail;
 
     private List<TimePrefDTO> prefDTOList = new ArrayList<>();

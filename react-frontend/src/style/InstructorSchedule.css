@@ -721,7 +721,7 @@
     animation: slideUp 0.25s ease-out;
 }
 
-/* Reuse header styles */
+
 .create-class-modal .class-modal-header {
     display: flex;
     justify-content: space-between;
@@ -757,12 +757,11 @@
 .create-class-modal .class-modal-close:hover {
     background: #fee2e2;
     color: #ef4444;
-    transform: rotate(90deg);
+    padding: 20px 28px 28px 28px;
 }
 
-/* Create class form */
 .create-class-form {
-    padding: 20px 28px 28px 28px;
+    
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -821,7 +820,6 @@
     cursor: pointer;
 }
 
-/* Create class buttons */
 .create-class-buttons {
     display: flex;
     gap: 12px;
@@ -998,4 +996,130 @@
 .class-info.status-cancelled strong {
     color: #475569 !important;
     font-weight: 700 !important;
+}
+
+
+/* ================================================== */
+/* MAKE SCHEDULE MODAL */
+/* ================================================== */
+
+.make-schedule-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.25s ease-out;
+}
+
+.make-schedule-body {
+    padding: 24px 28px 28px 28px;
+}
+
+.make-schedule-description {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0 0 24px 0;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.make-schedule-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.schedule-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.schedule-option:hover {
+    background: #f1f5f9;
+    border-color: #172554;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.schedule-option:active {
+    transform: scale(0.98);
+}
+
+.schedule-option .option-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.schedule-option .option-content {
+    flex: 1;
+}
+
+.schedule-option .option-content h4 {
+    color: #172554;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.schedule-option .option-content p {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Make Schedule Button in Sidebar */
+.make-schedule-button {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border: 2px solid #172554;
+    border-radius: 8px;
+    background: transparent;
+    color: #172554;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.make-schedule-button:hover {
+    background: #172554;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 37, 84, 0.2);
+}
+
+.make-schedule-button:active {
+    transform: scale(0.98);
+}
+
+.make-schedule-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.make-schedule-modal::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 3px;
+}
+
+.make-schedule-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.make-schedule-modal::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
