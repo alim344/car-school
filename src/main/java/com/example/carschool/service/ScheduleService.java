@@ -34,6 +34,9 @@ public class ScheduleService {
 
     public PracticalClassDTO createAClass(CreateClassDTO createClassDTO, Instructor instructor) {
         PracticalClass pc = new PracticalClass();
+        System.out.println("candidateEmail = " + createClassDTO.getCandidateEmail());
+        System.out.println("startTime = " + createClassDTO.getStartTime());
+        System.out.println("endTime = " + createClassDTO.getEndTime());
 
         pc.setClassStatus(ClassStatus.PENDING);
         pc.setInstructor(instructor);

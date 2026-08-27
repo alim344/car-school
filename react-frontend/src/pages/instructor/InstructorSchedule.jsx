@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import FullCalendar from "@fullcalendar/react";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import WeeklyCalendar from "../../components/WeeklyCalendar";
 import PracticalClassModal from "../../components/PracticalClassModal";
 import CreateClassModal from "../../components/CreateClassModal";
 
@@ -41,7 +39,6 @@ export default function InstructorSchedule() {
         classNames: [
             `class-status-${cls.classStatus.toLowerCase()}`
         ],
-
         extendedProps: {
             status: cls.classStatus,
             location: cls.location,
@@ -56,91 +53,63 @@ export default function InstructorSchedule() {
     return (
         <div className="schedule-container">
 
-            <div className="schedule-header">
-
-                <h2>Create Schedule</h2>
-
-                <button
-                    className="create-class-button"
-                    onClick={() => {
-                        setNewClassStart(null);
-                        setNewClassEnd(null);
-                        setCreateModalOpen(true);
-                    }}
-                >
-                    + Create a Class
-                </button>
-
-            </div>
-            <div className="instructor-calendar">
-
-                <FullCalendar
-                    plugins={[timeGridPlugin, interactionPlugin]}
-                    initialView="timeGridWeek"
+            <div className="calendar-section">
+                <WeeklyCalendar
                     events={events}
-                    height="auto"
-                    slotMinTime="07:00:00"
-                    slotMaxTime="22:00:00"
-                    allDaySlot={false}
-
-                    select={(info) => {
+                    onTimeSelect={(info) => {
                         setNewClassStart(info.start);
                         setNewClassEnd(info.end);
                         setCreateModalOpen(true);
                     }}
-
-                    slotLabelFormat={{
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false
-                    }}
-
-                    eventTimeFormat={{
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false
-                    }}
-
-                    eventContent={(eventInfo) => (
-                        <div className="calendar-event">
-                            <div className="calendar-event-time">
-                                {eventInfo.timeText}
-                            </div>
-
-                            <div className="calendar-event-name">
-                                {eventInfo.event.title}
-                            </div>
-
-                            <div className="calendar-event-status">
-                                {eventInfo.event.extendedProps.status}
-                            </div>
-                        </div>
-                    )}
-
-                    eventClick={(info) => {
+                    onEventClick={(info) => {
                         setSelectedClass(info.event);
                     }}
                 />
+            </div>
 
-            
-                <PracticalClassModal
-                    selectedClass={selectedClass}
-                    onClose={() => setSelectedClass(null)}
-                />
+            {/* Sidebar with two views */}
+            <div className="schedule-sidebar">
+                
+                {/* View 1: Button (default) */}
+                {!createModalOpen && (
+                    <div className="sidebar-default">
+                        <h2>Schedule</h2>
+                        <button
+                            className="create-class-button"
+                            onClick={() => {
+                                setNewClassStart(null);
+                                setNewClassEnd(null);
+                                setCreateModalOpen(true);
+                            }}
+                        >
+                            + Create a Class
+                        </button>
+                    </div>
+                )}
 
-                <CreateClassModal
-                    key={`${newClassStart}-${newClassEnd}`}
-                    isOpen={createModalOpen}
-                    initialStart={newClassStart}
-                    initialEnd={newClassEnd}
-                    onClose={() => setCreateModalOpen(false)}
-                    onCreated={(newClass) => {
-                        setClasses(prev => [...prev, newClass]);
-                    }}
-                />
-                            
+               
+                {createModalOpen && (
+                    <div className="sidebar-create-form">
+                        <CreateClassModal
+                            isOpen={createModalOpen}
+                            initialStart={newClassStart}
+                            initialEnd={newClassEnd}
+                            onClose={() => setCreateModalOpen(false)}
+                            onCreated={(newClass) => {
+                                setClasses(prev => [...prev, newClass]);
+                                setCreateModalOpen(false);
+                            }}
+                        />
+                    </div>
+                )}
 
             </div>
+
+            <PracticalClassModal
+                selectedClass={selectedClass}
+                onClose={() => setSelectedClass(null)}
+            />
+
         </div>
     );
 }

@@ -5,6 +5,7 @@ export default function PracticalClassModal({ selectedClass, onClose }) {
     }
 
     const props = selectedClass.extendedProps;
+     const status = props.status?.toLowerCase() || '';
 
     return (
         <div
@@ -48,7 +49,7 @@ export default function PracticalClassModal({ selectedClass, onClose }) {
                         </strong>
                     </div>
 
-                    <div className="class-info">
+                    <div className={`class-info status-${status}`}>
                         <span>Status</span>
                         <strong>
                             {props.status}
