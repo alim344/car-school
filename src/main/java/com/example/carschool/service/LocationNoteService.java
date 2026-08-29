@@ -25,14 +25,8 @@ public class LocationNoteService {
     @Transactional
     public LocationNoteDTO leaveANote(LocationNoteDTO dto) {
         try {
-            System.out.println("=== Creating Location Note ===");
-            System.out.println("ClassId: " + dto.getClassId());
-            System.out.println("Latitude: " + dto.getLatitude());
-            System.out.println("Longitude: " + dto.getLongitude());
-            System.out.println("Note: " + dto.getNote());
 
             PracticalClass practicalClass = practicalClassService.findById(dto.getClassId());
-            System.out.println("Found PracticalClass with ID: " + practicalClass.getId());
 
             LocationNote note = new LocationNote();
             note.setPracticalClass(practicalClass);
@@ -42,7 +36,6 @@ public class LocationNoteService {
             note.setCreatedAt(LocalDateTime.now());
 
             LocationNote savedNote = locationNoteRepository.save(note);
-            System.out.println("Saved LocationNote with ID: " + savedNote.getId());
 
             return new LocationNoteDTO(savedNote);
 

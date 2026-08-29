@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"candidate_id", "weekStartDate"}))
 @Getter @Setter
 public class Preference {
 
@@ -20,6 +22,9 @@ public class Preference {
 
     @Column
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDate weekStartDate;
 
     @Column
     private Double pickupLatitude;
@@ -37,5 +42,8 @@ public class Preference {
 
     @OneToMany(mappedBy = "preference", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimePreference> timePreferences = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private PreferenceStatus status;
 
 }

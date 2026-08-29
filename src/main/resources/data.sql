@@ -212,3 +212,6 @@ INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALU
 
 
 
+UPDATE preference
+SET week_start_date = date_trunc('week', created_at)::date
+WHERE week_start_date IS NULL;

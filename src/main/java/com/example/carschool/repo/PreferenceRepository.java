@@ -23,4 +23,18 @@ public interface PreferenceRepository extends JpaRepository<Preference, Long> {
             @Param("instructorId") Long instructorId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
-    );}
+    );
+
+
+    boolean existsByCandidateAndWeekStartDate(Candidate candidate, LocalDate startDate);
+
+    Preference findTopByCandidateOrderByWeekStartDateDesc(Candidate candidate);
+
+
+    Preference findByCandidateAndWeekStartDate(Candidate candidate, LocalDate startDate);
+
+}
+
+
+
+
