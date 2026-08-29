@@ -10,6 +10,7 @@ import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -130,10 +131,23 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/inst/delete/{requestId}")
-    public ResponseEntity<?> acceptRequest(@PathVariable Long requestId ) {
+    public ResponseEntity<?> deleteRequest(@PathVariable Long requestId ) {
 
             classRequestService.deleteRequest(requestId);
             return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/inst/request-class/{requestId}")
+    @Transactional
+    public ResponseEntity<?> createClassFromRequest(@RequestBody CreateClassDTO createClassDTO,@PathVariable Long requestId,HttpServletRequest request) {
+
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        var createdClass = scheduleService.createAClass(createClassDTO, instructor);
+        classRequestService.deleteRequest(requestId);
+        return ResponseEntity.ok(createdClass);
+
     }
 
 

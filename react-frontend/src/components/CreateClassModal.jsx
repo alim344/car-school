@@ -5,7 +5,9 @@ export default function CreateClassModal({
     onClose,
     initialStart,
     initialEnd,
-    onCreated
+    onCreated,
+    request = null
+
 }) {
     const [candidates, setCandidates] = useState([]);
     const [candidateEmail, setCandidateEmail] = useState("");
@@ -15,7 +17,10 @@ export default function CreateClassModal({
 
     const token = localStorage.getItem("userToken");
 
-    // Fetch candidates when modal opens
+    const finalCandidateEmail = request
+    ? request.candidate_email
+    : candidateEmail;
+
     useEffect(() => {
         if (!isOpen) {
             return;
@@ -41,6 +46,8 @@ export default function CreateClassModal({
             });
     }, [isOpen, token]);
 
+    
+
     const formatDateTimeLocal = (date) => {
         if (!date) {
             return "";
@@ -55,17 +62,38 @@ export default function CreateClassModal({
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     };
 
+    const formatRequestDateTime = (date, time) => {
+        if (!date || !time) {
+            return "";
+        }
+
+        return `${date}T${time.substring(0, 5)}`;
+    };
+
+    const computedStart = initialStart
+        ? formatDateTimeLocal(initialStart)
+        : (request ? formatRequestDateTime(request.date, request.startTime) : "");
+
+    const computedEnd = initialEnd
+        ? formatDateTimeLocal(initialEnd)
+    : (request ? formatRequestDateTime(request.date, request.endTime) : "");
+
+    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const finalStartTime =
-            startTime || formatDateTimeLocal(initialStart);
+        const url = request
+            ? `http://localhost:8080/schedule/inst/request-class/${request.id}`
+            : "http://localhost:8080/schedule/inst/create-class";
 
-        const finalEndTime =
-            endTime || formatDateTimeLocal(initialEnd);
+        const method = request ? "PATCH" : "POST";
+
+        const finalStartTime = startTime || computedStart;
+        const finalEndTime = endTime || computedEnd;
 
         const createClassDTO = {
-            candidateEmail,
+            candidateEmail: finalCandidateEmail,   
             startTime: finalStartTime,
             endTime: finalEndTime,
             location
@@ -74,17 +102,14 @@ export default function CreateClassModal({
         console.log("Sending:", createClassDTO);
 
         try {
-            const response = await fetch(
-                "http://localhost:8080/schedule/inst/create-class",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify(createClassDTO)
-                }
-            );
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(createClassDTO)
+            });
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
@@ -135,27 +160,32 @@ export default function CreateClassModal({
                 <div className="form-group">
                     <label>Candidate</label>
 
-                    <select
-                        value={candidateEmail}
-                        onChange={(e) =>
-                            setCandidateEmail(e.target.value)
-                        }
-                        required
-                    >
-                        <option value="">
-                            Select candidate
-                        </option>
-
-                        {candidates.map(candidate => (
-                            <option
-                                key={candidate.id}
-                                value={candidate.email}
-                            >
-                                {candidate.firstName}{" "}
-                                {candidate.lastName}
+                    {request ? (
+                        <div className="request-candidate-info">
+                            <strong>{request.candidate_name}</strong>
+                            <span>{request.candidate_email}</span>
+                        </div>
+                    ) : (
+                        <select 
+                            value={candidateEmail}
+                            onChange={(e) => setCandidateEmail(e.target.value)}
+                            required
+                        >
+                            <option value="">
+                                Select candidate
                             </option>
-                        ))}
-                    </select>
+
+                            {candidates.map(candidate => (
+                                <option 
+                                    key={candidate.id}
+                                    value={candidate.email}
+                                >
+                                    {candidate.firstName}{" "}
+                                    {candidate.lastName}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
 
 
@@ -164,15 +194,10 @@ export default function CreateClassModal({
                 <div className="form-group">
                     <label>Start time</label>
 
-                    <input
+                    <input 
                         type="datetime-local"
-                        value={
-                            startTime ||
-                            formatDateTimeLocal(initialStart)
-                        }
-                        onChange={(e) =>
-                            setStartTime(e.target.value)
-                        }
+                        value={startTime || computedStart}
+                        onChange={(e) => setStartTime(e.target.value)}
                         required
                     />
                 </div>
@@ -183,15 +208,10 @@ export default function CreateClassModal({
                 <div className="form-group">
                     <label>End time</label>
 
-                    <input
+                   <input
                         type="datetime-local"
-                        value={
-                            endTime ||
-                            formatDateTimeLocal(initialEnd)
-                        }
-                        onChange={(e) =>
-                            setEndTime(e.target.value)
-                        }
+                        value={endTime || computedEnd}
+                        onChange={(e) => setEndTime(e.target.value)}
                         required
                     />
                 </div>

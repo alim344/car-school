@@ -34,6 +34,9 @@ export default function InstructorSchedule() {
 
     const [manualDrafts, setManualDrafts] = useState([]);
 
+    const [classRequests, setClassRequests] = useState([]);
+    const [selectedRequest, setSelectedRequest] = useState(null);
+    const [acceptRequestOpen, setAcceptRequestOpen] = useState(false);
  
 
     const token = localStorage.getItem("userToken");
@@ -57,8 +60,25 @@ export default function InstructorSchedule() {
             .catch(error => {
                 console.error("Error fetching schedule:", error);
             });
-    }, [token]);
 
+        fetch("http://localhost:8080/schedule/inst/requests", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                setClassRequests(data);
+            })
+            .catch(error => {
+                console.error("Error fetching class requests:", error);
+            });
+    }, [token]);
    
 
     const events = classes.map(cls => ({
@@ -79,6 +99,20 @@ export default function InstructorSchedule() {
             remarks: cls.remarks
         }
     }));
+
+
+    const requestEvents = selectedRequest
+        ? [{
+            id: `request-${selectedRequest.id}`,
+            start: `${selectedRequest.date}T${selectedRequest.startTime}`,
+            end: `${selectedRequest.date}T${selectedRequest.endTime}`,
+            display: "background",
+            classNames: ["selected-request"],
+            extendedProps: {
+                request: true
+            }
+        }]
+        : [];
 
     
 
@@ -122,6 +156,7 @@ export default function InstructorSchedule() {
 
     const calendarEvents = [
         ...preferenceEvents,
+         ...requestEvents,
         ...events,
         ...draftEvents
     ];
@@ -143,6 +178,59 @@ export default function InstructorSchedule() {
         });
 
         return existingOverlap || draftOverlap;
+    };
+
+    const handleRequestClick = (request) => {
+        setSelectedRequest(prev =>
+            prev?.id === request.id ? null : request
+        );
+    };
+
+
+    const handleDeclineRequest = async (requestId) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/schedule/inst/delete/${requestId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            setClassRequests(prev =>
+                prev.filter(request => request.id !== requestId)
+            );
+
+            if (selectedRequest?.id === requestId) {
+                setSelectedRequest(null);
+            }
+
+        } catch (error) {
+            console.error("Error declining request:", error);
+            alert("Could not decline the request.");
+        }
+    };
+
+    const handleAcceptRequest = (request) => {
+        setSelectedRequest(request);
+
+        setNewClassStart(
+            new Date(`${request.date}T${request.startTime}`)
+        );
+
+        setNewClassEnd(
+            new Date(`${request.date}T${request.endTime}`)
+        );
+
+        setCreateModalOpen(false);
+        setManualMode(false);
+        setAcceptRequestOpen(true);
     };
 
    
@@ -245,10 +333,17 @@ export default function InstructorSchedule() {
 
     const handleTimeSelect = (info) => {
 
+        if (acceptRequestOpen) {
+            setNewClassStart(info.start);
+            setNewClassEnd(info.end);
+            return;
+        }
+
         if (hasOverlap(info.start, info.end)) {
             alert("You already have a class scheduled during this time.");
             return;
         }
+
         if (manualMode) {
             setNewClassStart(info.start);
             setNewClassEnd(info.end);
@@ -380,6 +475,18 @@ export default function InstructorSchedule() {
             });
         } else {
             setClasses(prev => [...prev, newClass]);
+
+
+            if (acceptRequestOpen && selectedRequest) {
+                const requestId = selectedRequest.id;
+
+                setClassRequests(prev =>
+                    prev.filter(request => request.id !== requestId)
+                );
+
+                setSelectedRequest(null);
+                setAcceptRequestOpen(false);
+            }
         }
         setCreateModalOpen(false);
     };
@@ -402,7 +509,7 @@ export default function InstructorSchedule() {
          
             <div className="schedule-sidebar">
 
-                {!manualMode && !createModalOpen && (
+                {!manualMode && !createModalOpen && !acceptRequestOpen && (
                     <div className="sidebar-default">
                         <h2>Schedule</h2>
                         <button
@@ -421,10 +528,70 @@ export default function InstructorSchedule() {
                         >
                             + Create a Class
                         </button>
+
+                        <div className="requests-section">
+                            <div className="requests-header">
+                                <h3>Requests</h3>
+                                <span className="requests-count">
+                                    {classRequests.length}
+                                </span>
+                            </div>
+
+                            <div className="requests-list">
+                                    {classRequests.length === 0 ? (
+                                        <p className="no-requests">
+                                            No pending requests.
+                                        </p>
+                                    ) : (
+                                    classRequests.map(request => (
+                                       <div
+                                            className={`request-item ${
+                                                selectedRequest?.id === request.id ? "selected-request-item" : ""
+                                            }`}
+                                            key={request.id}
+                                            onClick={() => handleRequestClick(request)}
+                                        >
+                                            <span className="request-name">
+                                                {request.candidate_name}
+                                            </span>
+
+                                            <div className="request-actions">
+                                                <button
+                                                    className="request-decline-button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeclineRequest(request.id);
+                                                    }}
+                                                    title="Decline request"
+                                                >
+                                                    ×
+                                                </button>
+
+                                               <button 
+                                                    className="request-accept-button" 
+                                                    onClick={(e) => { 
+                                                        e.stopPropagation();
+                                                        handleAcceptRequest(request);
+                                                    }} 
+                                                    title="Accept request"
+                                                >
+                                                    ✓
+                                                </button>
+                                            </div>
+                                        </div>
+                                                                                ))
+                                    )}
+                                </div>
+                        </div>
+
+
+
+
+
                     </div>
                 )}
 
-                {createModalOpen && !manualMode && (
+                {createModalOpen && !manualMode && !acceptRequestOpen &&(
                     <div className="sidebar-create-form">
                         <CreateClassModal
                             isOpen={createModalOpen}
@@ -452,6 +619,25 @@ export default function InstructorSchedule() {
                         onTimeSelect={handleClearTime}
                     />
                 )}
+
+                 {acceptRequestOpen && selectedRequest && (
+                    <CreateClassModal
+                        isOpen={acceptRequestOpen}
+                        request={selectedRequest}
+                        initialStart={newClassStart}
+                        initialEnd={newClassEnd}
+                        onClose={() => {
+                            setAcceptRequestOpen(false);
+                            setSelectedRequest(null);
+                            setNewClassStart(null);
+                            setNewClassEnd(null);
+                        }}
+                        onCreated={handleClassCreated}
+                    />
+                )}
+
+
+
             </div>
 
           
@@ -481,6 +667,9 @@ export default function InstructorSchedule() {
                 />
             )}
 
+           
+
+           
         </div>
     );
 }

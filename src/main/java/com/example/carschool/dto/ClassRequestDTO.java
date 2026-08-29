@@ -13,6 +13,8 @@ public class ClassRequestDTO {
 
     private String candidate_name;
 
+    private String candidate_email;
+
     private Long id;
 
     private LocalDate date;
@@ -28,6 +30,7 @@ public class ClassRequestDTO {
         this.startTime = classRequest.getStartTime();
         this.endTime = classRequest.getEndTime();
         this.location = classRequest.getLocation();
+        this.candidate_email = classRequest.getCandidate().getEmail();
         this.candidate_name = classRequest.getCandidate().getName() + " " + classRequest.getCandidate().getLastname();
     }
 
