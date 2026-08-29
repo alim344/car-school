@@ -333,6 +333,19 @@ export default function InstructorSchedule() {
 
     const handleTimeSelect = (info) => {
 
+
+        const now = new Date();
+
+        if (info.start < now) {
+            alert("You cannot create a class in the past.");
+            return;
+        }
+
+        if (info.end <= now) {
+            alert("You cannot create a class in the past.");
+            return;
+        }
+
         if (acceptRequestOpen) {
             setNewClassStart(info.start);
             setNewClassEnd(info.end);

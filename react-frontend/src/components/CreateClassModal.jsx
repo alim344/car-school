@@ -46,6 +46,18 @@ export default function CreateClassModal({
             });
     }, [isOpen, token]);
 
+    const getMinDateTime = () => {
+        const now = new Date();
+
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
     
 
     const formatDateTimeLocal = (date) => {
@@ -91,6 +103,25 @@ export default function CreateClassModal({
 
         const finalStartTime = startTime || computedStart;
         const finalEndTime = endTime || computedEnd;
+
+        const now = new Date();
+        const selectedStart = new Date(finalStartTime);
+        const selectedEnd = new Date(finalEndTime);
+
+        if (selectedStart < now) {
+            alert("You cannot create a class in the past.");
+            return;
+        }
+
+        if (selectedEnd <= now) {
+            alert("The class end time must be in the future.");
+            return;
+        }
+
+        if (selectedEnd <= selectedStart) {
+            alert("End time must be after start time.");
+            return;
+        }
 
         const createClassDTO = {
             candidateEmail: finalCandidateEmail,   
@@ -196,6 +227,7 @@ export default function CreateClassModal({
 
                     <input 
                         type="datetime-local"
+                        min={getMinDateTime()}
                         value={startTime || computedStart}
                         onChange={(e) => setStartTime(e.target.value)}
                         required
@@ -210,6 +242,7 @@ export default function CreateClassModal({
 
                    <input
                         type="datetime-local"
+                        min={getMinDateTime()}
                         value={endTime || computedEnd}
                         onChange={(e) => setEndTime(e.target.value)}
                         required
