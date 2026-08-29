@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,8 +58,22 @@ public class ScheduleService {
 
         if (conflict) {
             throw new IllegalArgumentException(
-                    "Instructor already has a class during this time."
-            );}
+                    "Instructor already has a class during this time.");}
+
+        if (createClassDTO.getStartTime().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("Cannot schedule a class in the past.");
+        }
+
+        if (createClassDTO.getStartTime().isBefore(LocalDateTime.now().plusMinutes(10))) {
+            throw new IllegalArgumentException("Start time must be at least 10 minutes from now.");
+        }
+
+        if (!createClassDTO.getEndTime().isAfter(createClassDTO.getStartTime())) {
+            throw new IllegalArgumentException("End time must be after start time.");
+        }
+
+
+
         pc.setClassStatus(ClassStatus.PENDING);
         pc.setInstructor(instructor);
         pc.setScheduledStartTime(createClassDTO.getStartTime());

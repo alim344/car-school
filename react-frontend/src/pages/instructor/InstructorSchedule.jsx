@@ -346,6 +346,11 @@ export default function InstructorSchedule() {
             return;
         }
 
+        if(info.end < info.start){
+            alert("Start time has to be before end time");
+            return;
+        }
+
         if (acceptRequestOpen) {
             setNewClassStart(info.start);
             setNewClassEnd(info.end);

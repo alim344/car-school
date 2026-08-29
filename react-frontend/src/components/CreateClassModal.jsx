@@ -58,6 +58,19 @@ export default function CreateClassModal({
         return `${year}-${month}-${day}T${hours}:${minutes}`;
     };
 
+    const getMinimumEndTime = () => {
+        const selectedStart = startTime || computedStart;
+
+        if (!selectedStart) {
+            return getMinDateTime();
+        }
+
+        const date = new Date(selectedStart);
+        date.setMinutes(date.getMinutes() + 1);
+
+        return formatDateTimeLocal(date);
+    };
+
     
 
     const formatDateTimeLocal = (date) => {
@@ -242,7 +255,7 @@ export default function CreateClassModal({
 
                    <input
                         type="datetime-local"
-                        min={getMinDateTime()}
+                        min={getMinimumEndTime()}
                         value={endTime || computedEnd}
                         onChange={(e) => setEndTime(e.target.value)}
                         required
