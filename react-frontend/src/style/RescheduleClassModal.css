@@ -1,0 +1,119 @@
+
+.reschedule-class-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.25s ease-out;
+}
+
+
+.reschedule-class-form {
+    padding: 20px 28px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.reschedule-class-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.reschedule-class-form .form-group label {
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reschedule-class-form .form-group input {
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    color: #1e293b;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reschedule-class-form .form-group input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: #ffffff;
+}
+
+.reschedule-class-form .form-group input::placeholder {
+    color: #94a3b8;
+}
+
+.reschedule-class-form .form-group input[type="date"],
+.reschedule-class-form .form-group input[type="time"] {
+    color-scheme: light;
+    cursor: pointer;
+}
+
+.reschedule-class-form .form-group input[type="date"]::-webkit-calendar-picker-indicator,
+.reschedule-class-form .form-group input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 4px;
+}
+
+.reschedule-class-form .reschedule-class-button {
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 10px;
+    background: #3b82f6;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.reschedule-class-form .reschedule-class-button:hover {
+    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.reschedule-class-form .reschedule-class-button:active {
+    transform: scale(0.98);
+}
+
+
+
+
+.reschedule-class-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.reschedule-class-modal::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 3px;
+}
+
+.reschedule-class-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.reschedule-class-modal::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}

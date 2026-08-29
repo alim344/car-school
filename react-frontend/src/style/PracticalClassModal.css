@@ -1,0 +1,417 @@
+.class-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 9999;
+
+    padding: 20px;
+
+    animation: fadeIn 0.25s ease-out;
+}
+
+
+.class-modal {
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 0;
+
+    max-width: 500px;
+    width: 100%;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    animation: slideUp 0.25s ease-out;
+}
+
+
+.class-modal-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 24px 28px 16px 28px;
+
+    border-bottom: 2px solid #f1f5f9;
+}
+
+
+.class-modal-header h2 {
+    color: #172554;
+
+    font-size: 1.3rem;
+    font-weight: 700;
+
+    margin: 0;
+
+    letter-spacing: 0.3px;
+}
+
+
+.class-modal-close {
+    background: #f1f5f9;
+
+    border: none;
+
+    color: #64748b;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    line-height: 1;
+}
+
+
+.class-modal-close:hover {
+    background: #fee2e2;
+
+    color: #ef4444;
+
+    transform: rotate(90deg);
+}
+
+
+.class-modal-body {
+    padding: 20px 28px 28px 28px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.class-info {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 12px 14px;
+
+    background: #f8fafc;
+
+    border-radius: 8px;
+
+    border: 1px solid #f1f5f9;
+
+    transition: all 0.2s ease;
+}
+
+
+.class-info:hover {
+    background: #f1f5f9;
+
+    border-color: #e2e8f0;
+}
+
+
+.class-info span {
+    color: #64748b;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+
+    flex-shrink: 0;
+}
+
+
+.class-info strong {
+    color: #1e293b;
+
+    font-size: 0.9rem;
+
+    font-weight: 600;
+
+    text-align: right;
+
+    word-break: break-word;
+
+    max-width: 65%;
+}
+
+
+/* =========================
+   CANDIDATE PENDING ACTIONS
+========================= */
+
+.pending-class-actions {
+    margin-top: 8px;
+}
+
+
+.pending-action-buttons {
+    display: flex;
+
+    gap: 12px;
+
+    width: 100%;
+}
+
+
+.pending-action-buttons button {
+    flex: 1;
+
+    padding: 12px 20px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    font-size: 0.95rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+
+/* DECLINE */
+
+.decline-class-button {
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    border: 2px solid #fecaca !important;
+}
+
+
+.decline-class-button:hover {
+    background: #dc2626;
+
+    color: white;
+
+    border-color: #dc2626 !important;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+
+.decline-class-button:active {
+    transform: scale(0.98);
+}
+
+
+/* ACCEPT */
+
+.accept-class-button {
+    background: #172554;
+
+    color: white;
+}
+
+
+.accept-class-button:hover {
+    background: #1e3a8a;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 4px 12px rgba(23, 37, 84, 0.3);
+}
+
+
+.accept-class-button:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   STATUS COLORS
+========================= */
+
+.class-info.status-pending {
+    background: #fef3c7 !important;
+
+    border-color: #f59e0b !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-pending strong {
+    color: #d97706 !important;
+}
+
+
+.class-info.status-accepted {
+    background: #dcfce7 !important;
+
+    border-color: #22c55e !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-accepted strong {
+    color: #16a34a !important;
+}
+
+
+.class-info.status-rejected {
+    background: #fef9c3 !important;
+
+    border-color: #eab308 !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-rejected strong {
+    color: #ca8a04 !important;
+}
+
+
+.class-info.status-started {
+    background: #edf7c2 !important;
+
+    border-color: #9fa63e !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-started strong {
+    color: #52601a !important;
+}
+
+
+.class-info.status-ended {
+    background: #f1f5f9 !important;
+
+    border-color: #6b7280 !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-ended strong {
+    color: #4b5563 !important;
+}
+
+
+.class-info.status-bad_end {
+    background: #fca5a5 !important;
+
+    border-color: #991b1b !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-bad_end strong {
+    color: #7f1d1d !important;
+}
+
+
+.class-info.status-cancelled {
+    background: #e2e8f0 !important;
+
+    border-color: #64748b !important;
+
+    border-width: 2px !important;
+}
+
+
+.class-info.status-cancelled strong {
+    color: #475569 !important;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.class-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+
+.class-modal::-webkit-scrollbar-track {
+    background: #f8fafc;
+
+    border-radius: 3px;
+}
+
+
+.class-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+
+    border-radius: 3px;
+}
+
+
+.class-modal::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0) scale(1);
+    }
+}

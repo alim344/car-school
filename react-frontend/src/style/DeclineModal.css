@@ -1,0 +1,110 @@
+
+.decline-class-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 0;
+    max-width: 440px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.25s ease-out;
+}
+
+.decline-class-body {
+    padding: 24px 28px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.decline-class-body p {
+    color: #475569;
+    font-size: 1rem;
+    margin: 0;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.decline-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.skip-week-button {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #f59e0b;
+    border-radius: 10px;
+    background: #fffbeb;
+    color: #d97706;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.skip-week-button:hover {
+    background: #fef3c7;
+    border-color: #d97706;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+}
+
+.skip-week-button:active {
+    transform: scale(0.98);
+}
+
+.reschedule-class-button {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #3b82f6;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.reschedule-class-button:hover {
+    background: #dbeafe;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.reschedule-class-button:active {
+    transform: scale(0.98);
+}
+
+
+
+.decline-class-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.decline-class-modal::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 3px;
+}
+
+.decline-class-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.decline-class-modal::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
