@@ -1,12 +1,13 @@
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import "../style/WeeklyCalendar.css";
 
 export default function WeeklyCalendar({
-    events,
+    events = [],
     preferenceEvents = [],
-    onEventClick,
-    onTimeSelect
+    onEventClick = () => {},
+    onTimeSelect = () => {}
 }) {
     const allEvents = [
         ...preferenceEvents,

@@ -1,13 +1,14 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.CandidatePreferencesDTO;
 import com.example.carschool.dto.CreateClassDTO;
 import com.example.carschool.dto.PracticalClassDTO;
-import com.example.carschool.model.Candidate;
-import com.example.carschool.model.ClassStatus;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.PracticalClass;
+import com.example.carschool.dto.TimePrefDTO;
+import com.example.carschool.model.*;
+import com.example.carschool.repo.ClassRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -23,10 +24,21 @@ public class ScheduleService {
     private  CandidateService candidateService;
     @Autowired
     private PracticalClassService practicalClassService;
+    @Autowired
+    private ClassRequestRepository classRequestRepository;
 
 
     public List<PracticalClassDTO> getInstructorSchedule(Instructor instructor) {
         List<PracticalClass> classes = practicalClassService.findByInstructor(instructor);
+        List<PracticalClassDTO> practicalClassDTOS = new ArrayList<>();
+        for (PracticalClass practicalClass : classes) {
+            practicalClassDTOS.add(new PracticalClassDTO(practicalClass));
+        }
+        return practicalClassDTOS;
+    }
+
+    public List<PracticalClassDTO> getCandidateSchedule(Candidate candidate) {
+        List<PracticalClass> classes = practicalClassService.findByCandidate(candidate);
         List<PracticalClassDTO> practicalClassDTOS = new ArrayList<>();
         for (PracticalClass practicalClass : classes) {
             practicalClassDTOS.add(new PracticalClassDTO(practicalClass));
@@ -102,5 +114,32 @@ public class ScheduleService {
 
     }
 
+
+    //requests
+
+    public void acceptClass(Long pc_id){
+        PracticalClass pc = practicalClassService.findById(pc_id);
+        pc.setClassStatus(ClassStatus.ACCEPTED);
+        practicalClassService.save(pc);
+    }
+
+
+    @Transactional
+    public void requestClass(TimePrefDTO dto, Candidate candidate){
+
+        ClassRequest request = new ClassRequest();
+        request.setStartTime(dto.getStartTime());
+        request.setEndTime(dto.getEndTime());
+        request.setCandidate(candidate);
+        request.setDate(dto.getDate());
+        classRequestRepository.save(request);
+
+        practicalClassService.deleteById(dto.getId());
+
+    }
+
+    public void declineClass(Long pc_id){
+        practicalClassService.deleteById(pc_id);
+    }
 
 }

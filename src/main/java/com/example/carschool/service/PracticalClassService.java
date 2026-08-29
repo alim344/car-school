@@ -123,7 +123,9 @@ public class PracticalClassService {
         return practicalClassRepository.findByInstructor(instructor);
     }
 
-
+    public List<PracticalClass> findByCandidate(Candidate candidate){
+        return practicalClassRepository.findByCandidate(candidate);
+    }
 
 
     public List<PracticalClass> getPeriodInstructorClasses(Instructor instructor,LocalDateTime startTime,LocalDateTime endTime){
@@ -145,6 +147,14 @@ public class PracticalClassService {
 
     public void save(PracticalClass practicalClass){
         practicalClassRepository.save(practicalClass);
+    }
+
+    public void delete(PracticalClass practicalClass){
+        practicalClassRepository.delete(practicalClass);
+    }
+
+    public void deleteById(Long id){
+        practicalClassRepository.deleteById(id);
     }
 
     public boolean classExists(Instructor instructor, LocalDateTime endTime, LocalDateTime startTime){

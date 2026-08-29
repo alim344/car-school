@@ -1,5 +1,6 @@
 package com.example.carschool.repo;
 
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.PracticalClass;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 public interface PracticalClassRepository extends JpaRepository<PracticalClass, Long> {
 
     List<PracticalClass> findByInstructor(Instructor instructor);
+    List<PracticalClass> findByCandidate(Candidate candidate);
 
     List<PracticalClass> findByInstructorAndScheduledStartTimeBetween(Instructor instructor, LocalDateTime startOfDay, LocalDateTime endOfDay);
 
@@ -20,6 +22,8 @@ public interface PracticalClassRepository extends JpaRepository<PracticalClass, 
             LocalDateTime endTime,
             LocalDateTime startTime
     );
+
+
 
 
 }

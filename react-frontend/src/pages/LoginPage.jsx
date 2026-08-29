@@ -35,7 +35,7 @@ export default function LoginPage(){
             localStorage.setItem('userToken',token);
 
             if(role == "ROLE_CANDIDATE"){
-                navigate('/candidate_main');
+                navigate('/candidate');
             }else if(role == "ROLE_ADMIN"){
                 navigate('/admin_main');
             }else{
