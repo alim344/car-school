@@ -75,7 +75,7 @@ export default function CreateClassModal({
 
         try {
             const response = await fetch(
-                "http://localhost:8080/schedule/create-class",
+                "http://localhost:8080/schedule/inst/create-class",
                 {
                     method: "POST",
                     headers: {

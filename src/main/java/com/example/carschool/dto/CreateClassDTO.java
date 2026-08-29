@@ -27,4 +27,8 @@ public class CreateClassDTO {
         this.location = pc.getLocation();
         this.candidateName = pc.getCandidate().getName() + " " + pc.getCandidate().getLastname();
     }
+
+
+
+
 }

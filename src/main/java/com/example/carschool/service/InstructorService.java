@@ -19,6 +19,8 @@ public class InstructorService {
     private  InstructorRepository instructorRepository;
     @Autowired
     private PracticalClassService practicalClassService;
+    @Autowired
+    private ClassRequestService classRequestService;
 
 
     public Instructor findByEmail(String email) {
@@ -36,7 +38,7 @@ public class InstructorService {
         Integer studentNum = instructor.getCandidates().size();
         List<PracticalClass> pc = practicalClassService.getPeriodInstructorClasses(instructor, startOfDay, endOfDay);
         Integer classesTodayNum = pc.size();
-        Integer requestNum = 1;
+        Integer requestNum = classRequestService.getNumberOfClassRequests(instructor);
 
         List<PracticalClassDTO> pcDto = pc.stream().map(PracticalClassDTO::new).toList();
 

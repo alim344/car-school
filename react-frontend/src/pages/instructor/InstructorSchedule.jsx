@@ -40,7 +40,7 @@ export default function InstructorSchedule() {
 
 
     useEffect(() => {
-        fetch("http://localhost:8080/schedule/get-inst", {
+        fetch("http://localhost:8080/schedule/inst/get", {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -151,7 +151,7 @@ export default function InstructorSchedule() {
         if (option === "manual") {
             try {
                 const response = await fetch(
-                    "http://localhost:8080/schedule/candidate-prefs",
+                    "http://localhost:8080/schedule/inst/candidate-prefs",
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -181,13 +181,13 @@ export default function InstructorSchedule() {
         if (option === "copy") {
             try {
                 const [copyResponse, prefsResponse] = await Promise.all([
-                    fetch("http://localhost:8080/schedule/copy", {
+                    fetch("http://localhost:8080/schedule/inst/copy", {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
                     }),
 
-                    fetch("http://localhost:8080/schedule/candidate-prefs", {
+                    fetch("http://localhost:8080/schedule/inst/candidate-prefs", {
                         headers: {
                             Authorization: `Bearer ${token}`
                         }
@@ -310,7 +310,7 @@ export default function InstructorSchedule() {
 
         try {
             const response = await fetch(
-                "http://localhost:8080/schedule/create-manual",
+                "http://localhost:8080/schedule/inst/create-manual",
                 {
                     method: "POST",
                     headers: {

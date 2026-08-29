@@ -1,5 +1,6 @@
 package com.example.carschool.model;
 
+import com.example.carschool.service.InstructorService;
 import com.example.carschool.service.PracticalClassService;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,6 +32,13 @@ public class ClassRequest {
     private LocalTime startTime;
     @Column
     private LocalTime endTime;
+
+    @Column
+    private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "instructor_id", nullable = false)
+    private Instructor instructor;
 
 
 }

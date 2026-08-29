@@ -132,6 +132,7 @@ public class ScheduleService {
         request.setEndTime(dto.getEndTime());
         request.setCandidate(candidate);
         request.setDate(dto.getDate());
+        request.setInstructor(candidate.getInstructor());
         classRequestRepository.save(request);
 
         practicalClassService.deleteById(dto.getId());

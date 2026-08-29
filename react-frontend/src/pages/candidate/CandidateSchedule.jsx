@@ -24,7 +24,7 @@ export default function CandidateSchedule(){
     
     
         useEffect(() => {
-            fetch("http://localhost:8080/schedule/get-cand", {
+            fetch("http://localhost:8080/schedule/cand/get-cand", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -59,7 +59,7 @@ export default function CandidateSchedule(){
             try {
 
                 const response = await fetch(
-                    `http://localhost:8080/schedule/accept-class/${classId}`,
+                    `http://localhost:8080/schedule/cand/accept-class/${classId}`,
                     {
                         method: "PATCH",
                         headers: {
@@ -119,7 +119,7 @@ export default function CandidateSchedule(){
         try {
 
             const response = await fetch(
-                "http://localhost:8080/schedule/request-class",
+                "http://localhost:8080/schedule/cand/request-class",
                 {
                     method: "PATCH",
 
@@ -176,7 +176,7 @@ export default function CandidateSchedule(){
             try {
 
                 const response = await fetch(
-                    `http://localhost:8080/schedule/decline-class/${classToDecline}`,
+                    `http://localhost:8080/schedule/cand/decline-class/${classToDecline}`,
                     {
                         method: "DELETE",
                         headers: {

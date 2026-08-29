@@ -1,16 +1,11 @@
 package com.example.carschool.controller;
 
-import com.example.carschool.dto.CandidatePreferencesDTO;
-import com.example.carschool.dto.CreateClassDTO;
-import com.example.carschool.dto.PracticalClassDTO;
-import com.example.carschool.dto.TimePrefDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.Candidate;
+import com.example.carschool.model.ClassRequest;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Preference;
-import com.example.carschool.service.CandidateService;
-import com.example.carschool.service.InstructorService;
-import com.example.carschool.service.PreferenceService;
-import com.example.carschool.service.ScheduleService;
+import com.example.carschool.service.*;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +31,10 @@ public class ScheduleController {
     private ScheduleService scheduleService;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private ClassRequestService classRequestService;
 
-    @GetMapping("/candidate-prefs")
+    @GetMapping("/inst/candidate-prefs")
     public ResponseEntity<List<CandidatePreferencesDTO>> getCandidatesPrefs(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -48,7 +45,7 @@ public class ScheduleController {
 
     //get schedule
 
-    @GetMapping("/get-inst")
+    @GetMapping("/inst/get")
     public ResponseEntity<List<PracticalClassDTO>> getInstructorSchedule(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -57,7 +54,7 @@ public class ScheduleController {
     }
 
 
-    @GetMapping("/get-cand")
+    @GetMapping("/cand/get-cand")
     public ResponseEntity<List<PracticalClassDTO>> getCandidateSchedule(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -74,7 +71,7 @@ public class ScheduleController {
 
     //make schedule
 
-    @PostMapping("/create-class")
+    @PostMapping("/inst/create-class")
     public ResponseEntity<PracticalClassDTO> createClass(@RequestBody CreateClassDTO createClassDTO, HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -83,7 +80,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.createAClass(createClassDTO, instructor));
     }
 
-    @PostMapping("/create-manual")
+    @PostMapping("/inst/create-manual")
     public ResponseEntity<List<PracticalClassDTO>> createManual(HttpServletRequest request, @RequestBody List<CreateClassDTO> dtos) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -91,7 +88,7 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleService.createManualSchedule(dtos,instructor));
     }
 
-    @GetMapping("/copy")
+    @GetMapping("/inst/copy")
     public ResponseEntity<List<CreateClassDTO>> copySchedule(HttpServletRequest request){
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
@@ -101,13 +98,13 @@ public class ScheduleController {
 
 
     //requests
-    @PatchMapping("/accept-class/{class_id}")
+    @PatchMapping("/cand/accept-class/{class_id}")
     public ResponseEntity<?> acceptClass(@PathVariable Long class_id) {
         scheduleService.acceptClass(class_id);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/request-class")
+    @PatchMapping("/cand/request-class")
     public ResponseEntity<?> requestClass(@RequestBody TimePrefDTO dto,HttpServletRequest request) {
 
         String token = tokenUtils.getToken(request);
@@ -117,11 +114,28 @@ public class ScheduleController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/decline-class/{class_id}")
+    @DeleteMapping("/cand/decline-class/{class_id}")
     public ResponseEntity<?> declineClass(@PathVariable Long class_id) {
 
         scheduleService.declineClass(class_id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/inst/requests")
+    public ResponseEntity<List<ClassRequestDTO>> getInstructorRequests(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(classRequestService.getInstructorRequests(instructor));
+    }
+
+    @DeleteMapping("/inst/delete/{requestId}")
+    public ResponseEntity<?> acceptRequest(@PathVariable Long requestId ) {
+
+            classRequestService.deleteRequest(requestId);
+            return ResponseEntity.ok().build();
+    }
+
+
 
 }
