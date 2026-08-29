@@ -3,7 +3,7 @@ import "../style/RescheduleCLassModal.css";
 
 export default function RescheduleClassModal({
     isOpen,
-    classId,
+    classToReschedule,
     onClose,
     onSubmit
 }) {
@@ -12,6 +12,63 @@ export default function RescheduleClassModal({
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [location, setLocation] = useState("");
+
+
+    const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+};
+
+
+const getWeekRange = () => {
+
+        if (!classToReschedule?.scheduledStartTime) {
+            return {
+                minDate: "",
+                maxDate: ""
+            };
+        }
+
+        const classDate = new Date(
+            classToReschedule.scheduledStartTime
+        );
+
+        const day = classDate.getDay();
+
+        const mondayOffset =
+            day === 0 ? -6 : 1 - day;
+
+        const monday = new Date(classDate);
+        monday.setDate(
+            classDate.getDate() + mondayOffset
+        );
+
+        const sunday = new Date(monday);
+        sunday.setDate(
+            monday.getDate() + 6
+        );
+
+        return {
+            minDate: formatDate(monday),
+            maxDate: formatDate(sunday)
+        };
+    };
+
+    const { minDate, maxDate } = getWeekRange();
+
+    const getToday = () => {
+        return formatDate(new Date());
+    };
+
+    const today = getToday();
+
+    const actualMinDate =
+        minDate && minDate > today
+            ? minDate
+            : today;
 
 
     if (!isOpen) {
@@ -23,8 +80,36 @@ export default function RescheduleClassModal({
 
         e.preventDefault();
 
+        const selectedStart =
+        new Date(`${date}T${startTime}`);
+
+        const selectedEnd =
+            new Date(`${date}T${endTime}`);
+
+        const now = new Date();
+
+        if (selectedStart < now) {
+            alert("You cannot reschedule a class in the past.");
+            return;
+        }
+
+        if (selectedEnd <= selectedStart) {
+            alert("End time must be after start time.");
+            return;
+        }
+
+        if (
+            date < actualMinDate ||
+            date > maxDate
+        ) {
+            alert(
+                "You can only reschedule the class within its original week."
+            );
+            return;
+        }
+
         onSubmit({
-            id: Number(classId),
+            id: Number(classToReschedule.id),
             date,
             startTime,
             endTime,
@@ -32,6 +117,9 @@ export default function RescheduleClassModal({
         });
 
     };
+
+
+    
 
 
     return (
@@ -76,6 +164,8 @@ export default function RescheduleClassModal({
 
                         <input
                             type="date"
+                            min={actualMinDate}
+                            max={maxDate}
                             value={date}
                             onChange={(e) =>
                                 setDate(e.target.value)

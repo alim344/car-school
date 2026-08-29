@@ -18,6 +18,7 @@ export default function CandidateSchedule(){
     const [classToDecline, setClassToDecline] = useState(null);
 
     const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
+    
 
    
     const token = localStorage.getItem("userToken");
@@ -45,7 +46,11 @@ export default function CandidateSchedule(){
 
         const handleDeclineClick = (classId) => {
 
-            setClassToDecline(classId);
+            const classToDecline = classes.find(
+                cls => cls.id === Number(classId)
+            );
+
+            setClassToDecline(classToDecline);
 
             setSelectedClass(null);
 
@@ -176,7 +181,7 @@ export default function CandidateSchedule(){
             try {
 
                 const response = await fetch(
-                    `http://localhost:8080/schedule/cand/decline-class/${classToDecline}`,
+                    `http://localhost:8080/schedule/cand/decline-class/${classToDecline.id}`,
                     {
                         method: "DELETE",
                         headers: {
@@ -191,7 +196,7 @@ export default function CandidateSchedule(){
 
                 setClasses(prev =>
                     prev.filter(
-                        cls => cls.id !== Number(classToDecline)
+                        cls => cls.id !== classToDecline.id
                     )
                 );
 
@@ -249,7 +254,7 @@ export default function CandidateSchedule(){
 
                     <RescheduleClassModal
                         isOpen={rescheduleModalOpen}
-                        classId={classToDecline}
+                        classToReschedule={classToDecline}
                         onClose={() => {
                             setRescheduleModalOpen(false);
                             setClassToDecline(null);
