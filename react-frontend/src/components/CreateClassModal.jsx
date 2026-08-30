@@ -226,6 +226,8 @@ export default function CreateClassModal({
                                 >
                                     {candidate.firstName}{" "}
                                     {candidate.lastName}
+                                    {" — "}
+                                  {candidate.numberOfClassesLeft} 
                                 </option>
                             ))}
                         </select>

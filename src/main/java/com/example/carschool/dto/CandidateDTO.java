@@ -13,6 +13,7 @@ public class CandidateDTO {
     private String lastName;
     private String email;
     private String category;
+    private Integer numberOfClassesLeft;
 
     public CandidateDTO() {
 
@@ -24,6 +25,7 @@ public class CandidateDTO {
         this.firstName = candidate.getName();
         this.lastName = candidate.getLastname();
         this.email = candidate.getEmail();
+        this.numberOfClassesLeft = candidate.getTotalRequiredClasses() - candidate.getNumberOfCompletedClasses();
     }
 
 

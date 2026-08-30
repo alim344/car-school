@@ -14,9 +14,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ScheduleService {
@@ -119,17 +117,31 @@ public class ScheduleService {
 
         List<PracticalClass> practicalClasses = practicalClassService.getPeriodInstructorClasses(instructor,start,end);
 
+        Map<Long, Integer> candidateClassCounter = new HashMap<>();
+
         for(PracticalClass pc : practicalClasses){
 
+            Candidate candidate = pc.getCandidate();
+
             //continue if last week he had his last class
-            if(pc.getCandidate().getStatus() == TrainingStatus.PENDING){
+            if(candidate.getStatus() == TrainingStatus.PENDING){
                 continue;
             }
 
             //save only one class, if it is his last
-            if(pc.getCandidate().getNumberOfCompletedClasses() > 40){
+
+            int currentCount = candidateClassCounter.getOrDefault(
+                    candidate.getId(),
+                    candidate.getNumberOfCompletedClasses()
+            );
+
+
+            if(currentCount >= candidate.getTotalRequiredClasses()){
                 continue;
             }
+
+            candidateClassCounter.put(candidate.getId(), currentCount + 1);
+
 
             start = pc.getScheduledStartTime();
             end = pc.getScheduledEndTime();
