@@ -20,6 +20,7 @@ public class PracticalClassDTO {
     private Integer grade;
     private String comment;
     private String remarks;
+    private boolean lastClass;
 
     public PracticalClassDTO(PracticalClass pc) {
         this.id = pc.getId();

@@ -11,6 +11,8 @@ public class EndClassDTO {
     private String comment;
     private String remarks;
     private Long routeId;
+    private boolean lastClass;
+    private Integer extraClasses;
 
     public EndClassDTO() {}
     public EndClassDTO(Long id, Integer grade, String comment, String remarks,Long routeId) {
@@ -19,6 +21,8 @@ public class EndClassDTO {
         this.comment = comment;
         this.remarks = remarks;
         this.routeId = routeId;
+        this.lastClass = false;
+        this.extraClasses = 0;
     }
 
 }

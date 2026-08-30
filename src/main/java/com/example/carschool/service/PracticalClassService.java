@@ -78,15 +78,27 @@ public class PracticalClassService {
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Class hasnt started");
         }
 
+        Candidate candidate = pc.getCandidate();
+
+        if(dto.isLastClass()){
+            candidate.setStatus(TrainingStatus.PENDING);
+        }
+
+
         pc.setClassStatus(ClassStatus.ENDED);
         pc.setActualEndTime(LocalDateTime.now());
         pc.setComment(dto.getComment());
         pc.setGrade(dto.getGrade());
         pc.setRemarks(dto.getRemarks());
 
-        Candidate candidate = pc.getCandidate();
+
         Integer numOfClasses = candidate.getNumberOfCompletedClasses();
         candidate.setNumberOfCompletedClasses(numOfClasses + 1);
+
+        if(dto.getExtraClasses() != null){
+            Integer required = candidate.getTotalRequiredClasses();
+            candidate.setTotalRequiredClasses(required + dto.getExtraClasses());
+        }
 
         candidateService.save(candidate);
 
@@ -125,6 +137,10 @@ public class PracticalClassService {
         practicalClassRepository.save(pc);
         return new PracticalClassDTO(pc);
     }
+
+
+
+
 
 
     public List<PracticalClass> findByInstructor(Instructor instructor){

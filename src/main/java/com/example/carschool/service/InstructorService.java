@@ -3,6 +3,7 @@ package com.example.carschool.service;
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.InstructorDashboardDTO;
 import com.example.carschool.dto.PracticalClassDTO;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.PracticalClass;
 import com.example.carschool.repo.InstructorRepository;
@@ -42,13 +43,26 @@ public class InstructorService {
         Integer classesTodayNum = pc.size();
         Integer requestNum = classRequestService.getNumberOfClassRequests(instructor);
 
-        List<PracticalClassDTO> pcDto = pc.stream().map(PracticalClassDTO::new).toList();
+        List<PracticalClassDTO> pcDto = new ArrayList<>();
+
+        for(PracticalClass practicalClass : pc) {
+
+            Candidate candidate = practicalClass.getCandidate();
+            PracticalClassDTO dto = new PracticalClassDTO(practicalClass);
+            if (candidate.getTotalRequiredClasses() - candidate.getNumberOfCompletedClasses() == 1){
+                dto.setLastClass(true);
+            }
+
+            pcDto.add(dto);
+        }
 
         InstructorDashboardDTO dto = new InstructorDashboardDTO();
         dto.setRequestNum(requestNum);
         dto.setStudentsNum(studentNum);
         dto.setTodayClassesNum(classesTodayNum);
         dto.setTodayClasses(pcDto);
+
+
 
         return dto;
     }
