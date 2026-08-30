@@ -76,6 +76,7 @@ public class PreferenceService {
                     CandidatePreferencesDTO dto = new CandidatePreferencesDTO();
                     dto.setCandidateEmail(candidate.getEmail());
                     dto.setName(candidate.getName()+" "+candidate.getLastname());
+                    dto.setNumberOfClassesLeft(candidate.getTotalRequiredClasses()- candidate.getNumberOfCompletedClasses());
 
                     List<TimePrefDTO> timePrefDTOs = candidatePrefs.stream()
                             .flatMap(pref -> pref.getTimePreferences().stream())

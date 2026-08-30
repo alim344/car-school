@@ -45,9 +45,6 @@ public class CandidateService {
         List<Candidate> candidateList = getActiveCandidatesByInstructor(instructor);
         List<CandidateDTO> dtos = new ArrayList<>();
         for(Candidate candidate : candidateList) {
-            if(candidate.getStatus() == TrainingStatus.PENDING){
-                continue;
-            }
             dtos.add(new CandidateDTO(candidate));
         }
         return dtos;

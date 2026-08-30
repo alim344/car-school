@@ -80,6 +80,8 @@ export default function ManualScheduleSidebar({
                             value={candidate.candidateEmail}
                         >
                             {candidate.name}
+                            {" — "}
+                            {candidate.numberOfClassesLeft}
                         </option>
                     ))}
                 </select>

@@ -17,6 +17,7 @@ public class CandidatePreferencesDTO {
     private String name;
     private String candidateEmail;
     private PreferenceStatus status;
+    private Integer numberOfClassesLeft;
 
     private List<TimePrefDTO> prefDTOList = new ArrayList<>();
 
