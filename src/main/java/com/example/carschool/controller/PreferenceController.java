@@ -48,5 +48,16 @@ public class PreferenceController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/setNoPreference")
+    public ResponseEntity<?> setNoPreference(HttpServletRequest request) {
+
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Candidate candidate = candidateService.getByEmail(email);
+        preferenceService.setNoPreference(candidate);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

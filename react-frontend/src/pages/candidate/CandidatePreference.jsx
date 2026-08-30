@@ -14,8 +14,11 @@ export default function CandidatePreference() {
     const [formOpen, setFormOpen] = useState(false);
     const [newPrefStart, setNewPrefStart] = useState(null);
     const [newPrefEnd, setNewPrefEnd] = useState(null);
+    const [preferenceStatus,setPreferenceStatus] = useState(null);
 
     const token = localStorage.getItem("userToken");
+
+    const hasDrafts = prefs.some(p => !p.id.startsWith("existing-"));
 
     useEffect(() => {
         fetch("http://localhost:8080/pref/candidate/get", {
@@ -27,8 +30,11 @@ export default function CandidatePreference() {
             })
             .then(data => {
                 setCandidateEmail(data.candidateEmail);
+                setPreferenceStatus(data.status); 
 
                 const list = data.prefDTOList || [];
+
+                setHasExistingPreference(data.status != null);
 
                 if (list.length > 0) {
                     setHasExistingPreference(true);
@@ -68,7 +74,11 @@ export default function CandidatePreference() {
         start: pref.start,
         end: pref.end,
         display: "background",
-        classNames: ["candidate-preference"],
+        classNames: [
+        pref.id.startsWith("existing-")
+            ? "candidate-preference-saved"
+            : "candidate-preference-draft"
+        ],
         extendedProps: { preference: true }
     }));
 
@@ -82,6 +92,11 @@ export default function CandidatePreference() {
         }
         if (info.end < info.start) {
             alert("Start time has to be before end time");
+            return;
+        }
+
+         if (hasOverlap(info.start, info.end)) {
+            alert("This time overlaps with an existing preference.");
             return;
         }
 
@@ -99,9 +114,22 @@ export default function CandidatePreference() {
         setFormOpen(false);
         setNewPrefStart(null);
         setNewPrefEnd(null);
+        setPrefs(prev => prev.filter(p => p.id.startsWith("existing-")));
+    };
+
+
+    const hasOverlap = (start, end) => {
+        return prefs.some(pref => {
+            return start < pref.end && end > pref.start;
+        });
     };
 
     const handleAddDraft = (draft) => {
+
+        if (hasOverlap(draft.start, draft.end)) {
+            alert("This time overlaps with an existing preference.");
+            return;
+        }
         setPrefs(prev => [...prev, draft]);
         setNewPrefStart(null);
         setNewPrefEnd(null);
@@ -148,6 +176,8 @@ export default function CandidatePreference() {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             setHasExistingPreference(true);
+            setPreferenceStatus("SUBMITTED");
+            setPrefs(prev => prev.map(p => ({ ...p, id: `existing-${p.id}` })));
             setFormOpen(false);
             setNewPrefStart(null);
             setNewPrefEnd(null);
@@ -155,6 +185,33 @@ export default function CandidatePreference() {
         } catch (error) {
             console.error("Error saving preference:", error);
             alert("Could not save preference.");
+        }
+    };
+
+    const handleSetNoPreference = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:8080/pref/setNoPreference",
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            setPrefs([]);
+            setHasExistingPreference(true);
+            setPreferenceStatus("NO_PREFERENCE");
+            setFormOpen(false);
+            setNewPrefStart(null);
+            setNewPrefEnd(null);
+
+        } catch (error) {
+            console.error("Error setting no preference:", error);
+            alert("Could not set no preference.");
         }
     };
 
@@ -180,13 +237,31 @@ export default function CandidatePreference() {
             <div className="candidate-preference-sidebar">
                 <h2>Preference</h2>
 
+                {preferenceStatus === "NO_PREFERENCE" && !hasDrafts && (
+                    <p className="no-preference-banner">
+                        You've set no preference for next week.
+                    </p>
+                )}
+
+                
+
                 {!formOpen && (
-                    <button
-                        className="add-time-pref-button"
-                        onClick={handleOpenForm}
-                    >
-                        + Add Time Pref
-                    </button>
+                    <>
+                        <button
+                            className="add-time-pref-button"
+                            onClick={handleOpenForm}
+                        >
+                            + Add Time Pref
+                        </button>
+
+                        <button
+                            className="no-preference-button"
+                            onClick={handleSetNoPreference}
+                            disabled={hasDrafts}
+                        >
+                            No Preference This Week
+                        </button>
+                    </>
                 )}
 
                 {formOpen && (
@@ -235,13 +310,14 @@ export default function CandidatePreference() {
                     ))}
                 </div>
 
-                <button
-                    className="save-preference-button"
-                    onClick={handleSavePreference}
-                    disabled={prefs.length === 0}
-                >
-                    Save Next Week Preference
-                </button>
+                {hasDrafts && (
+                    <button
+                        className="save-preference-button"
+                        onClick={handleSavePreference}
+                    >
+                        Save Next Week Preference
+                    </button>
+                )}
             </div>
 
         </div>

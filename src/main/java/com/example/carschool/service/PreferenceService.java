@@ -45,6 +45,8 @@ public class PreferenceService {
             return dto;
         }
 
+        dto.setStatus(pref.getStatus());
+
         List<TimePrefDTO> timeDto = new ArrayList<>();
 
         for(TimePreference tp : pref.getTimePreferences()){
@@ -132,8 +134,18 @@ public class PreferenceService {
     public void save(CandidatePreferencesDTO dto) {
         LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
 
+        Candidate candidate = candidateService.getByEmail(dto.getCandidateEmail());
+
+        Preference existing = preferenceRepository
+                .findByCandidateAndWeekStartDate(candidate, nextWeekStart);
+
+        if (existing != null) {
+            updateTimePreferences(dto);
+            return;
+        }
+
         Preference preference = new Preference();
-        preference.setCandidate(candidateService.getByEmail(dto.getCandidateEmail()));
+        preference.setCandidate(candidate);
         preference.setStatus(PreferenceStatus.SUBMITTED);
         preference.setCreatedAt(LocalDateTime.now());
         preference.setWeekStartDate(nextWeekStart);
@@ -198,6 +210,26 @@ public class PreferenceService {
 
     }
 
+    @Transactional
+    public void setNoPreference(Candidate candidate) {
+
+        LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
+
+        Preference pref = preferenceRepository.findByCandidateAndWeekStartDate(candidate, nextWeekStart);
+
+        if (pref == null) {
+            pref = new Preference();
+            pref.setCandidate(candidate);
+            pref.setCreatedAt(LocalDateTime.now());
+            pref.setWeekStartDate(nextWeekStart);
+        }else{
+            pref.getTimePreferences().clear();
+        }
+
+        pref.setStatus(PreferenceStatus.NO_PREFERENCE);
+        preferenceRepository.save(pref);
+
+    }
 
 
 }
