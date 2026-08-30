@@ -72,8 +72,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/foo").permitAll()
-                .requestMatchers("/instructor/*","/practical-class/*","/route/*","/schedule/inst/*").hasAuthority("ROLE_INSTRUCTOR")
-                .requestMatchers("/schedule/cand/*","/pref/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/instructor/*","/practical-class/*","/route/*","/schedule/inst/*","/p-exam/inst/*").hasAuthority("ROLE_INSTRUCTOR")
+                .requestMatchers("/schedule/cand/*","/pref/**","/p-exam/cand/*").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/p-exam/admin/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(
                         "/favicon.ico",
                         "/webjars/**",
