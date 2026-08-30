@@ -26,8 +26,8 @@ public class CandidateService {
     }
 
 
-    public List<Candidate> getActiveCandidates(){
-        return candidateRepository.findByStatus(TrainingStatus.PRACTICAL);
+    public List<Candidate> getCandidatesByStatus(TrainingStatus status){
+        return candidateRepository.findByStatus(status);
     }
 
 
@@ -46,5 +46,18 @@ public class CandidateService {
         return dtos;
 
     }
+
+    public List<CandidateDTO> getPendingCandidates(){
+        List<Candidate> candidates = getCandidatesByStatus(TrainingStatus.PENDING);
+        List<CandidateDTO> dtos = new ArrayList<>();
+        for(Candidate candidate : candidates) {
+            dtos.add(new CandidateDTO(candidate));
+
+        }
+        return dtos;
+    }
+
+
+
 
 }

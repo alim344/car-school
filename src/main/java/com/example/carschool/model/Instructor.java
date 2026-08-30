@@ -22,4 +22,7 @@ public class Instructor extends User{
 
     @Column(nullable = false)
     private Integer maxCapacity;
+
+
+
 }

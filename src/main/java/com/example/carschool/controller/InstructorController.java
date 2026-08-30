@@ -1,5 +1,6 @@
 package com.example.carschool.controller;
 
+import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.InstructorDashboardDTO;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.util.TokenUtils;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/instructor")
@@ -30,5 +33,9 @@ public class InstructorController {
         return ResponseEntity.ok(instructorService.getDashboardInfo(email));
     }
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<InstructorDTO>> getAll(){
+        return ResponseEntity.ok(instructorService.getALl());
+    }
 
 }

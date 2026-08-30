@@ -37,5 +37,13 @@ public class CandidateController {
     }
 
 
+    @GetMapping("/pending")
+    public ResponseEntity<List<CandidateDTO>> getPendingCandidates() {
+
+        return ResponseEntity.ok(candidateService.getPendingCandidates());
+
+    }
+
+
 
 }
