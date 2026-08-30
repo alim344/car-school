@@ -1,0 +1,178 @@
+.time-pref-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 0;
+}
+
+.time-pref-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.time-pref-form-header h3 {
+    margin: 0;
+    color: #172554;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.time-pref-close-button {
+    background: #f1f5f9;
+    border: none;
+    color: #64748b;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.time-pref-close-button:hover {
+    background: #fee2e2;
+    color: #ef4444;
+    transform: rotate(90deg);
+}
+
+.time-pref-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.time-pref-form .form-group label {
+    color: #475569;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-pref-form .form-group input {
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    color: #1e293b;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.time-pref-form .form-group input:focus {
+    border-color: #172554;
+    box-shadow: 0 0 0 3px rgba(23, 37, 84, 0.1);
+    background: #ffffff;
+}
+
+.time-pref-form .form-group input::placeholder {
+    color: #94a3b8;
+}
+
+.time-pref-form .selected-time-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.time-pref-form .time-display-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.time-pref-form .time-display-item .time-label {
+    color: #94a3b8;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.time-pref-form .time-display-item .time-value {
+    color: #1e293b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+}
+
+.time-pref-form .time-display-item .time-value.placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.time-pref-form .add-draft-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #172554;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-pref-form .add-draft-button:hover:not(:disabled) {
+    background: #1e3a8a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 37, 84, 0.3);
+}
+
+.time-pref-form .add-draft-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.time-pref-form .add-draft-button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.manual-schedule-sidebar .form-group input[type="text"] {
+    padding: 8px 12px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    color: #1e293b;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.manual-schedule-sidebar .form-group input[type="text"]:focus {
+    border-color: #172554;
+    box-shadow: 0 0 0 3px rgba(23, 37, 84, 0.1);
+    background: #ffffff;
+}
+
+.manual-schedule-sidebar .form-group input[type="text"]::placeholder {
+    color: #94a3b8;
+}
+
+

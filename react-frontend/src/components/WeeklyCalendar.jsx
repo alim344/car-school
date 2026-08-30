@@ -9,7 +9,8 @@ export default function WeeklyCalendar({
     onEventClick = () => {},
     onTimeSelect = () => {},
     initialDate,
-    disableNavigation = false
+    disableNavigation = false,
+     selectable = true
 }) {
     const allEvents = [
         ...preferenceEvents,
@@ -38,7 +39,7 @@ export default function WeeklyCalendar({
 
             events={allEvents}
 
-            selectable={true}
+            selectable={selectable}
             selectMirror={true}
 
             select={onTimeSelect}

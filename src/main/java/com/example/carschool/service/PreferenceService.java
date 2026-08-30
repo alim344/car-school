@@ -35,9 +35,15 @@ public class PreferenceService {
         LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
         Preference pref =  preferenceRepository.findByCandidateAndWeekStartDate(candidate,nextWeekStart);
 
+
+
         CandidatePreferencesDTO dto =  new CandidatePreferencesDTO();
         dto.setCandidateEmail(candidate.getEmail());
         dto.setName(candidate.getName() + " " + candidate.getLastname());
+
+        if(pref == null) {
+            return dto;
+        }
 
         List<TimePrefDTO> timeDto = new ArrayList<>();
 
@@ -124,32 +130,27 @@ public class PreferenceService {
 
     @Transactional
     public void save(CandidatePreferencesDTO dto) {
-
         LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
-
-
-        List<TimePrefDTO> timePrefDTOS = dto.getPrefDTOList();
-        List<TimePreference> timePreferences = new ArrayList<>();
 
         Preference preference = new Preference();
         preference.setCandidate(candidateService.getByEmail(dto.getCandidateEmail()));
         preference.setStatus(PreferenceStatus.SUBMITTED);
         preference.setCreatedAt(LocalDateTime.now());
         preference.setWeekStartDate(nextWeekStart);
-        Preference newPref = preferenceRepository.save(preference);
 
-        for(TimePrefDTO tp : timePrefDTOS) {
-            TimePreference clone = new TimePreference();
-            clone.setDate(tp.getDate());
-            clone.setStartTime(tp.getStartTime());
-            clone.setEndTime(tp.getEndTime());
-            clone.setPreference(newPref);
-            timePreferences.add(clone);
+        if (dto.getPrefDTOList() != null) {
+            for (TimePrefDTO tp : dto.getPrefDTOList()) {
+                TimePreference timePref = new TimePreference();
+                timePref.setDate(tp.getDate());
+                timePref.setStartTime(tp.getStartTime());
+                timePref.setEndTime(tp.getEndTime());
+                timePref.setPreference(preference);
+
+                preference.getTimePreferences().add(timePref);
+            }
         }
 
-        newPref.setTimePreferences(timePreferences);
-        preferenceRepository.save(newPref);
-
+        preferenceRepository.save(preference);
     }
 
     @Transactional

@@ -215,3 +215,13 @@ INSERT INTO time_preference (id, date, start_time, end_time, preference_id) VALU
 UPDATE preference
 SET week_start_date = date_trunc('week', created_at)::date
 WHERE week_start_date IS NULL;
+
+
+
+
+
+-- Standard PostgreSQL Identity fix:
+ALTER TABLE preference
+    ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
+
+SELECT setval(pg_get_serial_sequence('preference', 'id'), COALESCE(MAX(id), 1)) FROM preference;
