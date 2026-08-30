@@ -13,13 +13,17 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState(null);
     const [routeLoading, setRouteLoading] = useState(false);
-    
+
     const [showEndModal, setShowEndModal] = useState(false);
+    const [showLastClassModal, setShowLastClassModal] = useState(false);
+    const [showExtraClassesModal, setShowExtraClassesModal] = useState(false);
+    const [extraClasses, setExtraClasses] = useState("");
+
     const [grade, setGrade] = useState("");
     const [remarks, setRemarks] = useState("");
     const [comment, setComment] = useState("");
     const [endLoading, setEndLoading] = useState(false);
-    
+
     const [showInterruptModal, setShowInterruptModal] = useState(false);
     const [interruptReason, setInterruptReason] = useState("");
     const [interruptNote, setInterruptNote] = useState("");
@@ -77,7 +81,15 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
         }
     };
 
-    const handleEndClass = async () => {
+    const handleEndClassButtonClick = () => {
+        if (pc.lastClass) {
+            setShowLastClassModal(true);
+        } else {
+            setShowEndModal(true);
+        }
+    };
+
+    const submitEndClass = async (lastClassValue, extraClassesValue) => {
         if (!grade) {
             alert("Please select a grade");
             return;
@@ -90,7 +102,9 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 grade: parseInt(grade),
                 remarks: remarks,
                 comment: comment,
-                routeId: selectedRoute?.id || null
+                routeId: selectedRoute?.id || null,
+                lastClass: lastClassValue,
+                extraClasses: extraClassesValue
             };
 
             console.log("Ending class with data:", endClassData);
@@ -99,7 +113,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 "http://localhost:8080/practical-class/endClass",
                 endClassData,
                 {
-                    headers: { 
+                    headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
@@ -107,6 +121,8 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
             );
 
             setShowEndModal(false);
+            setShowLastClassModal(false);
+            setShowExtraClassesModal(false);
             alert("Class ended successfully!");
             if (onEndClass) onEndClass(pc);
         } catch (error) {
@@ -116,6 +132,19 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
         } finally {
             setEndLoading(false);
         }
+    };
+
+    const handleEndClass = () => submitEndClass(false, null);
+
+    const handleFinishCourse = () => submitEndClass(true, null);
+
+    const handleConfirmExtraClasses = () => {
+        const num = parseInt(extraClasses, 10);
+        if (!extraClasses || isNaN(num) || num <= 0) {
+            alert("Please enter a valid number of extra classes");
+            return;
+        }
+        submitEndClass(false, num);
     };
 
     const handleInterrupt = async () => {
@@ -138,7 +167,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 `http://localhost:8080/practical-class/interrupt`,
                 interruptData,
                 {
-                    headers: { 
+                    headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
@@ -146,7 +175,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
             );
 
             setShowInterruptModal(false);
-            
+
             if (onInterruptClass) onInterruptClass(pc);
         } catch (error) {
             console.error("Error interrupting class:", error);
@@ -172,7 +201,6 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 <div className="location">{pc.location}</div>
             </div>
 
-            
             <div className='route-card'>
                 <div className='route-word'>
                     <h3>ROUTE</h3>
@@ -198,7 +226,6 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                         {routeLoading ? "Loading..." : "Random"}
                     </button>
                 </div>
-               
             </div>
 
             <LocationNotes classId={pc.id} />
@@ -207,11 +234,11 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 <div className="section-title">
                     <h2> Class Evaluation</h2>
                 </div>
-                
+
                 <div className="grade-input">
                     <label>Grade (1-5):</label>
-                    <select 
-                        value={grade} 
+                    <select
+                        value={grade}
                         onChange={(e) => setGrade(e.target.value)}
                         className="grade-select"
                     >
@@ -223,7 +250,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                         <option value="5">5 - Excellent</option>
                     </select>
                 </div>
-                
+
                 <div className="remarks-input">
                     <label>Remarks:</label>
                     <input
@@ -234,7 +261,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                         className="remarks-input-field"
                     />
                 </div>
-                
+
                 <div className="comment-input">
                     <label>Comment:</label>
                     <textarea
@@ -248,19 +275,18 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
             </div>
 
             <div className="class-card-actions">
-                <button 
-                    className="interrupt-btn" 
+                <button
+                    className="interrupt-btn"
                     onClick={() => setShowInterruptModal(true)}
                 >
                      Interrupt Class
                 </button>
-                <button 
-                    className="end-btn" 
-                    onClick={() => setShowEndModal(true)}
+                <button
+                    className="end-btn"
+                    onClick={handleEndClassButtonClick}
                 >
                      End Class
                 </button>
-                
             </div>
 
             {showEndModal && (
@@ -269,16 +295,87 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                         <h3> End Class</h3>
                         <p>Are you sure you want to end this class?</p>
                         <div className="modal-actions">
-                            <button 
-                                className="modal-confirm-btn" 
-                                onClick={handleEndClass} 
+                            <button
+                                className="modal-confirm-btn"
+                                onClick={handleEndClass}
                                 disabled={endLoading}
                             >
                                 {endLoading ? "Processing..." : "Yes, End Class"}
                             </button>
-                            <button 
-                                className="modal-cancel-btn" 
+                            <button
+                                className="modal-cancel-btn"
                                 onClick={() => setShowEndModal(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showLastClassModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Finished All Classes</h3>
+                        <p>This candidate has finished all their scheduled classes. What would you like to do?</p>
+                        <div className="modal-actions">
+                            <button
+                                className="modal-confirm-btn"
+                                onClick={() => {
+                                    setShowLastClassModal(false);
+                                    setShowExtraClassesModal(true);
+                                }}
+                                disabled={endLoading}
+                            >
+                                Add Extra Classes
+                            </button>
+                            <button
+                                className="modal-confirm-btn"
+                                onClick={handleFinishCourse}
+                                disabled={endLoading}
+                            >
+                                {endLoading ? "Processing..." : "Finish the Course"}
+                            </button>
+                            <button
+                                className="modal-cancel-btn"
+                                onClick={() => setShowLastClassModal(false)}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showExtraClassesModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Add Extra Classes</h3>
+                        <p>How many extra classes should be added?</p>
+                        <div className="form-group">
+                            <input
+                                type="number"
+                                min="1"
+                                placeholder="Number of extra classes"
+                                value={extraClasses}
+                                onChange={(e) => setExtraClasses(e.target.value)}
+                                className="remarks-input-field"
+                            />
+                        </div>
+                        <div className="modal-actions">
+                            <button
+                                className="modal-confirm-btn"
+                                onClick={handleConfirmExtraClasses}
+                                disabled={endLoading}
+                            >
+                                {endLoading ? "Processing..." : "End"}
+                            </button>
+                            <button
+                                className="modal-cancel-btn"
+                                onClick={() => {
+                                    setShowExtraClassesModal(false);
+                                    setExtraClasses("");
+                                }}
                             >
                                 Cancel
                             </button>
@@ -292,12 +389,12 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                     <div className="modal-content interrupt-modal">
                         <h3> Interrupt Class</h3>
                         <p>Please provide the reason for interruption:</p>
-                        
+
                         <div className="interrupt-form">
                             <div className="form-group">
                                 <label>Reason for interruption:</label>
-                                <select 
-                                    value={interruptReason} 
+                                <select
+                                    value={interruptReason}
                                     onChange={(e) => setInterruptReason(e.target.value)}
                                     className="interrupt-select"
                                 >
@@ -321,17 +418,17 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                                 />
                             </div>
                         </div>
-                        
+
                         <div className="modal-actions">
-                            <button 
-                                className="modal-confirm-btn interrupt" 
-                                onClick={handleInterrupt} 
+                            <button
+                                className="modal-confirm-btn interrupt"
+                                onClick={handleInterrupt}
                                 disabled={interruptLoading}
                             >
                                 {interruptLoading ? "Processing..." : "Confirm Interruption"}
                             </button>
-                            <button 
-                                className="modal-cancel-btn" 
+                            <button
+                                className="modal-cancel-btn"
                                 onClick={() => setShowInterruptModal(false)}
                             >
                                 Cancel
