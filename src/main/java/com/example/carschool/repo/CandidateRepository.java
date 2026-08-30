@@ -18,4 +18,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
     List<Candidate> findByStatus(TrainingStatus status);
 
+
+
 }

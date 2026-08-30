@@ -25,7 +25,8 @@ public class Candidate extends User{
     @Column
     private boolean theoryCompleted = false;
 
-
+    @Column
+    private Integer numberOfCompletedClasses;
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")

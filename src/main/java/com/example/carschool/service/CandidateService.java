@@ -30,6 +30,10 @@ public class CandidateService {
         return candidateRepository.findByStatus(status);
     }
 
+    public void save(Candidate candidate) {
+        candidateRepository.save(candidate);
+    }
+
 
 
     public Candidate getByEmail(String email) {

@@ -120,6 +120,17 @@ public class ScheduleService {
         List<PracticalClass> practicalClasses = practicalClassService.getPeriodInstructorClasses(instructor,start,end);
 
         for(PracticalClass pc : practicalClasses){
+
+            //continue if last week he had his last class
+            if(pc.getCandidate().getStatus() == TrainingStatus.PENDING){
+                continue;
+            }
+
+            //save only one class, if it is his last
+            if(pc.getCandidate().getNumberOfCompletedClasses() > 40){
+                continue;
+            }
+
             start = pc.getScheduledStartTime();
             end = pc.getScheduledEndTime();
             pc.setScheduledStartTime(start.plusWeeks(1));

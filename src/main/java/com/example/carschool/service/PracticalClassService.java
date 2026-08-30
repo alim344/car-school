@@ -24,6 +24,8 @@ public class PracticalClassService {
 
     @Autowired
     private RouteService routeService;
+    @Autowired
+    private CandidateService candidateService;
 
     public PracticalClass findById(Long id){
         return practicalClassRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"PracticalClass not found with id: " + id));
@@ -81,6 +83,12 @@ public class PracticalClassService {
         pc.setComment(dto.getComment());
         pc.setGrade(dto.getGrade());
         pc.setRemarks(dto.getRemarks());
+
+        Candidate candidate = pc.getCandidate();
+        Integer numOfClasses = candidate.getNumberOfCompletedClasses();
+        candidate.setNumberOfCompletedClasses(numOfClasses + 1);
+
+        candidateService.save(candidate);
 
         if(dto.getRouteId() != null){
             Route route = routeService.findById(dto.getRouteId());
