@@ -80,10 +80,13 @@ public class ScheduleService {
         pc.setScheduledEndTime(createClassDTO.getEndTime());
         Candidate candidate = candidateService.getByEmail(createClassDTO.getCandidateEmail());
         pc.setCandidate(candidate);
-        if(candidate.getLocation().isEmpty()){
-            pc.setLocation(" ");
-        }else{
+
+
+
+        if(createClassDTO.getLocation().isEmpty()){
             pc.setLocation(candidate.getLocation());
+        }else{
+            pc.setLocation(createClassDTO.getLocation());
         }
 
         practicalClassService.save(pc);

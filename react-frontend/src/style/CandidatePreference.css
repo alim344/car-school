@@ -1,0 +1,147 @@
+.candidate-preference-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.candidate-preference-calendar {
+    flex: 1;
+    min-width: 0;
+}
+
+.candidate-preference-sidebar {
+    width: 300px;
+    padding: 25px;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate-preference-sidebar h2 {
+    margin-top: 0;
+}
+
+.save-preference-button {
+    margin-top: auto;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.candidate-preference-container {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+
+    display: flex;
+    gap: 20px;
+}
+
+
+.candidate-preference-calendar {
+    flex: 1;
+    height: calc(100vh - 100px);
+
+    background-color: white;
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    min-width: 0;
+}
+
+
+.candidate-preference-sidebar {
+    width: 300px;
+    height: calc(100vh - 100px);
+
+    background-color: white;
+    border-radius: 12px;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.candidate-preference-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+
+.save-preference-button {
+    margin-top: auto;
+
+    width: 100%;
+    padding: 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+    font-weight: 600;
+}
+
+
+/* Calendar events */
+
+.calendar-event {
+    padding: 3px 5px;
+    overflow: hidden;
+}
+
+
+.calendar-event-time {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+
+.calendar-event-name {
+    font-size: 13px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.calendar-event-status {
+    margin-top: 2px;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+
+/* FullCalendar */
+
+.candidate-preference-calendar .fc-event {
+    border-radius: 5px;
+    border-width: 1px;
+    cursor: pointer;
+}
+
+
+.candidate-preference-calendar .fc-event-main {
+    color: inherit !important;
+}
+
+
+
+.candidate-preference-calendar .candidate-preference {
+    background-color: rgba(59, 130, 246, 0.25) !important;
+}

@@ -9,6 +9,7 @@ import InstructorSchedule from './pages/instructor/InstructorSchedule';
 import InstructorProfile from './pages/instructor/InstructorProfile';
 import CandidateLayout from './pages/candidate/CandidateLayout';
 import CandidateSchedule from './pages/candidate/CandidateSchedule';
+import CandidatePreference from './pages/candidate/CandidatePreference';
 
 export default function App() {
   return (
@@ -39,7 +40,11 @@ export default function App() {
             <CandidateSchedule />
           </CandidateLayout>
         } />
-        
+        <Route path="/candidate/preference" element={
+          <CandidateLayout>
+            <CandidatePreference />
+          </CandidateLayout>
+        } />
 
       </Routes>
   );

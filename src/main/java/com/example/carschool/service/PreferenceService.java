@@ -30,6 +30,27 @@ public class PreferenceService {
     private CandidateService candidateService;
 
 
+
+    public CandidatePreferencesDTO getCandidatePreference(Candidate candidate) {
+        LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
+        Preference pref =  preferenceRepository.findByCandidateAndWeekStartDate(candidate,nextWeekStart);
+
+        CandidatePreferencesDTO dto =  new CandidatePreferencesDTO();
+        dto.setCandidateEmail(candidate.getEmail());
+        dto.setName(candidate.getName() + " " + candidate.getLastname());
+
+        List<TimePrefDTO> timeDto = new ArrayList<>();
+
+        for(TimePreference tp : pref.getTimePreferences()){
+            timeDto.add(new TimePrefDTO(tp));
+        }
+
+        dto.setPrefDTOList(timeDto);
+        return dto;
+
+    }
+
+
     public List<CandidatePreferencesDTO> getWeeklyPreferencesByInstructor(Long instructorId) {
         LocalDate today = LocalDate.now();
         LocalDate weekStart = today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
@@ -164,6 +185,17 @@ public class PreferenceService {
         preferenceRepository.save(preference);
     }
 
+
+    public void addNoPreference(Candidate candidate) {
+        LocalDate nextWeekStart = LocalDate.now().with(DayOfWeek.MONDAY).plusWeeks(1);
+        Preference preference = new Preference();
+        preference.setCandidate(candidate);
+        preference.setStatus(PreferenceStatus.NO_PREFERENCE);
+        preference.setCreatedAt(LocalDateTime.now());
+        preference.setWeekStartDate(nextWeekStart);
+        preferenceRepository.save(preference);
+
+    }
 
 
 

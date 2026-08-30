@@ -7,7 +7,9 @@ export default function WeeklyCalendar({
     events = [],
     preferenceEvents = [],
     onEventClick = () => {},
-    onTimeSelect = () => {}
+    onTimeSelect = () => {},
+    initialDate,
+    disableNavigation = false
 }) {
     const allEvents = [
         ...preferenceEvents,
@@ -21,7 +23,18 @@ export default function WeeklyCalendar({
                 interactionPlugin
             ]}
 
+            firstDay={1}
             initialView="timeGridWeek"
+            initialDate={initialDate}
+            headerToolbar={
+                disableNavigation
+                    ? {
+                        left: "",
+                        center: "title",
+                        right: ""
+                    }
+                    : undefined
+            }
 
             events={allEvents}
 

@@ -12,6 +12,7 @@ export default function InstructorLayout({ children }) {
     
     { id: 'schedule', label: 'Schedule',  path: '/candidate' },
     { id: 'notifications', label: 'Notifications',  path: '/candidate/notifications' },
+    { id: 'preferences', label: 'Preference',  path: '/candidate/preference' },
     { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' },
    
