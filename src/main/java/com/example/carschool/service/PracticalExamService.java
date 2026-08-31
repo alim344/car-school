@@ -31,6 +31,15 @@ public class PracticalExamService {
         return practicalExamDTOs;
     }
 
+    public List<PracticalExamDTO> getExamsByStatus(ExamStatus examStatus){
+        List<PracticalExamDTO> practicalExamDTOs = new ArrayList<>();
+        List<PracticalExam> exams = practicalExamRepository.findByStatus(examStatus);
+        for (PracticalExam exam : exams) {
+            practicalExamDTOs.add(new PracticalExamDTO(exam));
+        }
+        return practicalExamDTOs;
+    }
+
 
     public List<PracticalExamDTO> getByInstructor(Instructor instructor){
         List<PracticalExam> practicalExams = practicalExamRepository.findByInstructor(instructor);

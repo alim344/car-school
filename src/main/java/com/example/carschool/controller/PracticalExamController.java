@@ -1,8 +1,10 @@
 package com.example.carschool.controller;
 
 import com.example.carschool.dto.CreateExamDTO;
+import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.PracticalExamDTO;
 import com.example.carschool.model.Candidate;
+import com.example.carschool.model.ExamStatus;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorService;
@@ -34,6 +36,29 @@ public class PracticalExamController {
     public ResponseEntity<List<PracticalExamDTO>> getAllPracticalExams() {
         return ResponseEntity.ok(practicalExamService.getAll());
     }
+
+
+    @GetMapping("/admin/getScheduled")
+    public ResponseEntity<List<PracticalExamDTO>> getScheduledPracticalExams() {
+        return ResponseEntity.ok(practicalExamService.getExamsByStatus(ExamStatus.SCHEDULED));
+    }
+
+    @GetMapping("/admin/getPassed")
+    public ResponseEntity<List<PracticalExamDTO>> getPassedPracticalExams() {
+        return ResponseEntity.ok(practicalExamService.getExamsByStatus(ExamStatus.COMPLETED));
+    }
+
+
+    @GetMapping("/admin/getFailed")
+    public ResponseEntity<List<PracticalExamDTO>> getFailedPracticalExams() {
+        return ResponseEntity.ok(practicalExamService.getExamsByStatus(ExamStatus.FAILED));
+    }
+
+    @GetMapping("/admin/getCancelled")
+    public ResponseEntity<List<PracticalExamDTO>> getCancelledPracticalExams() {
+        return ResponseEntity.ok(practicalExamService.getExamsByStatus(ExamStatus.CANCELLED));
+    }
+
 
     @GetMapping("/inst/get")
     public ResponseEntity<List<PracticalExamDTO>> getByInstructor(HttpServletRequest request){
@@ -73,6 +98,10 @@ public class PracticalExamController {
     public ResponseEntity<PracticalExamDTO> failExam(PracticalExamDTO dto){
         return ResponseEntity.ok(practicalExamService.failExam(dto));
     }
+
+
+
+
 
 
 }

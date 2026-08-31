@@ -37,7 +37,7 @@ export default function LoginPage(){
             if(role == "ROLE_CANDIDATE"){
                 navigate('/candidate');
             }else if(role == "ROLE_ADMIN"){
-                navigate('/admin_main');
+                navigate('/admin');
             }else{
                 navigate('/instructor');
             }

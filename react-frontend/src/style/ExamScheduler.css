@@ -1,0 +1,455 @@
+.exam-scheduler-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    background: linear-gradient(135deg, #19212d 0%, #1a2332 50%, #19212d 100%);
+    min-height: 100vh;
+    color: #e2e8f0;
+}
+
+.exam-header {
+    margin-bottom: 32px;
+    padding: 20px 0;
+    border-bottom: 2px solid rgba(214, 251, 79, 0.1);
+}
+
+.exam-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: rgb(214, 251, 79);
+    margin-bottom: 8px;
+    text-shadow: 0 0 20px rgba(214, 251, 79, 0.1);
+}
+
+.exam-header h1 .icon {
+    margin-right: 10px;
+}
+
+.exam-subtitle {
+    font-size: 16px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    background: linear-gradient(145deg, #1a2332, #243447);
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.filter-tab {
+    padding: 10px 24px;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: transparent;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-tab:hover:not(:disabled) {
+    border-color: rgba(214, 251, 79, 0.3);
+    background: rgba(214, 251, 79, 0.05);
+    color: #e2e8f0;
+    transform: translateY(-2px);
+}
+
+.filter-tab.active {
+    border-color: rgb(214, 251, 79);
+    background: rgba(214, 251, 79, 0.1);
+    color: rgb(214, 251, 79);
+    box-shadow: 0 0 20px rgba(214, 251, 79, 0.05);
+}
+
+.filter-tab:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.filter-count {
+    background: rgb(214, 251, 79);
+    color: #1a2332;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 4px;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    color: #94a3b8;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(214, 251, 79, 0.1);
+    border-top-color: rgb(214, 251, 79);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+
+
+.error-container {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(145deg, #1a2332, #243447);
+    border-radius: 16px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.error-container p {
+    color: #ef4444;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.retry-btn {
+    padding: 10px 32px;
+    background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.7));
+    color: #1f2937;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(214, 251, 79, 0.2);
+}
+
+.exams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 24px;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(145deg, #1a2332, #243447);
+    border-radius: 16px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    color: #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #94a3b8;
+    margin: 0;
+}
+
+.exam-card {
+    background: linear-gradient(145deg, #1a2332, #243447);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.exam-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(214, 251, 79, 0.3);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(214, 251, 79, 0.05);
+}
+
+.exam-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.exam-candidate {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.candidate-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.candidate-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e2e8f0;
+    word-break: break-word;
+}
+
+.status-badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.status-scheduled {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.status-passed {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.status-failed {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.status-cancelled {
+    background: rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.exam-card-body {
+    flex: 1;
+}
+
+.exam-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #e2e8f0;
+    font-weight: 500;
+    text-align: right;
+}
+
+.score-value {
+    color: rgb(214, 251, 79);
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.exam-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.view-details-btn {
+    padding: 6px 20px;
+    background: transparent;
+    color: rgb(214, 251, 79);
+    border: 2px solid rgba(214, 251, 79, 0.3);
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+    background: rgba(214, 251, 79, 0.1);
+    border-color: rgb(214, 251, 79);
+    transform: translateX(4px);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+    padding: 20px;
+}
+
+
+
+.modal-content {
+    background: linear-gradient(145deg, #1a2332, #243447);
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px;
+    border-bottom: 2px solid rgba(214, 251, 79, 0.08);
+}
+
+.modal-header h2 {
+    color: rgb(214, 251, 79);
+    font-size: 22px;
+    margin: 0;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.exam-details {
+    padding: 28px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    align-items: center;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.detail-value {
+    color: #e2e8f0;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    word-break: break-word;
+    max-width: 60%;
+}
+
+.modal-footer {
+    padding: 20px 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-close-btn-bottom {
+    padding: 10px 32px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn-bottom:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+}
+
+.exam-scheduler-container::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.exam-scheduler-container::-webkit-scrollbar-track,
+.modal-content::-webkit-scrollbar-track {
+    background: #19212d;
+    border-radius: 4px;
+}
+
+.exam-scheduler-container::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(214, 251, 79, 0.3);
+    border-radius: 4px;
+}
+
+.exam-scheduler-container::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(214, 251, 79, 0.5);
+}

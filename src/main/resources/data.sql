@@ -225,3 +225,18 @@ ALTER TABLE preference
     ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY;
 
 SELECT setval(pg_get_serial_sequence('preference', 'id'), COALESCE(MAX(id), 1)) FROM preference;
+
+
+
+
+-- 1. Drop the outdated constraint
+ALTER TABLE candidate
+    DROP CONSTRAINT candidate_status_check;
+
+-- 2. Add the constraint back with EXAM_SCHEDULED included
+-- (Replace/add all statuses defined in your Java CandidateStatus enum)
+ALTER TABLE candidate
+    ADD CONSTRAINT candidate_status_check
+        CHECK (status IN ('THEORY','PRACTICAL','PASSED','PENDING' ,'EXAM_SCHEDULED'));
+
+SELECT DISTINCT status FROM candidate;
