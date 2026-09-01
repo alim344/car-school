@@ -257,3 +257,97 @@
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: rgba(214, 251, 79, 0.3);
 }
+
+
+
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+
+
+.cancel-exam-btn {
+    padding: 6px 16px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.cancel-exam-btn:hover:not(:disabled) {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.cancel-exam-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+
+
+.cancelled-badge {
+    padding: 4px 12px;
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.3);
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+
+.info-row.cancelled-message {
+    background: rgba(100, 116, 139, 0.1) !important;
+    border: 1px solid rgba(100, 116, 139, 0.2) !important;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-top: 4px;
+}
+
+.info-row.cancelled-message .info-label {
+    color: #94a3b8 !important;
+}
+
+.info-row.cancelled-message .info-value {
+    color: #94a3b8 !important;
+}
+
+.close-button {
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    font-size: 28px;
+    cursor: pointer;
+    color: #64748b;
+    padding: 0;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.close-button:hover {
+    color: rgb(214, 251, 79);
+    border-color: rgb(214, 251, 79);
+    transform: rotate(90deg);
+}

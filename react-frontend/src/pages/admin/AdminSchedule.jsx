@@ -65,6 +65,56 @@ export default function AdminSchedule() {
         setSelectedExam(null);
     };
 
+    const handleCancelExam = async (examToCancel) => {
+        try {
+            const response = await fetch("http://localhost:8080/p-exam/admin/cancel", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: examToCancel.id,
+                    status: "CANCELLED"
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const updatedExam = await response.json();
+            
+            setExams(prev => 
+                prev.map(exam => 
+                    exam.id === updatedExam.id ? updatedExam : exam
+                )
+            );
+
+            setEvents(prev => 
+                prev.map(event => 
+                    Number(event.id) === updatedExam.id 
+                        ? {
+                            ...event,
+                            classNames: [`exam-status-cancelled`],
+                            extendedProps: {
+                                ...event.extendedProps,
+                                status: updatedExam.status
+                            }
+                        }
+                        : event
+                )
+            );
+
+            handleCloseModal();
+            
+            alert(`Exam for ${examToCancel.candidate_name} has been cancelled successfully.`);
+        } catch (error) {
+            console.error("Error cancelling exam:", error);
+            throw error;
+        }
+    };
+
     return (
         <div className="admin-schedule-container">
             <div className="admin-calendar-section">
@@ -79,6 +129,7 @@ export default function AdminSchedule() {
                 isOpen={modalOpen}
                 exam={selectedExam}
                 onClose={handleCloseModal}
+                onCancel={handleCancelExam}
             />
         </div>
     );

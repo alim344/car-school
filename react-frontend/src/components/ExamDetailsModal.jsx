@@ -1,7 +1,10 @@
 import "../style/ExamDetailsModal.css";
+import { useState } from "react";
 
+export default function ExamDetailsModal({ isOpen, exam, onClose,onCancel }) {
 
-export default function ExamDetailsModal({ isOpen, exam, onClose }) {
+    const [isCancelling, setIsCancelling] = useState(false);
+
     if (!isOpen || !exam) return null;
 
     const getStatusColor = (status) => {
@@ -33,12 +36,46 @@ export default function ExamDetailsModal({ isOpen, exam, onClose }) {
         });
     };
 
+    const handleCancel = async () => {
+        if (!window.confirm(`Are you sure you want to cancel the exam for ${exam.candidate_name}?`)) {
+            return;
+        }
+
+        setIsCancelling(true);
+        try {
+            await onCancel(exam);
+        } catch (error) {
+            console.error("Error cancelling exam:", error);
+            alert("Failed to cancel exam. Please try again.");
+        } finally {
+            setIsCancelling(false);
+        }
+    };
+
+    const isScheduled = exam.status?.toUpperCase() === 'SCHEDULED';
+    const isCancelled = exam.status?.toUpperCase() === 'CANCELLED';
+
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2>Exam Details</h2>
-                    <button className="close-button" onClick={onClose}>×</button>
+                     <div className="modal-header-actions">
+                        {isScheduled && (
+                            <button 
+                                className="cancel-exam-btn" 
+                                onClick={handleCancel}
+                                disabled={isCancelling}
+                            >
+                                {isCancelling ? 'Cancelling...' : 'Cancel Exam'}
+                            </button>
+                        )}
+                        {isCancelled && (
+                            <span className="cancelled-badge">Cancelled</span>
+                        )}
+                        <button className="close-button" onClick={onClose}>×</button>
+                    </div>
                 </div>
 
                 <div className="modal-body">
@@ -96,31 +133,11 @@ export default function ExamDetailsModal({ isOpen, exam, onClose }) {
                             </div>
                         )}
 
-                        {exam.status?.toUpperCase() === 'FAILED' && (
-                            <div className="info-row failed-message">
-                                <span className="info-label">Note:</span>
-                                <span className="info-value" style={{ color: '#ef4444' }}>
-                                    Candidate did not pass this exam
-                                </span>
-                            </div>
-                        )}
-
-                        {exam.status?.toUpperCase() === 'PASSED' && (
-                            <div className="info-row passed-message">
-                                <span className="info-label">Note:</span>
-                                <span className="info-value" style={{ color: '#22c55e' }}>
-                                    Candidate successfully passed this exam
-                                </span>
-                            </div>
-                        )}
+                        
                     </div>
                 </div>
 
-                <div className="modal-footer">
-                    <button className="close-modal-btn" onClick={onClose}>
-                        Close
-                    </button>
-                </div>
+                
             </div>
         </div>
     );

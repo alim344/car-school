@@ -83,23 +83,23 @@ public class PracticalExamController {
 
 
     @PostMapping("/admin/schedule")
-    public ResponseEntity<PracticalExamDTO> scheduleExam(CreateExamDTO dto){
+    public ResponseEntity<PracticalExamDTO> scheduleExam(@RequestBody CreateExamDTO dto){
         return ResponseEntity.ok(practicalExamService.createExam(dto));
     }
 
 
     @PatchMapping("/admin/cancel")
-    public ResponseEntity<PracticalExamDTO> cancelExam(PracticalExamDTO dto){
+    public ResponseEntity<PracticalExamDTO> cancelExam(@RequestBody PracticalExamDTO dto){
         return ResponseEntity.ok(practicalExamService.cancelExam(dto));
     }
 
     @PatchMapping("/admin/pass")
-    public ResponseEntity<PracticalExamDTO> passExam(PracticalExamDTO dto){
+    public ResponseEntity<PracticalExamDTO> passExam(@RequestBody PracticalExamDTO dto){
         return ResponseEntity.ok(practicalExamService.passExam(dto));
     }
 
     @PatchMapping("/admin/fail")
-    public ResponseEntity<PracticalExamDTO> failExam(PracticalExamDTO dto){
+    public ResponseEntity<PracticalExamDTO> failExam(@RequestBody PracticalExamDTO dto){
         return ResponseEntity.ok(practicalExamService.failExam(dto));
     }
 
