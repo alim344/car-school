@@ -122,6 +122,7 @@ export default function AdminSchedule() {
                     events={events}
                     onEventClick={handleEventClick}
                     onTimeSelect={() => {}}
+                    selectable={false}
                 />
             </div>
 

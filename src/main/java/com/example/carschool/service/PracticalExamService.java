@@ -26,7 +26,7 @@ public class PracticalExamService {
 
 
     public List<PracticalExamDTO> getAll(){
-        List<PracticalExam> practicalExams = practicalExamRepository.findAll();
+        List<PracticalExam> practicalExams = practicalExamRepository.findAllByOrderByDateTimeDesc();
         List<PracticalExamDTO> practicalExamDTOs = new ArrayList<>();
         for (PracticalExam practicalExam : practicalExams) {
             practicalExamDTOs.add(new PracticalExamDTO(practicalExam));
@@ -36,7 +36,7 @@ public class PracticalExamService {
 
     public List<PracticalExamDTO> getExamsByStatus(ExamStatus examStatus){
         List<PracticalExamDTO> practicalExamDTOs = new ArrayList<>();
-        List<PracticalExam> exams = practicalExamRepository.findByStatus(examStatus);
+        List<PracticalExam> exams = practicalExamRepository.findByStatusOrderByDateTimeDesc(examStatus);
         for (PracticalExam exam : exams) {
             practicalExamDTOs.add(new PracticalExamDTO(exam));
         }

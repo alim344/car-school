@@ -11,7 +11,6 @@ export default function ExamScheduler() {
     const [showExamDetails, setShowExamDetails] = useState(false);
     const [showScheduleForm, setShowScheduleForm] = useState(false);
     
-    // Form states
     const [pendingCandidates, setPendingCandidates] = useState([]);
     const [instructors, setInstructors] = useState([]);
     const [formData, setFormData] = useState({
@@ -22,6 +21,9 @@ export default function ExamScheduler() {
     const [formLoading, setFormLoading] = useState(false);
     const [formError, setFormError] = useState(null);
     const [formSuccess, setFormSuccess] = useState(false);
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [adminSearchTerm, setAdminSearchTerm] = useState("");
 
     const hasFetched = useRef(false);
     const token = localStorage.getItem("userToken");
@@ -63,7 +65,6 @@ export default function ExamScheduler() {
 
     const loadFormData = useCallback(async () => {
         try {
-            // Fetch pending candidates
             const candidatesResponse = await axios.get(
                 "http://localhost:8080/candidate/pending",
                 {
@@ -74,7 +75,6 @@ export default function ExamScheduler() {
             );
             setPendingCandidates(candidatesResponse.data);
 
-            // Fetch all instructors
             const instructorsResponse = await axios.get(
                 "http://localhost:8080/instructor/getAll",
                 {
@@ -140,7 +140,6 @@ export default function ExamScheduler() {
     const handleScheduleExam = async (e) => {
         e.preventDefault();
         
-        // Validate form
         if (!formData.candidate_email || !formData.instructor_email || !formData.dateTime) {
             setFormError("Please fill in all fields");
             return;
@@ -164,10 +163,8 @@ export default function ExamScheduler() {
             setFormSuccess(true);
             setFormError(null);
             
-            // Reset form after successful submission
             setTimeout(() => {
                 closeScheduleForm();
-                // Refresh the exam list
                 loadExams(activeFilter);
             }, 2000);
             
@@ -201,6 +198,18 @@ export default function ExamScheduler() {
         });
     };
 
+    const searchedExams = filteredExams.filter((exam) => {
+        const candidateMatches = exam.candidate_name
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase());
+
+        const adminMatches = exam.admin_name
+            ?.toLowerCase()
+            .includes(adminSearchTerm.toLowerCase());
+
+        return candidateMatches && adminMatches;
+    });
+
     return (
         <div className="exam-scheduler-container">
             <div className="exam-header">
@@ -215,6 +224,24 @@ export default function ExamScheduler() {
                 </div>
             </div>
 
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Search by candidate name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="candidate-search-input"
+                />
+
+                <input
+                    type="text"
+                    placeholder="Search by witness name..."
+                    value={adminSearchTerm}
+                    onChange={(e) => setAdminSearchTerm(e.target.value)}
+                    className="candidate-search-input"
+                />
+            </div>
+
             <div className="filter-tabs">
                 {filters.map((filter) => (
                     <button
@@ -224,12 +251,12 @@ export default function ExamScheduler() {
                         disabled={loading}
                     >
                         {filter.label}
-                        {activeFilter === filter.key && (
-                            <span className="filter-count">{filteredExams.length}</span>
-                        )}
+                        
                     </button>
                 ))}
             </div>
+
+            
 
             {loading && (
                 <div className="loading-container">
@@ -249,7 +276,7 @@ export default function ExamScheduler() {
 
             {!loading && !error && (
                 <div className="exams-grid">
-                    {filteredExams.length === 0 ? (
+                    {searchedExams.length === 0 ? (
                         <div className="empty-state">
                             <h3>No exams found</h3>
                             <p>There are no {activeFilter.toLowerCase()} exams available.</p>
@@ -258,7 +285,7 @@ export default function ExamScheduler() {
                             </button>
                         </div>
                     ) : (
-                        filteredExams.map((exam) => (
+                        searchedExams.map((exam) => (
                             <div
                                 key={exam.id}
                                 className="exam-card"
@@ -280,8 +307,8 @@ export default function ExamScheduler() {
                                             <span className="info-value">{formatDateTime(exam.dateTime)}</span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label"> Instructor</span>
-                                            <span className="info-value">{exam.instructor_name}</span>
+                                            <span className="info-label"> Witness</span>
+                                            <span className="info-value">{exam.admin_name}</span>
                                         </div>
                                         {exam.score !== null && exam.score !== undefined && (
                                             <div className="info-item">
@@ -410,7 +437,6 @@ export default function ExamScheduler() {
                 </div>
             )}
 
-            {/* Exam Details Modal */}
             {showExamDetails && selectedExam && (
                 <div className="modal-overlay" onClick={closeExamDetails}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -429,12 +455,12 @@ export default function ExamScheduler() {
                                 <span className="detail-value">{selectedExam.candidate_email}</span>
                             </div>
                             <div className="detail-row">
-                                <span className="detail-label">Instructor</span>
-                                <span className="detail-value">{selectedExam.instructor_name}</span>
+                                <span className="detail-label">Witness</span>
+                                <span className="detail-value">{selectedExam.admin_name}</span>
                             </div>
                             <div className="detail-row">
-                                <span className="detail-label">Instructor Email</span>
-                                <span className="detail-value">{selectedExam.instructor_email}</span>
+                                <span className="detail-label">Admin Email</span>
+                                <span className="detail-value">{selectedExam.admin_email}</span>
                             </div>
                             <div className="detail-row">
                                 <span className="detail-label">Date & Time</span>
