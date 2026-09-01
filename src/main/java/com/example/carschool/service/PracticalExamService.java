@@ -1,11 +1,14 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.CreateExamDTO;
+import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.PracticalExamDTO;
+import com.example.carschool.dto.TimeDTO;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.PracticalExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;

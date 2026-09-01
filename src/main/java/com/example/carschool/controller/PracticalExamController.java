@@ -3,6 +3,7 @@ package com.example.carschool.controller;
 import com.example.carschool.dto.CreateExamDTO;
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.PracticalExamDTO;
+import com.example.carschool.dto.TimeDTO;
 import com.example.carschool.model.Admin;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.ExamStatus;
@@ -104,6 +105,9 @@ public class PracticalExamController {
     }
 
 
+    public ResponseEntity<List<InstructorDTO>> getAvailableAdmins(@RequestBody TimeDTO timeDTO){
+        return ResponseEntity.ok(adminService.getAvailableAdmins(timeDTO));
+    }
 
 
 

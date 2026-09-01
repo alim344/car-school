@@ -10,4 +10,6 @@ public interface PracticalExamRepository extends JpaRepository<PracticalExam, Lo
     List<PracticalExam> findByCandidate(Candidate candidate);
     List<PracticalExam> findByStatus(ExamStatus status);
     List<PracticalExam> findByAdmin(Admin admin);
+
+
 }
