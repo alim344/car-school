@@ -9,8 +9,8 @@ export default function AdminLayout({ children }) {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const menuItems = [
-    
-    { id: 'practical-exam', label: 'Practical Exam',  path: '/admin' },
+    { id: 'schedule', label: 'Schedule',  path: '/admin' },
+    { id: 'practical-exam', label: 'Practical Exam',  path: '/admin/scheduler' },
     { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' },
    

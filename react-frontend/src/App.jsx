@@ -11,6 +11,7 @@ import CandidateSchedule from './pages/candidate/CandidateSchedule';
 import CandidatePreference from './pages/candidate/CandidatePreference';
 import AdminLayout from './pages/admin/AdminLayout';
 import ExamScheduler from './pages/admin/ExamScheduler';
+import AdminSchedule from './pages/admin/AdminSchedule';
 
 export default function App() {
   return (
@@ -49,6 +50,13 @@ export default function App() {
 
 
         <Route path="/admin" element={
+          <AdminLayout>
+            <AdminSchedule /> 
+          </AdminLayout>
+        } />
+
+
+        <Route path="/admin/scheduler" element={
           <AdminLayout>
             <ExamScheduler /> 
           </AdminLayout>

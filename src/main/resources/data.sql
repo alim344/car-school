@@ -240,3 +240,6 @@ ALTER TABLE candidate
         CHECK (status IN ('THEORY','PRACTICAL','PASSED','PENDING' ,'EXAM_SCHEDULED'));
 
 SELECT DISTINCT status FROM candidate;
+
+
+DROP table practical_exam
