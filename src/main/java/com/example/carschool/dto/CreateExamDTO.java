@@ -15,7 +15,7 @@ public class CreateExamDTO {
 
     private String candidate_email;
 
-    private String instructor_email;
+    private String admin_email;
 
     public CreateExamDTO() {}
 

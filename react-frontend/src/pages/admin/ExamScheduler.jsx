@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import axios from "axios";
-import "../../style/ExamScheduler.css"
+import "../../style/ExamScheduler.css";
 
 export default function ExamScheduler() {
     const [filteredExams, setFilteredExams] = useState([]);
@@ -9,7 +9,20 @@ export default function ExamScheduler() {
     const [error, setError] = useState(null);
     const [selectedExam, setSelectedExam] = useState(null);
     const [showExamDetails, setShowExamDetails] = useState(false);
+    const [showScheduleForm, setShowScheduleForm] = useState(false);
     
+    // Form states
+    const [pendingCandidates, setPendingCandidates] = useState([]);
+    const [instructors, setInstructors] = useState([]);
+    const [formData, setFormData] = useState({
+        candidate_email: "",
+        instructor_email: "",
+        dateTime: ""
+    });
+    const [formLoading, setFormLoading] = useState(false);
+    const [formError, setFormError] = useState(null);
+    const [formSuccess, setFormSuccess] = useState(false);
+
     const hasFetched = useRef(false);
     const token = localStorage.getItem("userToken");
 
@@ -46,18 +59,41 @@ export default function ExamScheduler() {
         } finally {
             setLoading(false);
         }
+    }, [token, filters]);
+
+    const loadFormData = useCallback(async () => {
+        try {
+            // Fetch pending candidates
+            const candidatesResponse = await axios.get(
+                "http://localhost:8080/candidate/pending",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setPendingCandidates(candidatesResponse.data);
+
+            // Fetch all instructors
+            const instructorsResponse = await axios.get(
+                "http://localhost:8080/instructor/getAll",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setInstructors(instructorsResponse.data);
+        } catch (error) {
+            console.error("Error loading form data:", error);
+            setFormError("Failed to load form data. Please try again.");
+        }
     }, [token]);
 
     useEffect(() => {
         if (hasFetched.current) return;
         hasFetched.current = true;
-        
         loadExams("ALL");
-        
-        // Cleanup function
-        return () => {
-            hasFetched.current = false;
-        };
     }, [loadExams]);
 
     const handleFilterChange = (filterKey) => {
@@ -73,6 +109,74 @@ export default function ExamScheduler() {
     const closeExamDetails = () => {
         setShowExamDetails(false);
         setSelectedExam(null);
+    };
+
+    const openScheduleForm = async () => {
+        setShowScheduleForm(true);
+        setFormError(null);
+        setFormSuccess(false);
+        await loadFormData();
+    };
+
+    const closeScheduleForm = () => {
+        setShowScheduleForm(false);
+        setFormData({
+            candidate_email: "",
+            instructor_email: "",
+            dateTime: ""
+        });
+        setFormError(null);
+        setFormSuccess(false);
+    };
+
+    const handleFormChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleScheduleExam = async (e) => {
+        e.preventDefault();
+        
+        // Validate form
+        if (!formData.candidate_email || !formData.instructor_email || !formData.dateTime) {
+            setFormError("Please fill in all fields");
+            return;
+        }
+
+        setFormLoading(true);
+        setFormError(null);
+
+        try {
+            await axios.post(
+                "http://localhost:8080/p-exam/admin/schedule",
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                }
+            );
+
+            setFormSuccess(true);
+            setFormError(null);
+            
+            // Reset form after successful submission
+            setTimeout(() => {
+                closeScheduleForm();
+                // Refresh the exam list
+                loadExams(activeFilter);
+            }, 2000);
+            
+        } catch (error) {
+            console.error("Error scheduling exam:", error);
+            setFormError(error.response?.data?.message || "Failed to schedule exam. Please try again.");
+        } finally {
+            setFormLoading(false);
+        }
     };
 
     const getStatusBadgeClass = (status) => {
@@ -100,8 +204,15 @@ export default function ExamScheduler() {
     return (
         <div className="exam-scheduler-container">
             <div className="exam-header">
-                <h1> Exam Management</h1>
-                <p className="exam-subtitle">View and manage all practical exams</p>
+                <div className="header-content">
+                    <div>
+                        <h1>Exam Management</h1>
+                        <p className="exam-subtitle">View, manage and schedule practical exams</p>
+                    </div>
+                    <button className="schedule-exam-btn" onClick={openScheduleForm}>
+                        <span className="plus-icon">+</span> Schedule Exam
+                    </button>
+                </div>
             </div>
 
             <div className="filter-tabs">
@@ -140,9 +251,11 @@ export default function ExamScheduler() {
                 <div className="exams-grid">
                     {filteredExams.length === 0 ? (
                         <div className="empty-state">
-                            <div className="empty-icon">📭</div>
                             <h3>No exams found</h3>
                             <p>There are no {activeFilter.toLowerCase()} exams available.</p>
+                            <button className="schedule-from-empty-btn" onClick={openScheduleForm}>
+                                Schedule an Exam
+                            </button>
                         </div>
                     ) : (
                         filteredExams.map((exam) => (
@@ -188,6 +301,116 @@ export default function ExamScheduler() {
                 </div>
             )}
 
+            {showScheduleForm && (
+                <div className="modal-overlay" onClick={closeScheduleForm}>
+                    <div className="modal-content schedule-modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2> Schedule New Exam</h2>
+                            <button className="modal-close-btn" onClick={closeScheduleForm}>✕</button>
+                        </div>
+                        
+                        <form onSubmit={handleScheduleExam} className="schedule-form">
+                            <div className="form-group">
+                                <label className="form-label">
+                                    Candidate <span className="required">*</span>
+                                </label>
+                                <select
+                                    name="candidate_email"
+                                    value={formData.candidate_email}
+                                    onChange={handleFormChange}
+                                    className="form-select"
+                                    required
+                                >
+                                    <option value="">Select a candidate...</option>
+                                    {pendingCandidates.map((candidate) => (
+                                        <option key={candidate.id} value={candidate.email}>
+                                            {candidate.firstName} {candidate.lastName} ({candidate.email}) - {candidate.numberOfClassesLeft} classes left
+                                        </option>
+                                    ))}
+                                </select>
+                                {pendingCandidates.length === 0 && (
+                                    <p className="form-hint">No pending candidates available</p>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">
+                                    Instructor <span className="required">*</span>
+                                </label>
+                                <select
+                                    name="instructor_email"
+                                    value={formData.instructor_email}
+                                    onChange={handleFormChange}
+                                    className="form-select"
+                                    required
+                                >
+                                    <option value="">Select an instructor...</option>
+                                    {instructors.map((instructor) => (
+                                        <option key={instructor.email} value={instructor.email}>
+                                            {instructor.name} ({instructor.email})
+                                        </option>
+                                    ))}
+                                </select>
+                                {instructors.length === 0 && (
+                                    <p className="form-hint">No instructors available</p>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">
+                                    Date & Time <span className="required">*</span>
+                                </label>
+                                <input
+                                    type="datetime-local"
+                                    name="dateTime"
+                                    value={formData.dateTime}
+                                    onChange={handleFormChange}
+                                    className="form-input"
+                                    required
+                                />
+                            </div>
+
+                            {formError && (
+                                <div className="form-error">
+                                    <span className="error-icon">⚠️</span> {formError}
+                                </div>
+                            )}
+
+                            {formSuccess && (
+                                <div className="form-success">
+                                    <span className="success-icon">✅</span> Exam scheduled successfully!
+                                </div>
+                            )}
+
+                            <div className="form-actions">
+                                <button 
+                                    type="button" 
+                                    className="form-cancel-btn" 
+                                    onClick={closeScheduleForm}
+                                    disabled={formLoading}
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="form-submit-btn"
+                                    disabled={formLoading || formSuccess}
+                                >
+                                    {formLoading ? (
+                                        <>
+                                            <span className="spinner-small"></span> Scheduling...
+                                        </>
+                                    ) : (
+                                        "Schedule Exam"
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Exam Details Modal */}
             {showExamDetails && selectedExam && (
                 <div className="modal-overlay" onClick={closeExamDetails}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

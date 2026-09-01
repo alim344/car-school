@@ -23,8 +23,11 @@ public class PracticalExamDTO {
     private String candidate_name;
 
 
-    private String instructor_email;
-    private String instructor_name;
+
+
+
+    private String admin_email;
+    private String admin_name;
 
     private Integer score;
 
@@ -35,8 +38,8 @@ public class PracticalExamDTO {
         this.dateTime = practicalExam.getDateTime();
         this.status = practicalExam.getStatus();
         this.candidate_email = practicalExam.getCandidate().getEmail();
-        this.instructor_email = practicalExam.getInstructor().getEmail();
-        this.instructor_name = practicalExam.getInstructor().getName() + " " + practicalExam.getInstructor().getLastname();
+        this.admin_email = practicalExam.getAdmin().getEmail();
+        this.admin_name = practicalExam.getAdmin().getName() + " " + practicalExam.getAdmin().getLastname();
         this.candidate_name = practicalExam.getCandidate().getName()+ " " + practicalExam.getCandidate().getLastname();
 
     }

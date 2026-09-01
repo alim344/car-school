@@ -19,7 +19,7 @@ public class PracticalExamService {
     @Autowired
     private CandidateService candidateService;
     @Autowired
-    private InstructorService instructorService;
+    private AdminService adminService;
 
 
     public List<PracticalExamDTO> getAll(){
@@ -40,15 +40,17 @@ public class PracticalExamService {
         return practicalExamDTOs;
     }
 
-
-    public List<PracticalExamDTO> getByInstructor(Instructor instructor){
-        List<PracticalExam> practicalExams = practicalExamRepository.findByInstructor(instructor);
+    public List<PracticalExamDTO> getByAdmin(Admin admin){
         List<PracticalExamDTO> practicalExamDTOs = new ArrayList<>();
-        for (PracticalExam practicalExam : practicalExams) {
-            practicalExamDTOs.add(new PracticalExamDTO(practicalExam));
+        List<PracticalExam> exams = practicalExamRepository.findByAdmin(admin);
+        for (PracticalExam exam : exams) {
+            practicalExamDTOs.add(new PracticalExamDTO(exam));
+
         }
         return practicalExamDTOs;
     }
+
+
 
 
     public List<PracticalExamDTO> getByCandidate(Candidate candidate){
@@ -63,11 +65,12 @@ public class PracticalExamService {
     public PracticalExamDTO createExam(CreateExamDTO createExamDTO){
 
         Candidate candidate = candidateService.getByEmail(createExamDTO.getCandidate_email());
-        Instructor instructor = instructorService.findByEmail(createExamDTO.getInstructor_email());
+        Admin admin = adminService.findByEmail(createExamDTO.getAdmin_email());
+
 
         PracticalExam practicalExam = new PracticalExam();
         practicalExam.setCandidate(candidate);
-        practicalExam.setInstructor(instructor);
+        practicalExam.setAdmin(admin);
         practicalExam.setDateTime(createExamDTO.getDateTime());
         practicalExam.setStatus(ExamStatus.SCHEDULED);
         practicalExamRepository.save(practicalExam);
@@ -98,6 +101,7 @@ public class PracticalExamService {
         practicalExamRepository.save(pe);
         return new PracticalExamDTO(pe);
     }
+
 
 
 }

@@ -27,8 +27,8 @@ public class PracticalExam {
     private Candidate candidate;
 
     @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    private Instructor instructor;
+    @JoinColumn(name = "admin_id", nullable = false)
+    private Admin admin;
 
     @Column
     private Integer score;
