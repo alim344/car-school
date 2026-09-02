@@ -12,6 +12,7 @@ import CandidatePreference from './pages/candidate/CandidatePreference';
 import AdminLayout from './pages/admin/AdminLayout';
 import ExamScheduler from './pages/admin/ExamScheduler';
 import AdminSchedule from './pages/admin/AdminSchedule';
+import RecordExam from './pages/admin/RecordExam';
 
 export default function App() {
   return (
@@ -60,6 +61,10 @@ export default function App() {
           <AdminLayout>
             <ExamScheduler /> 
           </AdminLayout>
+        } />
+
+        <Route path="/admin/record" element={
+          <RecordExam></RecordExam>
         } />
 
       </Routes>

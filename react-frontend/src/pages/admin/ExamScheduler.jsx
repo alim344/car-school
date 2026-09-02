@@ -1,10 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../style/ExamScheduler.css";
 import "../../components/ScheduleExam"
 import ScheduleExam from "../../components/ScheduleExam";
 
+
+const filters = [
+        { key: "ALL", label: "All Exams", endpoint: "/admin/getAll" },
+        { key: "SCHEDULED", label: "Scheduled", endpoint: "/admin/getScheduled" },
+        { key: "COMPLETED", label: "Passed", endpoint: "/admin/getPassed" },
+        { key: "FAILED", label: "Failed", endpoint: "/admin/getFailed" },
+        { key: "CANCELLED", label: "Cancelled", endpoint: "/admin/getCancelled" },
+    ];
+
+
 export default function ExamScheduler() {
+    const navigate = useNavigate();
     const [filteredExams, setFilteredExams] = useState([]);
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [loading, setLoading] = useState(false);
@@ -20,14 +32,7 @@ export default function ExamScheduler() {
     const hasFetched = useRef(false);
     const token = localStorage.getItem("userToken");
 
-    const filters = [
-        { key: "ALL", label: "All Exams", endpoint: "/admin/getAll" },
-        { key: "SCHEDULED", label: "Scheduled", endpoint: "/admin/getScheduled" },
-        { key: "COMPLETED", label: "Passed", endpoint: "/admin/getPassed" },
-        { key: "FAILED", label: "Failed", endpoint: "/admin/getFailed" },
-        { key: "CANCELLED", label: "Cancelled", endpoint: "/admin/getCancelled" },
-    ];
-
+    
     const loadExams = useCallback(async (filterKey) => {
         setLoading(true);
         setError(null);
@@ -122,9 +127,14 @@ export default function ExamScheduler() {
                         <h1>Exam Management</h1>
                         <p className="exam-subtitle">View, manage and schedule practical exams</p>
                     </div>
-                    <button className="schedule-exam-btn" onClick={() => setShowScheduleForm(true)}>
-                        <span className="plus-icon">+</span> Schedule Exam
-                    </button>
+                    <div className="exam-buttons">
+                        <button className="schedule-exam-btn" onClick={() => navigate("/admin/record")}>
+                            Record Exam
+                        </button>
+                        <button className="schedule-exam-btn" onClick={() => setShowScheduleForm(true)}>
+                            <span className="plus-icon">+</span> Schedule Exam
+                        </button>
+                    </div>
                 </div>
             </div>
 

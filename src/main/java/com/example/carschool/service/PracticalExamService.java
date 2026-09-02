@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -132,6 +135,22 @@ public class PracticalExamService {
         pe.setScore(practicalExamDTO.getScore());
         practicalExamRepository.save(pe);
         return new PracticalExamDTO(pe);
+    }
+
+
+
+    public List<PracticalExamDTO> getByDate(TimeDTO timeDTO){
+
+        LocalDate date = timeDTO.getDateTime().toLocalDate();
+
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
+        List<PracticalExam> pe =  practicalExamRepository.findByStatusAndDateTimeBetween(ExamStatus.SCHEDULED,startOfDay,endOfDay);
+
+        List<PracticalExamDTO> dtos = pe.stream().map(PracticalExamDTO::new).toList();
+
+        return dtos;
     }
 
 

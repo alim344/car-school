@@ -455,9 +455,7 @@
 }
 
 
-/* Add these styles to your existing ExamScheduler.css */
 
-/* Header with Schedule Button */
 .header-content {
     display: flex;
     justify-content: space-between;
@@ -510,7 +508,6 @@
     box-shadow: 0 8px 30px rgba(214, 251, 79, 0.2);
 }
 
-/* Schedule Form Modal */
 .schedule-modal {
     max-width: 550px;
 }
@@ -697,4 +694,10 @@
 
 .candidate-search-input:focus {
     border-color: #172554;
+}
+
+.exam-buttons{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
 }

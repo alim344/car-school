@@ -111,6 +111,10 @@ public class PracticalExamController {
     }
 
 
+    @PostMapping("/getByDate")
+    public ResponseEntity<List<PracticalExamDTO>> getByDate(@RequestBody TimeDTO timeDTO){
+        return ResponseEntity.ok(practicalExamService.getByDate(timeDTO));
+    }
 
 
 }

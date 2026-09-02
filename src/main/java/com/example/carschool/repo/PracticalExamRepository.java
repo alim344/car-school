@@ -3,6 +3,7 @@ package com.example.carschool.repo;
 import com.example.carschool.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PracticalExamRepository extends JpaRepository<PracticalExam, Long> {
@@ -14,6 +15,6 @@ public interface PracticalExamRepository extends JpaRepository<PracticalExam, Lo
     List<PracticalExam> findAllByOrderByDateTimeDesc();
     List<PracticalExam> findByStatusOrderByDateTimeDesc(ExamStatus status);
 
-
+    List<PracticalExam> findByStatusAndDateTimeBetween(ExamStatus status,LocalDateTime startOfDay, LocalDateTime endOfDay);
 
 }
