@@ -8,6 +8,7 @@ import com.example.carschool.repo.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class AdminService {
 
     public List<InstructorDTO> getAvailableAdmins(TimeDTO time){
         List<InstructorDTO> dtos = new ArrayList<>();
-        List<Admin> admins = adminRepository.findAvailableAdminsAt(time.getStartTime(), ExamStatus.CANCELLED);
+        LocalDateTime endTime = time.getStartTime().plusMinutes(90);
+        List<Admin> admins = adminRepository.findAvailableAdminsBetween(time.getStartTime(), endTime,ExamStatus.CANCELLED);
         for(Admin admin : admins){
             InstructorDTO instructorDTO = new InstructorDTO();
             instructorDTO.setEmail(admin.getEmail());

@@ -105,6 +105,7 @@ public class PracticalExamController {
     }
 
 
+    @PostMapping("/admin/get-available")
     public ResponseEntity<List<InstructorDTO>> getAvailableAdmins(@RequestBody TimeDTO timeDTO){
         return ResponseEntity.ok(adminService.getAvailableAdmins(timeDTO));
     }

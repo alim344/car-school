@@ -23,4 +23,19 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
             @Param("dateTime") LocalDateTime dateTime,
             @Param("cancelledStatus") ExamStatus cancelledStatus
     );
+
+
+    @Query("SELECT a FROM Admin a WHERE a.id NOT IN (" +
+            "  SELECT pe.admin.id FROM PracticalExam pe " +
+            "  WHERE pe.dateTime >= :startTime AND pe.dateTime < :endTime " +
+            "  AND pe.status != :cancelledStatus" +
+            ")")
+    List<Admin> findAvailableAdminsBetween(
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime,
+            @Param("cancelledStatus") ExamStatus cancelledStatus
+    );
+
+
+
 }

@@ -8,6 +8,7 @@ import com.example.carschool.model.*;
 import com.example.carschool.repo.PracticalExamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
@@ -65,11 +66,22 @@ public class PracticalExamService {
         return practicalExamDTOs;
     }
 
+    @Transactional
     public PracticalExamDTO createExam(CreateExamDTO createExamDTO){
 
-        Candidate candidate = candidateService.getByEmail(createExamDTO.getCandidate_email());
-        Admin admin = adminService.findByEmail(createExamDTO.getAdmin_email());
+        if (createExamDTO.getAdminEmail() == null) {
+            throw new IllegalArgumentException("admin_email missing or null in request body");
+        }
+        if (createExamDTO.getCandidateEmail() == null) {
+            throw new IllegalArgumentException("candidate_email missing or null in request body");
+        }
 
+        Candidate candidate = candidateService.getByEmail(createExamDTO.getCandidateEmail());
+        Admin admin = adminService.findByEmail(createExamDTO.getAdminEmail());
+
+
+        candidate.setStatus(TrainingStatus.EXAM_SCHEDULED);
+        candidateService.save(candidate);
 
         PracticalExam practicalExam = new PracticalExam();
         practicalExam.setCandidate(candidate);
@@ -81,25 +93,42 @@ public class PracticalExamService {
 
     }
 
+    @Transactional
     public PracticalExamDTO cancelExam(PracticalExamDTO practicalExamDTO){
         PracticalExam pe = practicalExamRepository.findById(practicalExamDTO.getId()).orElse(null);
         pe.setStatus(ExamStatus.CANCELLED);
+
+        Candidate candidate = pe.getCandidate();
+        candidate.setStatus(TrainingStatus.PENDING);
+        candidateService.save(candidate);
+
         practicalExamRepository.save(pe);
         return new PracticalExamDTO(pe);
     }
 
-
+    @Transactional
     public PracticalExamDTO passExam(PracticalExamDTO practicalExamDTO){
         PracticalExam pe = practicalExamRepository.findById(practicalExamDTO.getId()).orElse(null);
         pe.setStatus(ExamStatus.COMPLETED);
+
+        Candidate candidate = pe.getCandidate();
+        candidate.setStatus(TrainingStatus.PASSED);
+        candidateService.save(candidate);
+
         pe.setScore(practicalExamDTO.getScore());
         practicalExamRepository.save(pe);
         return new PracticalExamDTO(pe);
     }
 
+    @Transactional
     public PracticalExamDTO failExam(PracticalExamDTO practicalExamDTO){
         PracticalExam pe = practicalExamRepository.findById(practicalExamDTO.getId()).orElse(null);
         pe.setStatus(ExamStatus.FAILED);
+
+        Candidate candidate = pe.getCandidate();
+        candidate.setStatus(TrainingStatus.PENDING);
+        candidateService.save(candidate);
+
         pe.setScore(practicalExamDTO.getScore());
         practicalExamRepository.save(pe);
         return new PracticalExamDTO(pe);
