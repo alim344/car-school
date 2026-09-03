@@ -61,7 +61,15 @@ public class CandidateService {
         return dtos;
     }
 
+    public List<Candidate> getCandidatesByEmail(List<String> emails) {
 
+        List<Candidate> candidates = new ArrayList<>();
+        for(String email : emails) {
+            candidates.add(getByEmail(email));
+
+        }
+        return candidates;
+    }
 
 
 }

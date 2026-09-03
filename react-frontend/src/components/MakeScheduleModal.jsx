@@ -51,8 +51,8 @@ export default function MakeScheduleModal({ isOpen, onClose, onSelect }) {
                         </button>
 
                          <button
-                            className="schedule-option copy"
-                            onClick={() => onSelect('copy')}
+                            className="schedule-option alg"
+                            onClick={() => onSelect('alg')}
                         >
                             <div className="option-content">
                                 <h4>Algorithm</h4>

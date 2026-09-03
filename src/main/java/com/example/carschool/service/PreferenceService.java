@@ -58,13 +58,19 @@ public class PreferenceService {
 
     }
 
-
-    public List<CandidatePreferencesDTO> getWeeklyPreferencesByInstructor(Long instructorId) {
+    public List<Preference> getNextWeekInstructorPreferences(Long instructorId){
         LocalDate today = LocalDate.now();
         LocalDate weekStart = today.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
         LocalDate weekEnd = weekStart.plusDays(6);
-        List<Preference> preferences = preferenceRepository
+        return preferenceRepository
                 .findByInstructorAndDateRange(instructorId, weekStart, weekEnd);
+
+    }
+
+
+    public List<CandidatePreferencesDTO> getWeeklyPreferencesByInstructor(Long instructorId) {
+
+        List<Preference> preferences = getNextWeekInstructorPreferences(instructorId);
 
         return preferences.stream()
                 .collect(Collectors.groupingBy(Preference::getCandidate))

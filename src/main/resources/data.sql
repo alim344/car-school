@@ -229,6 +229,50 @@ SELECT setval(pg_get_serial_sequence('preference', 'id'), COALESCE(MAX(id), 1)) 
 
 
 
+-- =============================================================================
+-- TIME PREFERENCES
+-- Candidate 1 -> Preference ID: 11 (1 slot)
+-- Candidate 4 -> Preference ID: 12 (3 slots)
+-- Candidate 5 -> Preference ID: 13 (5 slots)
+-- Candidate 7 -> Preference ID: 14 (0 slots - NO_PREFERENCE)
+-- =============================================================================
+
+-- Candidate 1 (Preference ID: 11) -> 1 Slot
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (11, '2026-09-08', '10:00:00', '12:00:00'); -- Tuesday 10:00-12:00
+
+
+-- Candidate 4 (Preference ID: 12) -> 3 Slots
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (12, '2026-09-07', '08:00:00', '10:00:00'); -- Monday 08:00-10:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (12, '2026-09-09', '14:00:00', '16:00:00'); -- Wednesday 14:00-16:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (12, '2026-09-11', '09:00:00', '11:00:00'); -- Friday 09:00-11:00
+
+
+-- Candidate 5 (Preference ID: 13) -> 5 Slots
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (13, '2026-09-07', '12:00:00', '14:00:00'); -- Monday 12:00-14:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (13, '2026-09-08', '15:00:00', '17:00:00'); -- Tuesday 15:00-17:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (13, '2026-09-09', '08:00:00', '10:00:00'); -- Wednesday 08:00-10:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (13, '2026-09-10', '11:00:00', '13:00:00'); -- Thursday 11:00-13:00
+
+INSERT INTO time_preference (preference_id, date, start_time, end_time)
+VALUES (13, '2026-09-11', '16:00:00', '18:00:00'); -- Friday 16:00-18:00
+
+
+-- Candidate 7 (Preference ID: 14) -> NO_PREFERENCE (0 rows needed)
+
+
 -- 1. Drop the outdated constraint
 ALTER TABLE candidate
     DROP CONSTRAINT candidate_status_check;
@@ -243,3 +287,19 @@ SELECT DISTINCT status FROM candidate;
 
 
 DROP table practical_exam
+
+
+INSERT INTO preference (candidate_id, week_start_date, status, location_name, created_at)
+VALUES (1, '2026-09-07', 'SUBMITTED', 'Centar, Novi Sad', '2026-09-03 10:15:00');
+
+-- Candidate 4: SUBMITTED (Moderate - 3 preferences)
+INSERT INTO preference (candidate_id, week_start_date, status, location_name, created_at)
+VALUES (4, '2026-09-07', 'SUBMITTED', 'Limana 3, Novi Sad', '2026-09-03 11:30:00');
+
+-- Candidate 5: SUBMITTED (Flexible - 5 preferences)
+INSERT INTO preference (candidate_id, week_start_date, status, location_name, created_at)
+VALUES (5, '2026-09-07', 'SUBMITTED', 'Novo Naselje, Novi Sad', '2026-09-03 12:45:00');
+
+-- Candidate 7: NO_PREFERENCE (No time preferences)
+INSERT INTO preference (candidate_id, week_start_date, status, location_name, created_at)
+VALUES (7, '2026-09-07', 'NO_PREFERENCE', 'Auto Skola HQ', '2026-09-03 14:00:00');

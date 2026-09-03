@@ -1,14 +1,13 @@
 package com.example.carschool.service;
 
-import com.example.carschool.dto.CandidatePreferencesDTO;
-import com.example.carschool.dto.CreateClassDTO;
-import com.example.carschool.dto.PracticalClassDTO;
-import com.example.carschool.dto.TimePrefDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.ClassRequestRepository;
+import com.example.carschool.repo.PracticalClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -25,6 +24,7 @@ public class ScheduleService {
     private PracticalClassService practicalClassService;
     @Autowired
     private ClassRequestRepository classRequestRepository;
+
 
 
     public List<PracticalClassDTO> getInstructorSchedule(Instructor instructor) {

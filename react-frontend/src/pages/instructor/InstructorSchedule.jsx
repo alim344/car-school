@@ -4,6 +4,7 @@ import PracticalClassModal from "../../components/PracticalClassModal";
 import CreateClassModal from "../../components/CreateClassModal";
 import MakeScheduleModal from "../../components/MakeScheduleModal";
 import ManualScheduleSidebar from "../../components/ManualScheduleSidebar";
+import AlgScheduleModal from "../../components/AlgScheduleModal";
 
 import "../../style/InstructorSchedule.css";
 
@@ -37,6 +38,13 @@ export default function InstructorSchedule() {
     const [classRequests, setClassRequests] = useState([]);
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [acceptRequestOpen, setAcceptRequestOpen] = useState(false);
+
+    const [candidates, setCandidates] = useState([]);
+    const [loadingCandidates, setLoadingCandidates] = useState(false);
+    const [showAlgModal, setShowAlgModal] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    
  
 
     const token = localStorage.getItem("userToken");
@@ -79,6 +87,32 @@ export default function InstructorSchedule() {
                 console.error("Error fetching class requests:", error);
             });
     }, [token]);
+
+    const fetchCandidatesForAlg = async () => {
+        setLoadingCandidates(true);
+        try {
+            const response = await fetch("http://localhost:8080/candidate/instructor-get", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const data = await response.json();
+            setCandidates(data);
+            return data;
+        } catch (error) {
+            console.error("Error fetching candidates:", error);
+            alert("Could not load candidates for algorithm scheduling.");
+            return [];
+        } finally {
+            setLoadingCandidates(false);
+        }
+    };
+
    
 
     const events = classes.map(cls => ({
@@ -236,6 +270,7 @@ export default function InstructorSchedule() {
    
 
     const handleMakeSchedule = async (option) => {
+       
         if (option === "manual") {
             try {
                 const response = await fetch(
@@ -266,7 +301,9 @@ export default function InstructorSchedule() {
             return;
         }
 
-        if (option === "copy") {
+        if (option === "copy" ) {
+
+            
             try {
                 const [copyResponse, prefsResponse] = await Promise.all([
                     fetch("http://localhost:8080/schedule/inst/copy", {
@@ -327,7 +364,18 @@ export default function InstructorSchedule() {
 
             return;
         }
+         if (option === "alg") {
+            setMakeScheduleOpen(false);
+            const fetchedCandidates = await fetchCandidatesForAlg();
+            
+            if (fetchedCandidates.length > 0) {
+                setShowAlgModal(true);
+            }
+        }
     };
+
+
+
 
    
 
@@ -452,6 +500,66 @@ export default function InstructorSchedule() {
         }
     };
 
+
+
+      const handleAlgSubmit = async (algData) => {
+        setIsGenerating(true);
+        try {
+            const response = await fetch(
+                "http://localhost:8080/schedule/inst/alg",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify(algData)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const generatedDrafts = await response.json();
+            
+            const newDrafts = generatedDrafts.map(draft => ({
+                candidateEmail: draft.candidateEmail,
+                candidateName: draft.candidateName || draft.candidateEmail,
+                startTime: draft.startTime,
+                endTime: draft.endTime,
+                location: draft.location || "",
+                source: "algorithm"
+            }));
+
+            const prefsResponse = await fetch(
+            "http://localhost:8080/schedule/inst/candidate-prefs",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        if (!prefsResponse.ok) {
+            throw new Error(`Preferences HTTP ${prefsResponse.status}`);
+        }
+
+        const preferences = await prefsResponse.json();
+        setCandidatePreferences(preferences);
+
+            setManualDrafts(newDrafts);
+            setShowAlgModal(false);
+            setManualMode(true); 
+
+        } catch (error) {
+            console.error("Error generating algorithm schedule:", error);
+            alert("Could not generate schedule with algorithm.");
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
     
 
     const handleExitManualMode = () => {
@@ -508,6 +616,8 @@ export default function InstructorSchedule() {
         }
         setCreateModalOpen(false);
     };
+
+    
 
    
 
@@ -621,6 +731,7 @@ export default function InstructorSchedule() {
                     </div>
                 )}
 
+                
                 {manualMode && (
                     <ManualScheduleSidebar
                         candidatePreferences={candidatePreferences}
@@ -671,6 +782,17 @@ export default function InstructorSchedule() {
                 isOpen={makeScheduleOpen}
                 onClose={() => setMakeScheduleOpen(false)}
                 onSelect={handleMakeSchedule}
+            />
+
+             <AlgScheduleModal
+                isOpen={showAlgModal}
+                onClose={() => {
+                    setShowAlgModal(false);
+                    setCandidates([]);
+                }}
+                onSubmit={handleAlgSubmit}
+                candidates={candidates}
+                loading={loadingCandidates || isGenerating}
             />
 
           

@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -191,5 +194,20 @@ public class PracticalClassService {
 
 
     }
+
+
+    public List<PracticalClass> getByInstructorAndWeek(Instructor instructor){
+
+        LocalDate today = LocalDate.now();
+
+        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
+
+        LocalDateTime start = startOfWeek.atStartOfDay();
+        LocalDateTime end = endOfWeek.atTime(LocalTime.MAX);
+
+        return practicalClassRepository.findByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(instructor, start, end);
+    }
+
 
 }

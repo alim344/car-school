@@ -23,6 +23,12 @@ public interface PracticalClassRepository extends JpaRepository<PracticalClass, 
             LocalDateTime startTime
     );
 
+    List<PracticalClass> findByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(
+            Instructor instructor,
+            LocalDateTime endTime,
+            LocalDateTime startTime
+    );
+
 
 
 
