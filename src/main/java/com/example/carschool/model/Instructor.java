@@ -1,9 +1,6 @@
 package com.example.carschool.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +20,9 @@ public class Instructor extends User{
     @Column(nullable = false)
     private Integer maxCapacity;
 
+    @OneToOne
+    @JoinColumn(name = "vehicle_id", unique = true)
+    private Vehicle vehicle;
 
 
 }
