@@ -13,6 +13,7 @@ import AdminLayout from './pages/admin/AdminLayout';
 import ExamScheduler from './pages/admin/ExamScheduler';
 import AdminSchedule from './pages/admin/AdminSchedule';
 import RecordExam from './pages/admin/RecordExam';
+import AdminVehicle from './pages/admin/AdminVehicle';
 
 export default function App() {
   return (
@@ -65,6 +66,12 @@ export default function App() {
 
         <Route path="/admin/record" element={
           <RecordExam></RecordExam>
+        } />
+
+        <Route path="/admin/vehicles" element={
+          <AdminLayout>
+            <AdminVehicle /> 
+          </AdminLayout>
         } />
 
       </Routes>

@@ -11,6 +11,7 @@ export default function AdminLayout({ children }) {
   const menuItems = [
     { id: 'schedule', label: 'Schedule',  path: '/admin' },
     { id: 'practical-exam', label: 'Practical Exam',  path: '/admin/scheduler' },
+    { id: 'vehicles', label: 'Vehicles',  path: '/admin/vehicles' },
     { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' },
    

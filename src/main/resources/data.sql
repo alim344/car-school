@@ -303,3 +303,170 @@ VALUES (5, '2026-09-07', 'SUBMITTED', 'Novo Naselje, Novi Sad', '2026-09-03 12:4
 -- Candidate 7: NO_PREFERENCE (No time preferences)
 INSERT INTO preference (candidate_id, week_start_date, status, location_name, created_at)
 VALUES (7, '2026-09-07', 'NO_PREFERENCE', 'Auto Skola HQ', '2026-09-03 14:00:00');
+
+
+
+
+
+
+
+
+
+
+-- =================================================================
+-- 1. VEHICLE INSERTS
+-- =================================================================
+
+-- Unassigned Vehicles (No Instructor, Status: AVAILABLE)
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (1, 'NS-101-AA', '2027-05-15', 'AVAILABLE', 45000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (2, 'NS-102-AB', '2027-08-20', 'AVAILABLE', 32000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (3, 'NS-103-AC', '2026-11-10', 'AVAILABLE', 61000);
+
+-- Instructor #3 Vehicle (Status: AVAILABLE)
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (4, 'NS-203-DD', '2027-03-01', 'AVAILABLE', 78000);
+
+-- Instructor Vehicles - OUT_OF_SERVICE (Assigned to Instructor #10 and #23)
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (5, 'NS-310-OOS', '2026-10-01', 'OUT_OF_SERVICE', 185000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (6, 'NS-323-OOS', '2026-09-12', 'OUT_OF_SERVICE', 210000);
+
+-- Instructor Vehicles - RESERVE (Assigned to Instructor #24 and #25)
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (7, 'NS-424-RES', '2027-01-15', 'RESERVE', 95000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (8, 'NS-425-RES', '2027-04-30', 'RESERVE', 88000);
+
+-- Regular Instructor Vehicles (Assigned to remaining Instructors, Status: AVAILABLE)
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (9, 'NS-526-AV', '2027-06-10', 'AVAILABLE', 54000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (10, 'NS-527-AV', '2027-07-22', 'AVAILABLE', 41000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (11, 'NS-528-AV', '2027-09-05', 'AVAILABLE', 63000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (12, 'NS-529-AV', '2027-12-19', 'AVAILABLE', 29000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (13, 'NS-530-AV', '2027-02-14', 'AVAILABLE', 71000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (14, 'NS-531-AV', '2027-05-30', 'AVAILABLE', 38000);
+
+INSERT INTO vehicle (id, registration_number, registration_expiry_date, status, current_mileage)
+VALUES (15, 'NS-532-AV', '2027-10-11', 'AVAILABLE', 50000);
+
+
+-- =================================================================
+-- 2. INSTRUCTOR VEHICLE FOREIGN KEY UPDATES
+-- =================================================================
+-- Since Instructor owns the @JoinColumn(name = "vehicle_id"), update
+-- the instructor table records with their assigned vehicle IDs.
+-- =================================================================
+-- INSTRUCTOR VEHICLE MAPPING
+-- =================================================================
+
+-- Instructor 3: Normal setup (driving their primary vehicle 4)
+UPDATE instructor
+SET vehicle_id = 4, primary_vehicle_id = 4
+WHERE id = 3;
+
+-- Instructor 10: Primary vehicle (5) is OUT_OF_SERVICE -> currently driving RESERVE vehicle (7)
+UPDATE instructor
+SET vehicle_id = 7, primary_vehicle_id = 5
+WHERE id = 10;
+
+-- Instructor 23: Primary vehicle (6) is OUT_OF_SERVICE -> currently driving RESERVE vehicle (8)
+UPDATE instructor
+SET vehicle_id = 8, primary_vehicle_id = 6
+WHERE id = 23;
+
+-- Instructors 24 & 25: Instructors whose primary cars are normal available vehicles, currently driving their primary cars
+UPDATE instructor
+SET vehicle_id = 9, primary_vehicle_id = 9
+WHERE id = 24;
+
+UPDATE instructor
+SET vehicle_id = 10, primary_vehicle_id = 10
+WHERE id = 25;
+
+-- Remaining Instructors (26 through 32): Standard active = primary mappings
+UPDATE instructor SET vehicle_id = 11, primary_vehicle_id = 11 WHERE id = 26;
+UPDATE instructor SET vehicle_id = 12, primary_vehicle_id = 12 WHERE id = 27;
+UPDATE instructor SET vehicle_id = 13, primary_vehicle_id = 13 WHERE id = 28;
+UPDATE instructor SET vehicle_id = 14, primary_vehicle_id = 14 WHERE id = 29;
+UPDATE instructor SET vehicle_id = 15, primary_vehicle_id = 15 WHERE id = 30;
+
+-- Instructors 31 & 32: Unassigned active/primary (or map to unassigned vehicles 1 & 2 if needed)
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 31;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 32;
+
+
+
+
+
+
+
+-- =================================================================
+-- INSTRUCTOR VEHICLE MAPPINGS
+-- =================================================================
+
+-- Instructor 3: Driving their active primary vehicle (4)
+UPDATE instructor
+SET vehicle_id = 4, primary_vehicle_id = 4
+WHERE id = 3;
+
+-- Instructor 10: Primary vehicle (5, OUT_OF_SERVICE) -> active reserve vehicle (7)
+UPDATE instructor
+SET vehicle_id = 7, primary_vehicle_id = 5
+WHERE id = 10;
+
+-- Instructor 23: Primary vehicle (6, OUT_OF_SERVICE) -> active reserve vehicle (8)
+UPDATE instructor
+SET vehicle_id = 8, primary_vehicle_id = 6
+WHERE id = 23;
+
+-- Instructors 24 through 32: Currently HAVE NO ASSIGNED VEHICLES
+-- (leaving Vehicles 1, 2, 3, 9, 10, 11, 12, 13, 14, 15 as AVAILABLE and unassigned)
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 24;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 25;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 26;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 27;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 28;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 29;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 30;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 31;
+UPDATE instructor SET vehicle_id = NULL, primary_vehicle_id = NULL WHERE id = 32;
+
+
+
+
+
+
+INSERT INTO vehicle_brand (id, brand, model, colour, year) VALUES
+                                                               (1, 'Chevrolet', 'Impala', 'Black', '1967'),
+                                                               (2, 'Volkswagen', 'Golf 7', 'White', '2019'),
+                                                               (3, 'Toyota', 'Yaris', 'Red', '2021'),
+                                                               (4, 'Peugeot', '208', 'Grey', '2020'),
+                                                               (5, 'Skoda', 'Fabia', 'Blue', '2018');
+
+
+
+
+
+UPDATE vehicle SET brand_id = 1 WHERE id IN (1, 5, 15);  -- 1967 Chevy Impala
+UPDATE vehicle SET brand_id = 2 WHERE id IN (2, 3, 9);   -- VW Golf 7
+UPDATE vehicle SET brand_id = 3 WHERE id IN (4, 7, 13);  -- Toyota Yaris
+UPDATE vehicle SET brand_id = 4 WHERE id IN (8, 10, 12); -- Peugeot 208
+UPDATE vehicle SET brand_id = 5 WHERE id IN (6, 11, 14); -- Skoda Fabia

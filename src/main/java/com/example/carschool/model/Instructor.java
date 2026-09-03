@@ -21,8 +21,12 @@ public class Instructor extends User{
     private Integer maxCapacity;
 
     @OneToOne
-    @JoinColumn(name = "vehicle_id", unique = true)
+    @JoinColumn(name = "vehicle_id", unique = true) // active vehicle
     private Vehicle vehicle;
+
+    @OneToOne
+    @JoinColumn(name = "primary_vehicle_id", unique = true)
+    private Vehicle primaryVehicle;
 
 
 }

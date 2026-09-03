@@ -1,6 +1,7 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.VehicleDTO;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Vehicle;
 import com.example.carschool.model.VehicleStatus;
@@ -89,6 +90,11 @@ public class VehicleService {
                 vehicleRepository.save(vehicle);
             }
         }
+
+    }
+
+    public void chooseVehicle(Candidate candidate){
+
 
     }
 

@@ -1,8 +1,10 @@
 package com.example.carschool.controller;
 
 import com.example.carschool.dto.VehicleDTO;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.VehicleStatus;
+import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.service.VehicleService;
 import com.example.carschool.util.TokenUtils;
@@ -28,26 +30,27 @@ public class VehicleController {
 
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private CandidateService candidateService;
 
     @GetMapping("/getAll")
     public ResponseEntity<List<VehicleDTO>> getAll(){
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
-    @GetMapping("/{status}")
+    @GetMapping("/getByStatus/{status}")
     public ResponseEntity<List<VehicleDTO>> getByStatus(@PathVariable String status){
-        List<VehicleDTO> vehicleDTOS;
-        if(status.toLowerCase().equals(VehicleStatus.AVAILABLE.toString()) ){
-            vehicleDTOS = vehicleService.getDTOByStatus(VehicleStatus.AVAILABLE);
-        }else if(status.toLowerCase().equals(VehicleStatus.IN_USE.toString())){
-            vehicleDTOS = vehicleService.getDTOByStatus(VehicleStatus.IN_USE);
-        }else if(status.toLowerCase().equals(VehicleStatus.OUT_OF_SERVICE.toString())){
-            vehicleDTOS =  vehicleService.getDTOByStatus(VehicleStatus.OUT_OF_SERVICE);
-        }else{
-            vehicleDTOS = vehicleService.getDTOByStatus(VehicleStatus.RESERVE);
+
+        try{
+            VehicleStatus vehicleStatus = VehicleStatus.valueOf(status.toUpperCase());
+            List<VehicleDTO> vehicleDTOS = vehicleService.getDTOByStatus(vehicleStatus);
+            return ResponseEntity.ok(vehicleDTOS);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(vehicleDTOS);
+
+
 
     }
 
@@ -62,6 +65,9 @@ public class VehicleController {
         return ResponseEntity.ok(inUse);
 
     }
+
+
+
 
 
 

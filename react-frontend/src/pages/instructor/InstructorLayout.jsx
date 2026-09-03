@@ -11,8 +11,7 @@ export default function InstructorLayout({ children }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/instructor' },
     { id: 'schedule', label: 'Schedule',  path: '/instructor/schedule' },
-    { id: 'make-schedule', label: 'Make Schedule',  path: '/instructor/make-schedule' },
-    { id: 'vehicles', label: 'Vehicles',  path: '/instructor/vehicles' },
+    { id: 'vehicle', label: 'Vehicle',  path: '/instructor/vehicle' },
     { id: 'students', label: 'Students',  path: '/instructor/students' },
     { id: 'reports', label: 'Reports',  path: '/instructor/reports' },
     { id: 'profile', label: 'Profile',  path: '/instructor/profile' },
