@@ -15,6 +15,7 @@ import AdminSchedule from './pages/admin/AdminSchedule';
 import RecordExam from './pages/admin/RecordExam';
 import AdminVehicle from './pages/admin/AdminVehicle';
 import AddVehicle from './pages/admin/AddVehicle';
+import AssignVehiclePage from './pages/admin/AssignVehiclePage';
 
 export default function App() {
   return (
@@ -79,6 +80,11 @@ export default function App() {
           <AdminLayout>
             <AddVehicle /> 
           </AdminLayout>
+        } />
+        <Route path="/admin/assign-vehicle" element={
+            <AdminLayout>
+                <AssignVehiclePage />
+            </AdminLayout>
         } />
 
       </Routes>

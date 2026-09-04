@@ -160,7 +160,7 @@ export default function VehicleManagement() {
                         <button className="add-vehicle-btn" onClick={() => navigate("/admin/add-vehicles")}>
                             <span className="plus-icon">+</span> Add Vehicle
                         </button>
-                            <button className="assign-vehicle-btn">
+                            <button className="assign-vehicle-btn" onClick={() => navigate("/admin/assign-vehicle")}>
                              Assign Vehicle
                         </button>
                     </div>
