@@ -33,6 +33,9 @@ public class Vehicle {
     @OneToOne(mappedBy = "vehicle")
     private Instructor instructor;
 
+    @OneToOne(mappedBy = "primaryVehicle")
+    private Instructor primaryInstructor;
+
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private VehicleBrand brand;

@@ -17,6 +17,7 @@ export default function VehicleManagement() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
+    const [brandSearchTerm, setBrandSearchTerm] = useState("");
     const [instructorSearchTerm, setInstructorSearchTerm] = useState("");
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [showVehicleDetails, setShowVehicleDetails] = useState(false);
@@ -74,16 +75,7 @@ export default function VehicleManagement() {
         }
     };
 
-    const getStatusIcon = (status) => {
-        switch(status) {
-            case "AVAILABLE": return "✅";
-            case "IN_USE": return "🚗";
-            case "OUT_OF_SERVICE": return "🔧";
-            case "RESERVE": return "📅";
-            default: return "";
-        }
-    };
-
+    
     const formatDate = (dateString) => {
         if (!dateString) return "--";
         const date = new Date(dateString);
@@ -99,11 +91,15 @@ export default function VehicleManagement() {
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
 
+        const brandMatches = (vehicle.brand || "")
+            .toLowerCase()
+            .includes(brandSearchTerm.toLowerCase());
+
         const instructorMatches = (vehicle.instructor_name || "")
             .toLowerCase()
             .includes(instructorSearchTerm.toLowerCase());
 
-        return registrationMatches && instructorMatches;
+        return registrationMatches && brandMatches && instructorMatches;
     });
 
     const handleAssignClick = (vehicle) => {
@@ -134,7 +130,7 @@ export default function VehicleManagement() {
                             <span className="plus-icon">+</span> Add Vehicle
                         </button>
                         <button className="assign-vehicle-btn">
-                            📋 Assign Vehicle
+                             Assign Vehicle
                         </button>
                     </div>
                 </div>
@@ -148,6 +144,14 @@ export default function VehicleManagement() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="vehicle-search-input"
                 />
+                <input
+                    type="text"
+                    placeholder="Search by brand..."
+                    value={brandSearchTerm}
+                    onChange={(e) => setBrandSearchTerm(e.target.value)}
+                    className="vehicle-search-input "
+                />
+                
                 <input
                     type="text"
                     placeholder="Search by instructor name..."
@@ -190,7 +194,6 @@ export default function VehicleManagement() {
                 <div className="vehicles-grid">
                     {searchedVehicles.length === 0 ? (
                         <div className="empty-state">
-                            <div className="empty-icon">🚗</div>
                             <h3>No vehicles found</h3>
                             <p>There are no {activeFilter.toLowerCase()} vehicles available.</p>
                             <button className="add-from-empty-btn">
@@ -205,30 +208,29 @@ export default function VehicleManagement() {
                                         <span className="registration-number">{vehicle.registrationNumber}</span>
                                     </div>
                                     <span className={`status-badge ${getStatusBadgeClass(vehicle.status)}`}>
-                                        {getStatusIcon(vehicle.status)} {vehicle.status.replace('_', ' ')}
                                     </span>
                                 </div>
 
                                 <div className="vehicle-card-body">
                                     <div className="vehicle-info">
                                         <div className="info-item">
-                                            <span className="info-label">📋 Status</span>
+                                            <span className="info-label"> Status</span>
                                             <span className="info-value">{vehicle.status.replace('_', ' ')}</span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label">👨‍🏫 Instructor</span>
+                                            <span className="info-label"> Instructor</span>
                                             <span className="info-value">{vehicle.instructor_name || "Unassigned"}</span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label">📧 Instructor Email</span>
+                                            <span className="info-label"> Instructor Email</span>
                                             <span className="info-value">{vehicle.instructor_email || "N/A"}</span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label">📅 Registration Expiry</span>
+                                            <span className="info-label"> Registration Expiry</span>
                                             <span className="info-value">{formatDate(vehicle.registrationExpiryDate)}</span>
                                         </div>
                                         <div className="info-item">
-                                            <span className="info-label">📊 Mileage</span>
+                                            <span className="info-label"> Mileage</span>
                                             <span className="info-value">{vehicle.currentMileage || "N/A"} km</span>
                                         </div>
                                     </div>
@@ -240,7 +242,7 @@ export default function VehicleManagement() {
                                                 className="assign-btn" 
                                                 onClick={() => handleAssignClick(vehicle)}
                                             >
-                                                📋 Assign
+                                                 Assign
                                             </button>
                                             
                                         )}

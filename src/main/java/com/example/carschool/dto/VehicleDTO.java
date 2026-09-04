@@ -1,5 +1,6 @@
 package com.example.carschool.dto;
 
+import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Vehicle;
 import com.example.carschool.model.VehicleBrand;
 import com.example.carschool.model.VehicleStatus;
@@ -20,6 +21,7 @@ public class VehicleDTO {
     private String instructor_email;
     private String instructor_name;
 
+    private Long brand_id;
     private String brand;
     private String model;
     private String colour;
@@ -34,12 +36,17 @@ public class VehicleDTO {
         this.registrationNumber = vehicle.getRegistrationNumber();
         this.status = vehicle.getStatus();
         this.currentMileage = vehicle.getCurrentMileage();
-        if(vehicle.getInstructor() != null) {
-            this.instructor_email = vehicle.getInstructor().getEmail();
-            this.instructor_name = vehicle.getInstructor().getName()+ " " + vehicle.getInstructor().getLastname();
+        Instructor relevantInstructor = vehicle.getInstructor() != null
+                ? vehicle.getInstructor()
+                : vehicle.getPrimaryInstructor();
+
+        if (relevantInstructor != null) {
+            this.instructor_email = relevantInstructor.getEmail();
+            this.instructor_name = relevantInstructor.getName() + " " + relevantInstructor.getLastname();
         }
         VehicleBrand vehicle_brand = vehicle.getBrand();
         if(vehicle_brand != null) {
+            this.brand_id = vehicle_brand.getId();
             this.brand = vehicle_brand.getBrand();
             this.model = vehicle_brand.getModel();
             this.colour = vehicle_brand.getColour();
@@ -47,6 +54,16 @@ public class VehicleDTO {
 
         }
 
+    }
+
+
+    public static BrandDTO getBrandFromVehicle(VehicleDTO vehicleDTO) {
+        BrandDTO brandDTO = new BrandDTO();
+        brandDTO.setBrand(vehicleDTO.getBrand());
+        brandDTO.setModel(vehicleDTO.getModel());
+        brandDTO.setColour(vehicleDTO.getColour());
+        brandDTO.setYear(vehicleDTO.getYear());
+        return brandDTO;
     }
 
 }

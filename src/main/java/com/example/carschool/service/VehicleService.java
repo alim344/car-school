@@ -1,13 +1,13 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.BrandDTO;
 import com.example.carschool.dto.VehicleDTO;
-import com.example.carschool.model.Candidate;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.Vehicle;
-import com.example.carschool.model.VehicleStatus;
+import com.example.carschool.model.*;
+import com.example.carschool.repo.VehicleBrandRepository;
 import com.example.carschool.repo.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ public class VehicleService {
     private VehicleRepository vehicleRepository;
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private VehicleBrandRepository vehicleBrandRepository;
 
     public List<Vehicle> getAll() {
         return vehicleRepository.findAll();
@@ -93,9 +95,50 @@ public class VehicleService {
 
     }
 
-    public void chooseVehicle(Candidate candidate){
+    public List<BrandDTO> getAllBrands(){
+       List<VehicleBrand> brands = vehicleBrandRepository.findAll();
+        return brands.stream().map(BrandDTO::new).toList();
+    }
 
 
+    public VehicleBrand createNewBrand(BrandDTO dto){
+        VehicleBrand vehicle_brand = new VehicleBrand();
+        vehicle_brand.setBrand(dto.getBrand());
+       vehicle_brand.setModel(dto.getModel());
+       vehicle_brand.setYear(dto.getYear());
+       vehicle_brand.setColour(dto.getColour());
+       vehicleBrandRepository.save(vehicle_brand);
+       return vehicle_brand;
+    }
+
+
+
+    @Transactional
+    public VehicleDTO addVehicle(VehicleDTO dto){
+
+        Vehicle vehicle = new Vehicle();
+        vehicle.setInstructor(instructorService.findByEmail(dto.getInstructor_email()));
+        vehicle.setStatus(VehicleStatus.AVAILABLE);
+        vehicle.setCurrentMileage(dto.getCurrentMileage());
+        vehicle.setPrimaryInstructor(instructorService.findByEmail(dto.getInstructor_email()));
+        vehicle.setRegistrationNumber(dto.getRegistrationNumber());
+        vehicle.setRegistrationExpiryDate(dto.getRegistrationExpiryDate());
+
+
+        VehicleBrand brand;
+
+        if(dto.getBrand_id() == null){
+            BrandDTO brandDTO = VehicleDTO.getBrandFromVehicle(dto);
+            brand = createNewBrand(brandDTO);
+
+
+        }else{
+            brand = vehicleBrandRepository.findById(dto.getBrand_id()).orElse(null);
+        }
+
+        vehicle.setBrand(brand);
+        vehicleRepository.save(vehicle);
+        return new VehicleDTO(vehicle);
     }
 
 

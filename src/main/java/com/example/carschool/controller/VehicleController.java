@@ -1,5 +1,6 @@
 package com.example.carschool.controller;
 
+import com.example.carschool.dto.BrandDTO;
 import com.example.carschool.dto.VehicleDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
@@ -11,10 +12,7 @@ import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -66,10 +64,16 @@ public class VehicleController {
 
     }
 
+    @GetMapping("/get-brands")
+    public ResponseEntity<List<BrandDTO>> getAllBrands(){
+        return ResponseEntity.ok(vehicleService.getAllBrands());
+    }
 
 
-
-
+    @PostMapping("/add-vehicle")
+    public ResponseEntity<VehicleDTO> addVehicle(@RequestBody VehicleDTO vehicleDTO){
+        return ResponseEntity.ok(vehicleService.addVehicle(vehicleDTO));
+    }
 
 
 }
