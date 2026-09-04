@@ -1,7 +1,9 @@
 package com.example.carschool.controller;
 
+import com.example.carschool.dto.AssignVehicleDTO;
 import com.example.carschool.dto.BrandDTO;
 import com.example.carschool.dto.VehicleDTO;
+import com.example.carschool.dto.VehicleInstructorDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.VehicleStatus;
@@ -75,5 +77,15 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.addVehicle(vehicleDTO));
     }
 
+    @PatchMapping("/assign")
+    public ResponseEntity<?> assignVehicle(@RequestBody AssignVehicleDTO vehicleDTO){
+        vehicleService.assignVehicleToInstructor(vehicleDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/get-inst")
+    public ResponseEntity<List<VehicleInstructorDTO>> getInstructorsForAssignment( ){
+        return ResponseEntity.ok(instructorService.getInstructorsForVehicleAssignment());
+    }
 
 }

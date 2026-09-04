@@ -3,6 +3,7 @@ package com.example.carschool.service;
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.InstructorDashboardDTO;
 import com.example.carschool.dto.PracticalClassDTO;
+import com.example.carschool.dto.VehicleInstructorDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.PracticalClass;
@@ -77,5 +78,13 @@ public class InstructorService {
         return dtos;
     }
 
+    public void save(Instructor instructor) {
+        instructorRepository.save(instructor);
+    }
+
+    public List<VehicleInstructorDTO> getInstructorsForVehicleAssignment(){
+        List<Instructor> instructors = instructorRepository.findByVehicleIsNull();
+        return instructors.stream().map(VehicleInstructorDTO::new).toList();
+    }
 
 }

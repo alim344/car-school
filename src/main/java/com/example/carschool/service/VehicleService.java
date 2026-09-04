@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.AssignVehicleDTO;
 import com.example.carschool.dto.BrandDTO;
 import com.example.carschool.dto.VehicleDTO;
 import com.example.carschool.model.*;
@@ -57,17 +58,43 @@ public class VehicleService {
         return new VehicleDTO(vehicleRepository.save(vehicle));
     }
 
-    public void assignVehicleToInstructor(VehicleDTO dto){
+    @Transactional
+    public void assignVehicleToInstructor(AssignVehicleDTO dto){
         Vehicle vehicle = vehicleRepository.findById(dto.getId()).orElse(null);
 
-
-        if(vehicle.getStatus() == VehicleStatus.AVAILABLE){
-            Instructor instructor = instructorService.findByEmail(dto.getInstructor_email());
-            vehicle.setInstructor(instructor);
+        if (vehicle == null) {
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+        if (vehicle.getStatus() != VehicleStatus.AVAILABLE) {
+            throw new IllegalStateException("Only an AVAILABLE vehicle can be assigned as a reserve");
         }
 
-        vehicle.setStatus(VehicleStatus.IN_USE);
+        Instructor instructor = instructorService.findByEmail(dto.getInstructor_email());
+        if (instructor == null) {
+            throw new IllegalArgumentException("Instructor not found");
+        }
+
+        Vehicle primary = instructor.getPrimaryVehicle();
+        boolean isFirstVehicle = primary == null;
+
+
+
+
+            if (isFirstVehicle) {
+                instructor.setVehicle(vehicle);
+                instructor.setPrimaryVehicle(vehicle);
+                vehicle.setStatus(VehicleStatus.IN_USE);
+            }else{
+                if (primary.getStatus() != VehicleStatus.OUT_OF_SERVICE) {
+                    throw new IllegalStateException("Instructor already has an active vehicle; primary must be OUT_OF_SERVICE to assign a reserve");
+                }
+                instructor.setVehicle(vehicle);
+                vehicle.setStatus(VehicleStatus.RESERVE);
+            }
+
+
         vehicleRepository.save(vehicle);
+        instructorService.save(instructor);
     }
 
     public void reportVehicleOutOfService(VehicleDTO dto){
