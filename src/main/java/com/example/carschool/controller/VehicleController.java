@@ -70,7 +70,7 @@ public class VehicleController {
     }
 
 
-    @PostMapping("/add-vehicle")
+    @PostMapping("/add")
     public ResponseEntity<VehicleDTO> addVehicle(@RequestBody VehicleDTO vehicleDTO){
         return ResponseEntity.ok(vehicleService.addVehicle(vehicleDTO));
     }

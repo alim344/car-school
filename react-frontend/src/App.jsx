@@ -14,6 +14,7 @@ import ExamScheduler from './pages/admin/ExamScheduler';
 import AdminSchedule from './pages/admin/AdminSchedule';
 import RecordExam from './pages/admin/RecordExam';
 import AdminVehicle from './pages/admin/AdminVehicle';
+import AddVehicle from './pages/admin/AddVehicle';
 
 export default function App() {
   return (
@@ -71,6 +72,12 @@ export default function App() {
         <Route path="/admin/vehicles" element={
           <AdminLayout>
             <AdminVehicle /> 
+          </AdminLayout>
+        } />
+
+        <Route path="/admin/add-vehicles" element={
+          <AdminLayout>
+            <AddVehicle /> 
           </AdminLayout>
         } />
 

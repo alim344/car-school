@@ -117,10 +117,8 @@ public class VehicleService {
     public VehicleDTO addVehicle(VehicleDTO dto){
 
         Vehicle vehicle = new Vehicle();
-        vehicle.setInstructor(instructorService.findByEmail(dto.getInstructor_email()));
         vehicle.setStatus(VehicleStatus.AVAILABLE);
         vehicle.setCurrentMileage(dto.getCurrentMileage());
-        vehicle.setPrimaryInstructor(instructorService.findByEmail(dto.getInstructor_email()));
         vehicle.setRegistrationNumber(dto.getRegistrationNumber());
         vehicle.setRegistrationExpiryDate(dto.getRegistrationExpiryDate());
 

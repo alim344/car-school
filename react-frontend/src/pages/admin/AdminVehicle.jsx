@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../../style/AdminVehicle.css';
 import VehicleDetailsModal from "../../components/VehicleDetailsModal";
@@ -12,6 +13,9 @@ const filters = [
 ];
 
 export default function VehicleManagement() {
+    
+    const navigate = useNavigate();
+
     const [filteredVehicles, setFilteredVehicles] = useState([]);
     const [activeFilter, setActiveFilter] = useState("ALL");
     const [loading, setLoading] = useState(false);
@@ -126,10 +130,10 @@ export default function VehicleManagement() {
                         <p className="vehicle-subtitle">View and manage all school vehicles</p>
                     </div>
                     <div className="vehicle-buttons">
-                        <button className="add-vehicle-btn">
+                        <button className="add-vehicle-btn" onClick={() => navigate("/admin/add-vehicles")}>
                             <span className="plus-icon">+</span> Add Vehicle
                         </button>
-                        <button className="assign-vehicle-btn">
+                            <button className="assign-vehicle-btn">
                              Assign Vehicle
                         </button>
                     </div>
