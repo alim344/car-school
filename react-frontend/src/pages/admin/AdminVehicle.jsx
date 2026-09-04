@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import '../../style/AdminVehicle.css';
 import VehicleDetailsModal from "../../components/VehicleDetailsModal";
+import AssignVehicleModal from "../../components/AssignVehicleModal";
 
 const filters = [
     { key: "ALL", label: "All Vehicles", endpoint: "/getAll" },
@@ -25,6 +26,9 @@ export default function VehicleManagement() {
     const [instructorSearchTerm, setInstructorSearchTerm] = useState("");
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [showVehicleDetails, setShowVehicleDetails] = useState(false);
+
+    const [showAssignModal, setShowAssignModal] = useState(false); 
+    const [vehicleToAssign, setVehicleToAssign] = useState(null);
 
     const hasFetched = useRef(false);
     const token = localStorage.getItem("userToken");
@@ -107,9 +111,27 @@ export default function VehicleManagement() {
     });
 
     const handleAssignClick = (vehicle) => {
-        console.log("Assign vehicle:", vehicle);
-        alert(`Assigning vehicle ${vehicle.registrationNumber} to an instructor`);
+        setVehicleToAssign(vehicle);
+        setShowAssignModal(true);
     };
+
+    const handleAssignSuccess = (vehicleId, instructor) => {
+        setFilteredVehicles(prev =>
+            prev.map(v =>
+                v.id === vehicleId
+                    ? {
+                        ...v,
+                        status: "IN_USE",
+                        instructor_name: instructor.name,
+                        instructor_email: instructor.email
+                    }
+                    : v
+            )
+        );
+        setShowAssignModal(false);
+        setVehicleToAssign(null);
+    };
+
 
      const handleMoreInfoClick = (vehicle) => {
         setSelectedVehicle(vehicle);
@@ -119,6 +141,11 @@ export default function VehicleManagement() {
     const closeVehicleDetails = () => {
         setShowVehicleDetails(false);
         setSelectedVehicle(null);
+    };
+
+    const closeAssignModal = () => {
+        setShowAssignModal(false);
+        setVehicleToAssign(null);
     };
 
     return (
@@ -268,6 +295,13 @@ export default function VehicleManagement() {
                 vehicle={selectedVehicle}
                 onClose={closeVehicleDetails}
                 onAssign={handleAssignClick}
+            />
+
+             <AssignVehicleModal
+                isOpen={showAssignModal}
+                vehicle={vehicleToAssign}
+                onClose={closeAssignModal}
+                onAssign={handleAssignSuccess}
             />
 
 

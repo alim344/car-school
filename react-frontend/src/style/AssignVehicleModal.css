@@ -1,0 +1,294 @@
+
+
+.assign-modal {
+    max-width: 500px;
+    width: 95%;
+}
+
+
+
+.assign-modal-body {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+
+
+.vehicle-info-section {
+    background: rgba(214, 251, 79, 0.04);
+    border: 1px solid rgba(214, 251, 79, 0.08);
+    border-radius: 12px;
+    padding: 16px 20px;
+}
+
+.assign-vehicle-registration {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 4px 0;
+}
+
+.assign-vehicle-registration .label {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.assign-vehicle-registration .value {
+    color: rgb(214, 251, 79);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.assign-vehicle-details {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+
+
+.instructor-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.required {
+    color: #f87171;
+    font-weight: 700;
+}
+
+
+
+.instructors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.instructors-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.instructors-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 2px;
+}
+
+.instructors-list::-webkit-scrollbar-thumb {
+    background: rgba(214, 251, 79, 0.2);
+    border-radius: 2px;
+}
+
+.instructor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.instructor-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(214, 251, 79, 0.15);
+}
+
+.instructor-item.selected {
+    background: rgba(214, 251, 79, 0.08);
+    border-color: rgb(214, 251, 79);
+}
+
+.instructor-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.instructor-name {
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.instructor-email {
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.needs-reserve-badge {
+    padding: 2px 10px;
+    background: rgba(234, 179, 8, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    margin-right: 8px;
+}
+
+.check-mark {
+    color: rgb(214, 251, 79);
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+
+
+.loading-instructors {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    color: #94a3b8;
+    justify-content: center;
+}
+
+.loader-small {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(214, 251, 79, 0.1);
+    border-top-color: rgb(214, 251, 79);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+
+
+
+.no-instructors {
+    text-align: center;
+    padding: 20px;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.no-instructors p {
+    margin: 0;
+}
+
+
+
+.assign-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #f87171;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.assign-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #4ade80;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.retry-small-btn {
+    margin-left: auto;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-small-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.error-icon,
+.success-icon {
+    font-size: 1.1rem;
+}
+
+
+
+.modal-footer {
+    padding: 20px 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel-btn {
+    padding: 10px 24px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #94a3b8;
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+}
+
+.cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.assign-btn-modal {
+    padding: 10px 28px;
+    background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+    color: #1f2937;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.assign-btn-modal:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(214, 251, 79, 0.25);
+    background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+}
+
+.assign-btn-modal:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}

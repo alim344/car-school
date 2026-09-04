@@ -14,7 +14,7 @@ public class VehicleInstructorDTO {
     public VehicleInstructorDTO() {}
 
     public VehicleInstructorDTO(Instructor instructor) {
-        this.name = instructor.getName();
+        this.name = instructor.getName() + " " + instructor.getLastname();
         this.email = instructor.getEmail();
 
         Vehicle primary = instructor.getPrimaryVehicle();
