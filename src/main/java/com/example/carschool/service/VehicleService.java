@@ -35,6 +35,18 @@ public class VehicleService {
     }
 
 
+    public VehicleDTO getDTOById(Long id) {
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        if(vehicle != null) {
+            return new VehicleDTO(vehicle);
+        }
+        return null;
+    }
+
+    public Vehicle getById(Long id) {
+        return vehicleRepository.findById(id).orElse(null);
+    }
+
 
 
 
@@ -98,17 +110,7 @@ public class VehicleService {
         instructorService.save(instructor);
     }
 
-    public void reportVehicleOutOfService(VehicleDTO dto){
-        Vehicle vehicle = vehicleRepository.findById(dto.getId()).orElse(null);
 
-
-        if(vehicle.getStatus() == VehicleStatus.IN_USE){
-            if(vehicle.getInstructor() != null){
-                vehicle.setStatus(VehicleStatus.OUT_OF_SERVICE);
-                vehicleRepository.save(vehicle);
-            }
-        }
-    }
 
     public void makeReserveAvailable(VehicleDTO dto){
 
@@ -116,7 +118,10 @@ public class VehicleService {
         if(vehicle.getStatus() == VehicleStatus.RESERVE){
             if(vehicle.getInstructor() != null){
                 vehicle.setStatus(VehicleStatus.AVAILABLE);
-                vehicle.setInstructor(null);
+
+                Instructor instructor = vehicle.getInstructor();
+                instructor.setVehicle(null);
+                instructorService.save(instructor);
                 vehicleRepository.save(vehicle);
             }
         }
@@ -214,6 +219,15 @@ public class VehicleService {
                 throw new IllegalArgumentException("Vehicle is not in use to declare out of service");
             }
         }
+
+    }
+
+    public void deleteVehicle(Long id){
+        vehicleRepository.deleteById(id);
+    }
+
+
+    public void setAsPrimaryCar(Long vehicleId){
 
     }
 

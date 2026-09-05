@@ -35,6 +35,12 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.getAllVehicles());
     }
 
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<VehicleDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(vehicleService.getDTOById(id));
+    }
+
     @GetMapping("/getByStatus/{status}")
     public ResponseEntity<List<VehicleDTO>> getByStatus(@PathVariable String status){
 
@@ -103,6 +109,12 @@ public class VehicleController {
     @PatchMapping("/inst/out-of-service/{id}")
     public ResponseEntity<?> reportOutOfService(@PathVariable Long id){
         vehicleService.reportOutOfService(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteVehicle(@PathVariable Long id){
+        vehicleService.deleteVehicle(id);
         return ResponseEntity.ok().build();
     }
 
