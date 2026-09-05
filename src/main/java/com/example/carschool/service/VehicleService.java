@@ -174,7 +174,7 @@ public class VehicleService {
 
 
     public List<VehicleDTO> findByInstructor(Instructor instructor){
-        List<Vehicle> vehicles = vehicleRepository.findByInstructor(instructor);
+        List<Vehicle> vehicles = vehicleRepository.findByInstructorOrPrimaryInstructor(instructor,instructor);
         return vehicles.stream().map(VehicleDTO::new).toList();
     }
 
@@ -207,12 +207,9 @@ public class VehicleService {
         if(vehicle != null){
             if(vehicle.getStatus() == VehicleStatus.IN_USE || vehicle.getStatus() == VehicleStatus.RESERVE){
                 vehicle.setStatus(VehicleStatus.OUT_OF_SERVICE);
-                if(vehicle.getStatus() == VehicleStatus.RESERVE){
-                    Instructor instructor = vehicle.getInstructor();
-                    instructor.setVehicle(null);
-                    instructorService.save(instructor);
-                }
-
+                Instructor instructor = vehicle.getInstructor();
+                instructor.setVehicle(null);
+                instructorService.save(instructor);
 
                 vehicleRepository.save(vehicle);
             }else{

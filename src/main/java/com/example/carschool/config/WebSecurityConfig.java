@@ -72,9 +72,9 @@ public class WebSecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/foo").permitAll()
-                .requestMatchers("/instructor/dashboard","/practical-class/*","/route/*","/schedule/inst/*","/p-exam/inst/*", "/vehicle/inst/*").hasAuthority("ROLE_INSTRUCTOR")
+                .requestMatchers("/instructor/dashboard","/practical-class/*","/route/*","/schedule/inst/*","/p-exam/inst/*", "/vehicle/inst/**","/car-request/inst/*").hasAuthority("ROLE_INSTRUCTOR")
                 .requestMatchers("/schedule/cand/*","/pref/**","/p-exam/cand/*").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/p-exam/admin/*","/instructor/getAll","/candidate/pending","/vehicle/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/p-exam/admin/*","/instructor/getAll","/candidate/pending","/vehicle/**","/car-request/*").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(
                         "/favicon.ico",
                         "/webjars/**",

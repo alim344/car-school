@@ -40,7 +40,7 @@ public class CarChangeRequestController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping("/inst/create")
     public ResponseEntity<?> createRequest(@RequestBody CarRequestDTO carRequestDTO){
         carChangeRequestService.createRequest(carRequestDTO);
         return ResponseEntity.ok().build();
