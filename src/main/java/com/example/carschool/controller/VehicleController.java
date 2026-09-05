@@ -118,4 +118,13 @@ public class VehicleController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/make-reserve-available/{id}")
+    public ResponseEntity<?> makeReserveAvailable(@PathVariable Long id){
+        vehicleService.makeReserveAvailable(id);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
 }

@@ -75,6 +75,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/instructor/dashboard","/practical-class/*","/route/*","/schedule/inst/*","/p-exam/inst/*", "/vehicle/inst/**","/car-request/inst/*").hasAuthority("ROLE_INSTRUCTOR")
                 .requestMatchers("/schedule/cand/*","/pref/**","/p-exam/cand/*").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("/p-exam/admin/*","/instructor/getAll","/candidate/pending","/vehicle/**","/car-request/*").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/vehicle/inst/out-of-service/*").hasAnyAuthority("ROLE_INSTRUCTOR", "ROLE_ADMIN")
                 .requestMatchers(
                         "/favicon.ico",
                         "/webjars/**",

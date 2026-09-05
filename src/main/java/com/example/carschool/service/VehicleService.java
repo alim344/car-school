@@ -1,9 +1,6 @@
 package com.example.carschool.service;
 
-import com.example.carschool.dto.AssignVehicleDTO;
-import com.example.carschool.dto.BrandDTO;
-import com.example.carschool.dto.VehicleDTO;
-import com.example.carschool.dto.VehicleUpdateDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.VehicleBrandRepository;
 import com.example.carschool.repo.VehicleRepository;
@@ -23,6 +20,8 @@ public class VehicleService {
     private InstructorService instructorService;
     @Autowired
     private VehicleBrandRepository vehicleBrandRepository;
+    @Autowired
+    private VehicleMalfunctionRecordService vehicleMalfunctionRecordService;
 
     public List<Vehicle> getAll() {
         return vehicleRepository.findAll();
@@ -112,9 +111,9 @@ public class VehicleService {
 
 
 
-    public void makeReserveAvailable(VehicleDTO dto){
+    public void makeReserveAvailable(Long id){
 
-        Vehicle vehicle = vehicleRepository.findById(dto.getId()).orElse(null);
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
         if(vehicle.getStatus() == VehicleStatus.RESERVE){
             if(vehicle.getInstructor() != null){
                 vehicle.setStatus(VehicleStatus.AVAILABLE);
@@ -174,7 +173,7 @@ public class VehicleService {
 
 
     public List<VehicleDTO> findByInstructor(Instructor instructor){
-        List<Vehicle> vehicles = vehicleRepository.findByInstructorOrPrimaryInstructor(instructor,instructor);
+        List<Vehicle> vehicles = vehicleRepository.findByInstructorOrPrimaryInstructor    (instructor,instructor);
         return vehicles.stream().map(VehicleDTO::new).toList();
     }
 
@@ -201,17 +200,20 @@ public class VehicleService {
         }
     }
 
+    @Transactional
     public void reportOutOfService(Long id){
 
         Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
         if(vehicle != null){
-            if(vehicle.getStatus() == VehicleStatus.IN_USE || vehicle.getStatus() == VehicleStatus.RESERVE){
+            if(vehicle.getStatus() != VehicleStatus.OUT_OF_SERVICE ){
                 vehicle.setStatus(VehicleStatus.OUT_OF_SERVICE);
                 Instructor instructor = vehicle.getInstructor();
-                instructor.setVehicle(null);
-                instructorService.save(instructor);
-
+                if(instructor != null){
+                    instructor.setVehicle(null);
+                    instructorService.save(instructor);
+                }
                 vehicleRepository.save(vehicle);
+                vehicleMalfunctionRecordService.createRecord(vehicle);
             }else{
                 throw new IllegalArgumentException("Vehicle is not in use to declare out of service");
             }
@@ -224,9 +226,6 @@ public class VehicleService {
     }
 
 
-    public void setAsPrimaryCar(Long vehicleId){
-
-    }
 
 
 
