@@ -16,6 +16,7 @@ import RecordExam from './pages/admin/RecordExam';
 import AdminVehicle from './pages/admin/AdminVehicle';
 import AddVehicle from './pages/admin/AddVehicle';
 import AssignVehiclePage from './pages/admin/AssignVehiclePage';
+import InstructorVehicle from './pages/instructor/InstructorVehicle';
 
 export default function App() {
   return (
@@ -40,6 +41,12 @@ export default function App() {
             <InstructorProfile />
           </InstructorLayout>
         } />
+        <Route path="/instructor/vehicle" element={
+          <InstructorLayout>
+            <InstructorVehicle />
+          </InstructorLayout>
+        } />
+
 
         <Route path="/candidate" element={
           <CandidateLayout>

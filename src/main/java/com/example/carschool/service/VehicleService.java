@@ -3,6 +3,7 @@ package com.example.carschool.service;
 import com.example.carschool.dto.AssignVehicleDTO;
 import com.example.carschool.dto.BrandDTO;
 import com.example.carschool.dto.VehicleDTO;
+import com.example.carschool.dto.VehicleUpdateDTO;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.VehicleBrandRepository;
 import com.example.carschool.repo.VehicleRepository;
@@ -166,6 +167,55 @@ public class VehicleService {
         return new VehicleDTO(vehicle);
     }
 
+
+    public List<VehicleDTO> findByInstructor(Instructor instructor){
+        List<Vehicle> vehicles = vehicleRepository.findByInstructor(instructor);
+        return vehicles.stream().map(VehicleDTO::new).toList();
+    }
+
+
+    public void updateVehicle(VehicleUpdateDTO dto){
+        Vehicle vehicle = vehicleRepository.findById(dto.getId()).orElse(null);
+        if (vehicle != null ) {
+
+            if(vehicle.getStatus() == VehicleStatus.IN_USE){
+                if(dto.getMileage() != null){
+                    vehicle.setCurrentMileage(dto.getMileage());
+                }
+
+                if(dto.getRegistrationExpiryDate() != null){
+                    vehicle.setRegistrationExpiryDate(dto.getRegistrationExpiryDate());
+                }
+
+                vehicleRepository.save(vehicle);
+            }
+
+
+        }else{
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+    }
+
+    public void reportOutOfService(Long id){
+
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        if(vehicle != null){
+            if(vehicle.getStatus() == VehicleStatus.IN_USE || vehicle.getStatus() == VehicleStatus.RESERVE){
+                vehicle.setStatus(VehicleStatus.OUT_OF_SERVICE);
+                if(vehicle.getStatus() == VehicleStatus.RESERVE){
+                    Instructor instructor = vehicle.getInstructor();
+                    instructor.setVehicle(null);
+                    instructorService.save(instructor);
+                }
+
+
+                vehicleRepository.save(vehicle);
+            }else{
+                throw new IllegalArgumentException("Vehicle is not in use to declare out of service");
+            }
+        }
+
+    }
 
 
 

@@ -1,9 +1,6 @@
 package com.example.carschool.controller;
 
-import com.example.carschool.dto.AssignVehicleDTO;
-import com.example.carschool.dto.BrandDTO;
-import com.example.carschool.dto.VehicleDTO;
-import com.example.carschool.dto.VehicleInstructorDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.VehicleStatus;
@@ -49,10 +46,19 @@ public class VehicleController {
             return ResponseEntity.badRequest().build();
         }
 
-
-
-
     }
+
+    @GetMapping("/inst/get")
+    public ResponseEntity<List<VehicleDTO>> findByInstructor(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+
+        Instructor instructor = instructorService.findByEmail(email);
+
+        return ResponseEntity.ok(vehicleService.findByInstructor(instructor));
+    }
+
+
 
     @GetMapping("/inst/in-use")
     public ResponseEntity<List<VehicleDTO>> findInUseByInstructor(HttpServletRequest  request){
@@ -86,6 +92,18 @@ public class VehicleController {
     @GetMapping("/get-inst")
     public ResponseEntity<List<VehicleInstructorDTO>> getInstructorsForAssignment( ){
         return ResponseEntity.ok(instructorService.getInstructorsForVehicleAssignment());
+    }
+
+    @PatchMapping("/inst/update")
+    public ResponseEntity<?> updateVehicle(@RequestBody VehicleUpdateDTO updateDTO){
+        vehicleService.updateVehicle(updateDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/inst/out-of-service/{id}")
+    public ResponseEntity<?> reportOutOfService(@PathVariable Long id){
+        vehicleService.reportOutOfService(id);
+        return ResponseEntity.ok().build();
     }
 
 }
