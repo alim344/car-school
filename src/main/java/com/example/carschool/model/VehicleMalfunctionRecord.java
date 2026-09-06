@@ -26,7 +26,7 @@ public class VehicleMalfunctionRecord {
     private LocalDate fixedDate;
 
     @Column
-    private boolean isFixed;
+    private boolean fixed;
 
     public VehicleMalfunctionRecord() {}
 

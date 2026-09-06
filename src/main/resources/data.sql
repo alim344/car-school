@@ -483,3 +483,7 @@ SELECT setval(
                pg_get_serial_sequence('vehicle', 'id'),
                (SELECT COALESCE(MAX(id), 1) FROM vehicle)
        );
+
+
+
+drop table vehicle_malfunction_record

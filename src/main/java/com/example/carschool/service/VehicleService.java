@@ -182,7 +182,7 @@ public class VehicleService {
         Vehicle vehicle = vehicleRepository.findById(dto.getId()).orElse(null);
         if (vehicle != null ) {
 
-            if(vehicle.getStatus() == VehicleStatus.IN_USE){
+            if(vehicle.getStatus() == VehicleStatus.IN_USE || vehicle.getStatus() == VehicleStatus.RESERVE){
                 if(dto.getMileage() != null){
                     vehicle.setCurrentMileage(dto.getMileage());
                 }

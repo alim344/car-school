@@ -118,7 +118,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                 onFix(vehicle.id);
             }
 
-            // Close the modal
+          
             onClose();
 
         } catch (error) {
@@ -219,10 +219,10 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                                 <div className="detail-row">
                                     <span className="detail-label">Status</span>
                                     <span className="detail-value">
-                                        {malfunction.isFixed ? "✅ Fixed" : "🔧 Not Fixed"}
+                                        {malfunction.fixed ? "✅ Fixed" : "🔧 Not Fixed"}
                                     </span>
                                 </div>
-                                {malfunction.isFixed && (
+                                {malfunction.fixed && (
                                     <div className="detail-row">
                                         <span className="detail-label">Fixed On</span>
                                         <span className="detail-value">{formatFullDate(malfunction.fixedDate)}</span>
@@ -243,7 +243,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                         </button>
                     )}
 
-                    {vehicle.status === "OUT_OF_SERVICE" && malfunction && !malfunction.isFixed && (
+                    {vehicle.status === "OUT_OF_SERVICE" && malfunction && !malfunction.fixed && (
                             <button 
                                 className="fix-vehicle-btn" 
                                 onClick={handleFix}
@@ -252,7 +252,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                                 {fixing ? "Fixing..." : "🔧 Mark as Fixed"}
                             </button>
                         )}
-                        {vehicle.status === "OUT_OF_SERVICE" && malfunction && malfunction.isFixed && (
+                        {vehicle.status === "OUT_OF_SERVICE" && malfunction && malfunction.fixed && (
                             <span className="already-fixed-badge">✅ Vehicle is fixed</span>
                         )}
                         

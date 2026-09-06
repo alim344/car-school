@@ -16,13 +16,13 @@ public class MalfunctionDTO {
 
     private LocalDate fixedDate;
 
-    private boolean isFixed;
+    private boolean fixed;
 
 
     public MalfunctionDTO() {}
     public MalfunctionDTO(VehicleMalfunctionRecord record) {
         this.fixedDate = record.getFixedDate();
-        this.isFixed = record.isFixed();
+        this.fixed = record.isFixed();
         this.malfunctionDate = record.getMalfunctionDate();
         this.id = record.getId();
     }

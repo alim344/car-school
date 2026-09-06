@@ -8,4 +8,6 @@ public interface VehicleMalfunctionRecordRepository extends JpaRepository<Vehicl
 
     VehicleMalfunctionRecord findByVehicle(Vehicle vehicle);
 
+    VehicleMalfunctionRecord findTopByVehicleOrderByMalfunctionDateDesc(Vehicle vehicle);
+
 }

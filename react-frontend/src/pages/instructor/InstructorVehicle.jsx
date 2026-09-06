@@ -9,6 +9,8 @@ export default function InstructorVehicle() {
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [malfunctionStatus, setMalfunctionStatus] = useState({});
+    const [loadingMalfunction, setLoadingMalfunction] = useState({});
     
     const [selectedVehicle, setSelectedVehicle] = useState(null);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -25,6 +27,29 @@ export default function InstructorVehicle() {
 
     const hasFetched = useRef(false);
 
+    
+    const fetchMalfunctionInfo = async (vehicleId) => {
+        setLoadingMalfunction(prev => ({ ...prev, [vehicleId]: true }));
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/vehicle/record-get/${vehicleId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            setMalfunctionStatus(prev => ({
+                ...prev,
+                [vehicleId]: response.data
+            }));
+        } catch (error) {
+            console.error("Error fetching malfunction info:", error);
+        } finally {
+            setLoadingMalfunction(prev => ({ ...prev, [vehicleId]: false }));
+        }
+    };
+
     const fetchVehicles = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -38,6 +63,11 @@ export default function InstructorVehicle() {
                 }
             );
             setVehicles(response.data);
+            
+            const outOfServiceVehicles = response.data.filter(v => v.status === "OUT_OF_SERVICE");
+            for (const vehicle of outOfServiceVehicles) {
+                await fetchMalfunctionInfo(vehicle.id);
+            }
         } catch (error) {
             console.error("Error fetching vehicles:", error);
             setError("Failed to load vehicles. Please try again.");
@@ -45,6 +75,7 @@ export default function InstructorVehicle() {
             setLoading(false);
         }
     }, [token]);
+
 
     useEffect(() => {
         if (hasFetched.current) return;
@@ -175,6 +206,8 @@ export default function InstructorVehicle() {
                         : v
                 )
             );
+            
+            await fetchMalfunctionInfo(vehicleId);
 
         } catch (error) {
             console.error("Error reporting out of service:", error);
@@ -302,92 +335,111 @@ export default function InstructorVehicle() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {vehicles.map((vehicle) => (
-                                    <tr key={vehicle.id} className={`vehicle-row status-${vehicle.status.toLowerCase()}`}>
-                                        <td>
-                                            <span className="registration-number">{vehicle.registrationNumber}</span>
-                                        </td>
-                                        <td>{vehicle.brand || "N/A"}</td>
-                                        <td>{vehicle.model || "N/A"}</td>
-                                        <td>
-                                            {vehicle.colour ? (
-                                                <span className="colour-display">
-                                                    <span 
-                                                        className="colour-swatch" 
-                                                        style={{ backgroundColor: vehicle.colour.toLowerCase() }}
-                                                    ></span>
-                                                    {vehicle.colour}
+                                {vehicles.map((vehicle) => {
+                                    const malfunction = malfunctionStatus[vehicle.id];
+                                    const isMalfunctionFixed = malfunction?.fixed;
+                                    const isMalfunctionLoading = loadingMalfunction[vehicle.id];
+                                    
+                                    return (
+                                        <tr key={vehicle.id} className={`vehicle-row status-${vehicle.status.toLowerCase()}`}>
+                                            <td>
+                                                <span className="registration-number">{vehicle.registrationNumber}</span>
+                                            </td>
+                                            <td>{vehicle.brand || "N/A"}</td>
+                                            <td>{vehicle.model || "N/A"}</td>
+                                            <td>
+                                                {vehicle.colour ? (
+                                                    <span className="colour-display">
+                                                        <span 
+                                                            className="colour-swatch" 
+                                                            style={{ backgroundColor: vehicle.colour.toLowerCase() }}
+                                                        ></span>
+                                                        {vehicle.colour}
+                                                    </span>
+                                                ) : "N/A"}
+                                            </td>
+                                            <td>{vehicle.year || "N/A"}</td>
+                                            <td>
+                                                <span className="mileage-value">
+                                                    {vehicle.currentMileage || "0"} km
                                                 </span>
-                                            ) : "N/A"}
-                                        </td>
-                                        <td>{vehicle.year || "N/A"}</td>
-                                        <td>
-                                            <span className="mileage-value">
-                                                {vehicle.currentMileage || "0"} km
-                                            </span>
-                                        </td>
-                                        <td>{formatDate(vehicle.registrationExpiryDate)}</td>
-                                        <td>
-                                            <span className={`status-badge ${getStatusBadgeClass(vehicle.status)}`}>
-                                                {getStatusIcon(vehicle.status)} {vehicle.status.replace('_', ' ')}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div className="action-buttons">
-                                                {vehicle.status === "IN_USE" && (
-                                                    <>
-                                                        <button 
-                                                            className="update-btn" 
-                                                            onClick={() => handleUpdateClick(vehicle)}
-                                                            title="Update vehicle details"
-                                                        >
-                                                            ✏️ Update
-                                                        </button>
-                                                        <button 
-                                                            className="out-of-service-btn" 
-                                                            onClick={() => handleReportOutOfService(vehicle.id)}
-                                                            disabled={reportingOutOfService}
-                                                            title="Report out of service"
-                                                        >
-                                                            🔧 Report OOS
-                                                        </button>
-                                                    </>
-                                                )}
-
-                                                {vehicle.status === "RESERVE" && (
-                                                    <>
-                                                        <button 
-                                                            className="update-btn" 
-                                                            onClick={() => handleUpdateClick(vehicle)}
-                                                            title="Update vehicle details"
-                                                        >
-                                                            ✏️ Update
-                                                        </button>
-                                                        <button 
-                                                            className="make-available-btn" 
-                                                            onClick={() => handleMakeReserveAvailable(vehicle.id)}
-                                                            disabled={processingAction}
-                                                            title="Make vehicle available for assignment"
-                                                        >
-                                                            ✅ Make Available
-                                                        </button>
-                                                    </>
-                                                )}
-
+                                            </td>
+                                            <td>{formatDate(vehicle.registrationExpiryDate)}</td>
+                                            <td>
+                                                <span className={`status-badge ${getStatusBadgeClass(vehicle.status)}`}>
+                                                    {getStatusIcon(vehicle.status)} {vehicle.status.replace('_', ' ')}
+                                                </span>
                                                 {vehicle.status === "OUT_OF_SERVICE" && (
-                                                    <button 
-                                                        className="activate-btn" 
-                                                        onClick={() => handleActivateVehicle(vehicle.id)}
-                                                        disabled={processingAction}
-                                                        title="Activate primary vehicle"
-                                                    >
-                                                        ⚡ Activate
-                                                    </button>
+                                                    <div className="malfunction-status">
+                                                        {isMalfunctionLoading ? (
+                                                            <span className="malfunction-loading">Loading...</span>
+                                                        ) : malfunction ? (
+                                                            <span className={isMalfunctionFixed ? "fixed-text" : "not-fixed-text"}>
+                                                                {isMalfunctionFixed ? "✅ Fixed" : "🔧 Not Fixed"}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="malfunction-error">⚠️ No record</span>
+                                                        )}
+                                                    </div>
                                                 )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                            </td>
+                                            <td>
+                                                <div className="action-buttons">
+                                                    {vehicle.status === "IN_USE" && (
+                                                        <>
+                                                            <button 
+                                                                className="update-btn" 
+                                                                onClick={() => handleUpdateClick(vehicle)}
+                                                                title="Update vehicle details"
+                                                            >
+                                                                ✏️ Update
+                                                            </button>
+                                                            <button 
+                                                                className="out-of-service-btn" 
+                                                                onClick={() => handleReportOutOfService(vehicle.id)}
+                                                                disabled={reportingOutOfService}
+                                                                title="Report out of service"
+                                                            >
+                                                                🔧 Report OOS
+                                                            </button>
+                                                        </>
+                                                    )}
+
+                                                    {vehicle.status === "RESERVE" && (
+                                                        <>
+                                                            <button 
+                                                                className="update-btn" 
+                                                                onClick={() => handleUpdateClick(vehicle)}
+                                                                title="Update vehicle details"
+                                                            >
+                                                                ✏️ Update
+                                                            </button>
+                                                            <button 
+                                                                className="make-available-btn" 
+                                                                onClick={() => handleMakeReserveAvailable(vehicle.id)}
+                                                                disabled={processingAction}
+                                                                title="Make vehicle available for assignment"
+                                                            >
+                                                                ✅ Make Available
+                                                            </button>
+                                                        </>
+                                                    )}
+
+                                                    {vehicle.status === "OUT_OF_SERVICE" && (
+                                                        <button 
+                                                            className={`activate-btn ${!isMalfunctionFixed ? 'disabled' : ''}`}
+                                                            onClick={() => handleActivateVehicle(vehicle.id)}
+                                                            disabled={processingAction || !isMalfunctionFixed || isMalfunctionLoading}
+                                                            title={!isMalfunctionFixed ? "Vehicle must be fixed before activation" : "Activate primary vehicle"}
+                                                        >
+                                                            ⚡ Activate
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     )}

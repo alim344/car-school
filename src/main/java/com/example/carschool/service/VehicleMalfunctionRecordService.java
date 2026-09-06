@@ -31,14 +31,17 @@ public class VehicleMalfunctionRecordService {
     }
 
     public void fixVehicle(Vehicle vehicle) {
-        VehicleMalfunctionRecord record = malfunctionRecordRepository.findByVehicle(vehicle);
+        VehicleMalfunctionRecord record = malfunctionRecordRepository.findTopByVehicleOrderByMalfunctionDateDesc(vehicle);
+        if(record == null) {
+            throw new IllegalArgumentException("No record found for vehicle: " + vehicle);
+        }
         record.setFixed(true);
         record.setFixedDate(LocalDate.now());
         malfunctionRecordRepository.save(record);
     }
 
     public VehicleMalfunctionRecord findByVehicle(Vehicle vehicle) {
-        return  malfunctionRecordRepository.findByVehicle(vehicle);
+        return  malfunctionRecordRepository.findTopByVehicleOrderByMalfunctionDateDesc(vehicle);
     }
 
 
