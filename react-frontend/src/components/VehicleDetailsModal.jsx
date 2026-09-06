@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../style/VehicleDetailsModal.css";
 
-export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign }) {
+export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign, onFix }) {
 
     const [malfunction, setMalfunction] = useState(null);
     const [loadingMalfunction, setLoadingMalfunction] = useState(false);
     const [malfunctionError, setMalfunctionError] = useState(null);
+
+    const [fixing, setFixing] = useState(false);
 
      const token = localStorage.getItem("userToken");
 
@@ -91,6 +93,39 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
     const handleAssign = () => {
         if (onAssign) {
             onAssign(vehicle);
+        }
+    };
+
+     const handleFix = async () => {
+        if (!window.confirm(`Are you sure you want to mark vehicle ${vehicle.registrationNumber} as fixed?`)) {
+            return;
+        }
+
+        setFixing(true);
+        try {
+            await axios.patch(
+                `http://localhost:8080/vehicle/fix/${vehicle.id}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            
+            if (onFix) {
+                onFix(vehicle.id);
+            }
+
+            // Close the modal
+            onClose();
+
+        } catch (error) {
+            console.error("Error fixing vehicle:", error);
+            alert("Failed to mark vehicle as fixed. Please try again.");
+        } finally {
+            setFixing(false);
         }
     };
 
@@ -207,6 +242,20 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                              Assign Vehicle
                         </button>
                     )}
+
+                    {vehicle.status === "OUT_OF_SERVICE" && malfunction && !malfunction.isFixed && (
+                            <button 
+                                className="fix-vehicle-btn" 
+                                onClick={handleFix}
+                                disabled={fixing}
+                            >
+                                {fixing ? "Fixing..." : "🔧 Mark as Fixed"}
+                            </button>
+                        )}
+                        {vehicle.status === "OUT_OF_SERVICE" && malfunction && malfunction.isFixed && (
+                            <span className="already-fixed-badge">✅ Vehicle is fixed</span>
+                        )}
+                        
                     <button className="modal-close-btn-bottom" onClick={onClose}>
                         Close
                     </button>

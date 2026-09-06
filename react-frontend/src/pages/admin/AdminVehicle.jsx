@@ -148,6 +148,16 @@ export default function VehicleManagement() {
         setVehicleToAssign(null);
     };
 
+
+    const handleFixVehicle = (vehicleId) => {
+        setFilteredVehicles(prev =>
+            prev.map(v =>
+                v.id === vehicleId
+                    ? { ...v }
+                    : v
+            )
+        );
+    };
     return (
         <div className="vehicle-management-container">
             <div className="vehicle-header">
@@ -295,6 +305,7 @@ export default function VehicleManagement() {
                 vehicle={selectedVehicle}
                 onClose={closeVehicleDetails}
                 onAssign={handleAssignClick}
+                onFix={handleFixVehicle}
             />
 
              <AssignVehicleModal

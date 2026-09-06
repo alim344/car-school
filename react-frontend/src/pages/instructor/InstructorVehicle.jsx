@@ -21,6 +21,7 @@ export default function InstructorVehicle() {
     const [updateSuccess, setUpdateSuccess] = useState(false);
     
     const [reportingOutOfService, setReportingOutOfService] = useState(false);
+    const [processingAction, setProcessingAction] = useState(false);
 
     const hasFetched = useRef(false);
 
@@ -183,6 +184,70 @@ export default function InstructorVehicle() {
         }
     };
 
+    const handleMakeReserveAvailable = async (vehicleId) => {
+        if (!window.confirm("Are you sure you want to make this reserve vehicle available?")) {
+            return;
+        }
+
+        setProcessingAction(true);
+        try {
+            await axios.patch(
+                `http://localhost:8080/vehicle/make-reserve-available/${vehicleId}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setVehicles(prev =>
+                prev.map(v =>
+                    v.id === vehicleId
+                        ? { ...v, status: "AVAILABLE" }
+                        : v
+                )
+            );
+        } catch (error) {
+            console.error("Error setting reserve vehicle available:", error);
+            alert(error.response?.data?.message || "Failed to make reserve vehicle available.");
+        } finally {
+            setProcessingAction(false);
+        }
+    };
+
+    const handleActivateVehicle = async (vehicleId) => {
+        if (!window.confirm("Are you sure you want to activate this primary vehicle?")) {
+            return;
+        }
+
+        setProcessingAction(true);
+        try {
+            await axios.patch(
+                `http://localhost:8080/vehicle/activate/${vehicleId}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setVehicles(prev =>
+                prev.map(v =>
+                    v.id === vehicleId
+                        ? { ...v, status: "IN_USE" }
+                        : v
+                )
+            );
+        } catch (error) {
+            console.error("Error activating primary vehicle:", error);
+            alert(error.response?.data?.message || "Failed to activate primary vehicle. Make sure you don't already have an active vehicle.");
+        } finally {
+            setProcessingAction(false);
+        }
+    };
+
     return (
         <div className="instructor-vehicle-container">
             <div className="instructor-vehicle-header">
@@ -269,7 +334,7 @@ export default function InstructorVehicle() {
                                         </td>
                                         <td>
                                             <div className="action-buttons">
-                                                {vehicle.status !== "OUT_OF_SERVICE" && (
+                                                {vehicle.status === "IN_USE" && (
                                                     <>
                                                         <button 
                                                             className="update-btn" 
@@ -288,8 +353,36 @@ export default function InstructorVehicle() {
                                                         </button>
                                                     </>
                                                 )}
+
+                                                {vehicle.status === "RESERVE" && (
+                                                    <>
+                                                        <button 
+                                                            className="update-btn" 
+                                                            onClick={() => handleUpdateClick(vehicle)}
+                                                            title="Update vehicle details"
+                                                        >
+                                                            ✏️ Update
+                                                        </button>
+                                                        <button 
+                                                            className="make-available-btn" 
+                                                            onClick={() => handleMakeReserveAvailable(vehicle.id)}
+                                                            disabled={processingAction}
+                                                            title="Make vehicle available for assignment"
+                                                        >
+                                                            ✅ Make Available
+                                                        </button>
+                                                    </>
+                                                )}
+
                                                 {vehicle.status === "OUT_OF_SERVICE" && (
-                                                    <span className="out-of-service-badge">Out of Service</span>
+                                                    <button 
+                                                        className="activate-btn" 
+                                                        onClick={() => handleActivateVehicle(vehicle.id)}
+                                                        disabled={processingAction}
+                                                        title="Activate primary vehicle"
+                                                    >
+                                                        ⚡ Activate
+                                                    </button>
                                                 )}
                                             </div>
                                         </td>
