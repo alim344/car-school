@@ -6,6 +6,7 @@ import com.example.carschool.model.Instructor;
 import com.example.carschool.model.VehicleStatus;
 import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorService;
+import com.example.carschool.service.VehicleMalfunctionRecordService;
 import com.example.carschool.service.VehicleService;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,8 @@ public class VehicleController {
     private InstructorService instructorService;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private VehicleMalfunctionRecordService vehicleMalfunctionRecordService;
 
     @GetMapping("/getAll")
     public ResponseEntity<List<VehicleDTO>> getAll(){
@@ -125,6 +128,24 @@ public class VehicleController {
     }
 
 
+
+    @PatchMapping("/fix/{id}")
+    public ResponseEntity<?> fixVehicle(@PathVariable Long id){
+        vehicleService.fixVehicle(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/activate/{id}")
+    public ResponseEntity<?> activatePrimaryVehicle(@PathVariable Long id){
+        vehicleService.ActivatePrimaryVehicle(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/record-get/{vehicle_id}")
+    public ResponseEntity<MalfunctionDTO> findByVehicleId(@PathVariable Long vehicle_id){
+
+        return ResponseEntity.ok(vehicleService.getByVehicleId(vehicle_id));
+    }
 
 
 }

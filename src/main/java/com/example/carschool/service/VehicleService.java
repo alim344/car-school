@@ -226,7 +226,58 @@ public class VehicleService {
     }
 
 
+    @Transactional
+    public void fixVehicle(Long id){
 
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        if(vehicle == null){
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+
+        vehicleMalfunctionRecordService.fixVehicle(vehicle);
+        Instructor instructor = vehicle.getPrimaryInstructor();
+        if(instructor == null){
+            vehicle.setStatus(VehicleStatus.AVAILABLE);
+        }
+        vehicleRepository.save(vehicle);
+    }
+
+
+    @Transactional
+    public void ActivatePrimaryVehicle(Long id){
+
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        if(vehicle == null){
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+
+        Instructor instructor = vehicle.getPrimaryInstructor();
+        if(instructor == null){
+            throw new IllegalArgumentException("Primary instructor not found");
+        }
+
+        if(instructor.getVehicle() != null){
+            throw new IllegalArgumentException("Primary instructor already has an active vehicle");
+        }
+
+        vehicle.setStatus(VehicleStatus.IN_USE);
+        instructor.setVehicle(vehicle);
+        instructorService.save(instructor);
+        vehicleRepository.save(vehicle);
+
+
+    }
+
+
+    public MalfunctionDTO getByVehicleId(Long id){
+        Vehicle vehicle = vehicleRepository.findById(id).orElse(null);
+        if(vehicle == null){
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+        VehicleMalfunctionRecord record = vehicleMalfunctionRecordService.findByVehicle(vehicle);
+        return new MalfunctionDTO(record);
+
+    }
 
 
 }

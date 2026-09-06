@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.MalfunctionDTO;
 import com.example.carschool.model.Vehicle;
 import com.example.carschool.model.VehicleMalfunctionRecord;
 import com.example.carschool.repo.VehicleMalfunctionRecordRepository;
@@ -28,6 +29,19 @@ public class VehicleMalfunctionRecordService {
         record.setMalfunctionDate(LocalDate.now());
         malfunctionRecordRepository.save(record);
     }
+
+    public void fixVehicle(Vehicle vehicle) {
+        VehicleMalfunctionRecord record = malfunctionRecordRepository.findByVehicle(vehicle);
+        record.setFixed(true);
+        record.setFixedDate(LocalDate.now());
+        malfunctionRecordRepository.save(record);
+    }
+
+    public VehicleMalfunctionRecord findByVehicle(Vehicle vehicle) {
+        return  malfunctionRecordRepository.findByVehicle(vehicle);
+    }
+
+
 
 
 }

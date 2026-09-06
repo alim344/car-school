@@ -1,8 +1,62 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "../style/VehicleDetailsModal.css";
 
-
 export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign }) {
-    if (!isOpen || !vehicle) return null;
+
+    const [malfunction, setMalfunction] = useState(null);
+    const [loadingMalfunction, setLoadingMalfunction] = useState(false);
+    const [malfunctionError, setMalfunctionError] = useState(null);
+
+     const token = localStorage.getItem("userToken");
+
+    useEffect(() => {
+            if (!isOpen || !vehicle || vehicle.status !== "OUT_OF_SERVICE") {
+                return;
+            }
+
+            let cancelled = false;
+
+            const fetchMalfunction = async () => {
+                setLoadingMalfunction(true);
+                setMalfunctionError(null);
+
+                try {
+                    const res = await axios.get(
+                        `http://localhost:8080/vehicle/record-get/${vehicle.id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+
+                    if (!cancelled) {
+                        setMalfunction(res.data);
+                    }
+                } catch (err) {
+                    console.error("Error fetching malfunction record:", err);
+
+                    if (!cancelled) {
+                        setMalfunctionError("Could not load malfunction info.");
+                    }
+                } finally {
+                    if (!cancelled) {
+                        setLoadingMalfunction(false);
+                    }
+                }
+            };
+
+            fetchMalfunction();
+
+            return () => {
+                cancelled = true;
+            };
+        }, [isOpen, vehicle, token]);
+
+                if (!isOpen || !vehicle) return null;
+
+
 
     const getStatusBadgeClass = (status) => {
         switch(status) {
@@ -113,6 +167,36 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                         </div>
                     </div>
                 </div>
+
+                {vehicle.status === "OUT_OF_SERVICE" && (
+                    <div className="detail-section">
+                        <h3 className="section-title">Malfunction Information</h3>
+
+                        {loadingMalfunction && <p>Loading malfunction info...</p>}
+                        {malfunctionError && <p className="error-text">{malfunctionError}</p>}
+
+                        {malfunction && (
+                            <>
+                                <div className="detail-row">
+                                    <span className="detail-label">Reported On</span>
+                                    <span className="detail-value">{formatFullDate(malfunction.malfunctionDate)}</span>
+                                </div>
+                                <div className="detail-row">
+                                    <span className="detail-label">Status</span>
+                                    <span className="detail-value">
+                                        {malfunction.isFixed ? "✅ Fixed" : "🔧 Not Fixed"}
+                                    </span>
+                                </div>
+                                {malfunction.isFixed && (
+                                    <div className="detail-row">
+                                        <span className="detail-label">Fixed On</span>
+                                        <span className="detail-value">{formatFullDate(malfunction.fixedDate)}</span>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                )}
 
                 <div className="modal-footer">
                     {vehicle.status === "AVAILABLE" && (
