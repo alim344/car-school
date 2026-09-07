@@ -144,6 +144,64 @@ export default function InstructorRequestVehicle() {
         }
     };
 
+
+
+   const handlePickUp = async () => {
+        if (!latestRequest) {
+            alert("No request found.");
+            return;
+        }
+
+        if (latestRequest.status !== 'ACCEPTED') {
+            alert("This request has not been accepted yet.");
+            return;
+        }
+
+        if (latestRequest.pickedUp) {
+            alert("This vehicle has already been picked up.");
+            return;
+        }
+
+        if (!window.confirm(`Are you sure you want to pick up this vehicle?`)) {
+            return;
+        }
+
+        setLoadingRequest(true);
+        try {
+            const payload = {
+                id: latestRequest.id,
+                instructor_email: latestRequest.instructor_email,
+                vehicle_id: latestRequest.vehicle_id
+            };
+
+            await axios.patch(
+                "http://localhost:8080/car-request/inst/set-primary-car",
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            alert("Vehicle picked up successfully!");
+
+            await fetchLatestRequest();
+            await fetchVehicles();
+
+        } catch (error) {
+            console.error("Error picking up vehicle:", error);
+            alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
+        } finally {
+            setLoadingRequest(false);
+        }
+    };
+
+
+
+
+
     return (
         <div className="instructor-request-container">
             <div className="instructor-request-header">
@@ -158,24 +216,57 @@ export default function InstructorRequestVehicle() {
                 </div>
             </div>
          
-            <div className="latest-request-container">
+           <div className="latest-request-container">
                 {loadingRequest ? (
                     <div className="latest-request-loading">Loading request status...</div>
                 ) : latestRequest ? (
                     <div className={`latest-request status-${latestRequest.status?.toLowerCase()}`}>
                         <div className="request-info">
                             <span className="request-label"> Latest Request:</span>
-                            <span className="request-vehicle">{latestRequest.vehicle_id ? `Registration: ${latestRequest.registrationNumber}` : 'No vehicle'}</span>
+                            <span className="request-vehicle">
+                                {latestRequest.registrationNumber 
+                                    ? `Vehicle: ${latestRequest.registrationNumber}` 
+                                    : `Vehicle ID: ${latestRequest.vehicle_id}`}
+                            </span>
                             <span className={`request-status status-${latestRequest.status?.toLowerCase()}`}>
                                 Status: {latestRequest.status || 'N/A'}
                             </span>
                             <span className="request-date">
                                 {latestRequest.request_date ? new Date(latestRequest.request_date).toLocaleDateString() : ''}
                             </span>
+                            {latestRequest.pickedUp && (
+                                <span className="picked-up-badge">✅ Picked Up</span>
+                            )}
                         </div>
+                        
                         {latestRequest.status === 'PENDING' && (
                             <div className="pending-warning">
                                 ⏳ Your request is pending approval. You cannot make new requests until it's resolved.
+                            </div>
+                        )}
+                        
+                        {latestRequest.status === 'ACCEPTED' && !latestRequest.pickedUp && (
+                            <div className="approved-warning">
+                                ✅ Your request was accepted! Click the button below to pick up your vehicle.
+                                <button 
+                                    className="pickup-btn" 
+                                    onClick={handlePickUp}
+                                    disabled={loadingRequest}
+                                >
+                                    {loadingRequest ? "Processing..." : "📋 Pick Up"}
+                                </button>
+                            </div>
+                        )}
+                        
+                        {latestRequest.status === 'ACCEPTED' && latestRequest.pickedUp && (
+                            <div className="picked-up-warning">
+                                ✅ Vehicle has been picked up.
+                            </div>
+                        )}
+                        
+                        {latestRequest.status === 'DECLINED' && (
+                            <div className="rejected-warning">
+                                ❌ Your request was declined. You can make a new request.
                             </div>
                         )}
                     </div>

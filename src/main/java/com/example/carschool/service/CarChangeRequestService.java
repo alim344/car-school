@@ -108,6 +108,7 @@ public class CarChangeRequestService {
             throw new IllegalArgumentException("Car does not exist");
         }
 
+        carChangeRequest.setPickedUp(true);
         Instructor instructor = instructorService.findByEmail(dto.getInstructor_email());
         if(instructor == null){
             throw new IllegalArgumentException("Instructor not found");

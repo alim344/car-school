@@ -22,6 +22,7 @@ public class CarRequestDTO {
 
     private CarRequestStatus status;
     private LocalDateTime request_date;
+    private boolean pickedUp;
 
 
     public CarRequestDTO(){}
@@ -35,6 +36,7 @@ public class CarRequestDTO {
         this.registrationNumber = request.getVehicle().getRegistrationNumber();
         this.status = request.getStatus();
         this.request_date = request.getRequestDate();
+        this.pickedUp = request.isPickedUp();
     }
 
 }

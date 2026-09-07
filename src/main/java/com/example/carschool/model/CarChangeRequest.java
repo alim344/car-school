@@ -30,5 +30,7 @@ public class CarChangeRequest {
     @Column
     private LocalDateTime requestDate;
 
+    @Column
+    private boolean pickedUp = false;
 
 }
