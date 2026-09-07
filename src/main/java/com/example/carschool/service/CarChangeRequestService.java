@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -51,6 +53,7 @@ public class CarChangeRequestService {
         carChangeRequest.setVehicle(vehicle);
         carChangeRequest.setInstructor(instructor);
         carChangeRequest.setStatus(CarRequestStatus.PENDING);
+        carChangeRequest.setRequestDate( LocalDateTime.now());
         carChangeRequestRepository.save(carChangeRequest);
 
     }
@@ -149,6 +152,10 @@ public class CarChangeRequestService {
 
     }
 
+    public List<CarRequestDTO> findByStatus(CarRequestStatus status){
+        List<CarChangeRequest> requests = carChangeRequestRepository.findByStatus(status);
+        return requests.stream().map(CarRequestDTO::new).toList();
+    }
 
 
 

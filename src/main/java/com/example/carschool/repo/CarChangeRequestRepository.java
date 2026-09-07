@@ -18,5 +18,6 @@ public interface CarChangeRequestRepository extends JpaRepository<CarChangeReque
 
     List<CarChangeRequest> findByVehicle(Vehicle vehicle);
 
+    List<CarChangeRequest> findByStatus(CarRequestStatus status);
 
 }

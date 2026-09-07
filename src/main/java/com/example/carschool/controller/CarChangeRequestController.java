@@ -1,6 +1,7 @@
 package com.example.carschool.controller;
 
 import com.example.carschool.dto.CarRequestDTO;
+import com.example.carschool.model.CarRequestStatus;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.service.CarChangeRequestService;
 import com.example.carschool.service.InstructorService;
@@ -74,5 +75,15 @@ public class CarChangeRequestController {
         String email = tokenUtils.getEmailFromToken(token);
         Instructor instructor = instructorService.findByEmail(email);
         return ResponseEntity.ok(carChangeRequestService.findLatestRequest(instructor));
+    }
+
+    @GetMapping("/get-status/{status}")
+    public ResponseEntity<List<CarRequestDTO>> findByStatus(@PathVariable String status){
+        try{
+            CarRequestStatus request_status = CarRequestStatus.valueOf(status.toUpperCase());
+            return ResponseEntity.ok(carChangeRequestService.findByStatus(request_status));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

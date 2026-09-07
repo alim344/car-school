@@ -14,12 +14,31 @@ export default function VehicleRequests() {
 
     const hasFetched = useRef(false);
 
-    const fetchRequests = useCallback(async () => {
+    const filters = [
+        { key: "ALL", label: "All Requests", endpoint: "/getAll" },
+        { key: "PENDING", label: "Pending", endpoint: "/get-status/PENDING" },
+        { key: "ACCEPTED", label: "Accepted", endpoint: "/get-status/ACCEPTED" },
+        { key: "DECLINED", label: "Declined", endpoint: "/get-status/DECLINED" },
+    ];
+
+    const [activeFilter, setActiveFilter] = useState("ALL");
+    
+    const [requestedFilter, setRequestedFilter] = useState("ALL");
+
+    const fetchRequests = useCallback(async (filterKey) => {
         setLoading(true);
         setError(null);
+        setRequestedFilter(filterKey);
+
+        const filter = filters.find(f => f.key === filterKey);
+        if (!filter) {
+            setLoading(false); 
+            return;
+        }
+
         try {
             const response = await axios.get(
-                "http://localhost:8080/car-request/getAll",
+                `http://localhost:8080/car-request${filter.endpoint}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -27,9 +46,11 @@ export default function VehicleRequests() {
                 }
             );
             setRequests(response.data);
+            setActiveFilter(filterKey);
         } catch (error) {
             console.error("Error fetching requests:", error);
             setError("Failed to load requests. Please try again.");
+            setRequests([]);
         } finally {
             setLoading(false);
         }
@@ -38,7 +59,7 @@ export default function VehicleRequests() {
     useEffect(() => {
         if (hasFetched.current) return;
         hasFetched.current = true;
-        fetchRequests();
+        fetchRequests("ALL");
     }, [fetchRequests]);
 
     const filteredRequests = useMemo(() => {
@@ -68,9 +89,8 @@ export default function VehicleRequests() {
     const getStatusBadgeClass = (status) => {
         switch(status) {
             case "PENDING": return "status-pending";
-            case "APPROVED": return "status-approved";
-            case "REJECTED": return "status-rejected";
-            case "CANCELLED": return "status-cancelled";
+            case "ACCEPTED": return "status-approved";
+            case "DECLINED": return "status-rejected";
             default: return "";
         }
     };
@@ -78,9 +98,8 @@ export default function VehicleRequests() {
     const getStatusIcon = (status) => {
         switch(status) {
             case "PENDING": return "⏳";
-            case "APPROVED": return "✅";
-            case "REJECTED": return "❌";
-            case "CANCELLED": return "🚫";
+            case "ACCEPTED": return "✅";
+            case "DECLINED": return "❌";
             default: return "";
         }
     };
@@ -106,7 +125,7 @@ export default function VehicleRequests() {
             setRequests(prev =>
                 prev.map(r =>
                     r.id === request.id
-                        ? { ...r, status: "APPROVED" }
+                        ? { ...r, status: "ACCEPTED" }
                         : r
                 )
             );
@@ -140,7 +159,7 @@ export default function VehicleRequests() {
             setRequests(prev =>
                 prev.map(r =>
                     r.id === request.id
-                        ? { ...r, status: "REJECTED" }
+                        ? { ...r, status: "DECLINED" }
                         : r
                 )
             );
@@ -151,6 +170,11 @@ export default function VehicleRequests() {
         } finally {
             setProcessingId(null);
         }
+    };
+
+    const handleFilterChange = (filterKey) => {
+        if (filterKey === activeFilter) return;
+        fetchRequests(filterKey);
     };
 
     return (
@@ -187,6 +211,19 @@ export default function VehicleRequests() {
                 />
             </div>
 
+            <div className="filter-tabs">
+                {filters.map((filter) => (
+                    <button
+                        key={filter.key}
+                        className={`filter-tab ${activeFilter === filter.key ? "active" : ""}`}
+                        onClick={() => handleFilterChange(filter.key)}
+                        disabled={loading}
+                    >
+                        {filter.label}
+                    </button>
+                ))}
+            </div>
+
             {loading && (
                 <div className="loading-container">
                     <div className="loader"></div>
@@ -197,7 +234,7 @@ export default function VehicleRequests() {
             {error && (
                 <div className="error-container">
                     <p>{error}</p>
-                    <button onClick={fetchRequests} className="retry-btn">
+                    <button onClick={() => fetchRequests(requestedFilter)} className="retry-btn">
                         Retry
                     </button>
                 </div>
@@ -264,9 +301,8 @@ export default function VehicleRequests() {
                                     )}
                                     {request.status !== "PENDING" && (
                                         <span className={`status-text status-${request.status?.toLowerCase()}`}>
-                                            {request.status === "APPROVED" && "✅ Approved"}
-                                            {request.status === "REJECTED" && "❌ Rejected"}
-                                            {request.status === "CANCELLED" && "🚫 Cancelled"}
+                                            {request.status === "ACCEPTED" && "✅ Accepted"}
+                                            {request.status === "DECLINED" && "❌ Declined"}
                                         </span>
                                     )}
                                 </div>
