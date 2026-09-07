@@ -41,8 +41,11 @@ public class CarChangeRequestController {
 
 
     @PostMapping("/inst/create")
-    public ResponseEntity<?> createRequest(@RequestBody CarRequestDTO carRequestDTO){
-        carChangeRequestService.createRequest(carRequestDTO);
+    public ResponseEntity<?> createRequest(@RequestBody CarRequestDTO carRequestDTO,HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        carChangeRequestService.createRequest(carRequestDTO,instructor);
         return ResponseEntity.ok().build();
     }
 
@@ -59,10 +62,17 @@ public class CarChangeRequestController {
     }
 
 
-    @PatchMapping("/set-primary-car")
+    @PatchMapping("/inst/set-primary-car")
     public ResponseEntity<?> setAsPrimaryCar(@RequestBody  CarRequestDTO dto){
         carChangeRequestService.setAsPrimaryCar(dto);
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/inst/get-latest")
+    public ResponseEntity<CarRequestDTO> findLatestRequestFromInstructor(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(carChangeRequestService.findLatestRequest(instructor));
+    }
 }

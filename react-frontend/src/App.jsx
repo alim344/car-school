@@ -17,6 +17,8 @@ import AdminVehicle from './pages/admin/AdminVehicle';
 import AddVehicle from './pages/admin/AddVehicle';
 import AssignVehiclePage from './pages/admin/AssignVehiclePage';
 import InstructorVehicle from './pages/instructor/InstructorVehicle';
+import InstructorRequestVehicle from './pages/instructor/InstructorRequestVehicle';
+import VehicleRequests from './pages/admin/VehicleRequests';
 
 export default function App() {
   return (
@@ -44,6 +46,11 @@ export default function App() {
         <Route path="/instructor/vehicle" element={
           <InstructorLayout>
             <InstructorVehicle />
+          </InstructorLayout>
+        } />
+        <Route path="/instructor/request-vehicle" element={
+          <InstructorLayout>
+            <InstructorRequestVehicle />
           </InstructorLayout>
         } />
 
@@ -91,6 +98,11 @@ export default function App() {
         <Route path="/admin/assign-vehicle" element={
             <AdminLayout>
                 <AssignVehiclePage />
+            </AdminLayout>
+        } />
+        <Route path="/admin/vehicle-requests" element={
+            <AdminLayout>
+                <VehicleRequests />
             </AdminLayout>
         } />
 

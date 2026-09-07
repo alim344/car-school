@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter @Setter
 public class CarChangeRequest {
@@ -24,6 +26,9 @@ public class CarChangeRequest {
     @Column
     @Enumerated(EnumType.STRING)
     private CarRequestStatus status;
+
+    @Column
+    private LocalDateTime requestDate;
 
 
 }

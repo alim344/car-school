@@ -65,6 +65,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
             case "AVAILABLE": return "status-available";
             case "IN_USE": return "status-in-use";
             case "OUT_OF_SERVICE": return "status-out-of-service";
+            case "WAITING_FOR_PICKUP": return "status-waiting-for-pickup";
             case "RESERVE": return "status-reserve";
             default: return "";
         }
@@ -74,6 +75,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
         switch(status) {
             case "AVAILABLE": return "✅";
             case "IN_USE": return "🚗";
+            case "WAITING_FOR_PICKUP": return "⏳";
             case "OUT_OF_SERVICE": return "🔧";
             case "RESERVE": return "📅";
             default: return "";
@@ -239,23 +241,23 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                             className="assign-from-modal-btn" 
                             onClick={handleAssign}
                         >
-                             Assign Vehicle
+                            📋 Assign Vehicle
                         </button>
                     )}
 
                     {vehicle.status === "OUT_OF_SERVICE" && malfunction && !malfunction.fixed && (
-                            <button 
-                                className="fix-vehicle-btn" 
-                                onClick={handleFix}
-                                disabled={fixing}
-                            >
-                                {fixing ? "Fixing..." : "🔧 Mark as Fixed"}
-                            </button>
-                        )}
-                        {vehicle.status === "OUT_OF_SERVICE" && malfunction && malfunction.fixed && (
-                            <span className="already-fixed-badge">✅ Vehicle is fixed</span>
-                        )}
-                        
+                        <button 
+                            className="fix-vehicle-btn" 
+                            onClick={handleFix}
+                            disabled={fixing}
+                        >
+                            {fixing ? "Fixing..." : "🔧 Mark as Fixed"}
+                        </button>
+                    )}
+                    {vehicle.status === "OUT_OF_SERVICE" && malfunction && malfunction.fixed && (
+                        <span className="already-fixed-badge">✅ Vehicle is fixed</span>
+                    )}
+                    
                     <button className="modal-close-btn-bottom" onClick={onClose}>
                         Close
                     </button>

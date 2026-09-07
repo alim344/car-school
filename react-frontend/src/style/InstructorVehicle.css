@@ -585,10 +585,6 @@
 
 
 
-/* =========================
-   MALFUNCTION STATUS
-========================= */
-
 .malfunction-status {
     margin-top: 4px;
     font-size: 11px;
@@ -624,3 +620,65 @@
     box-shadow: none;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.request-vehicle-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+    color: #1f2937;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.request-vehicle-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(214, 251, 79, 0.25);
+    background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+}
+
+
+.pickup-btn {
+    padding: 5px 14px;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.pickup-btn:hover:not(:disabled) {
+    background: rgba(59, 130, 246, 0.25);
+    border-color: rgba(59, 130, 246, 0.4);
+    transform: scale(1.02);
+}
+
+.pickup-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-waiting-for-pickup {
+    background: rgba(234, 179, 8, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.vehicle-row.status-waiting_for_pickup td {
+    border-left: 3px solid rgba(234, 179, 8, 0.5);
+}

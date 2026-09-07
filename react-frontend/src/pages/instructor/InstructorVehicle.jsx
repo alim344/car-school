@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../style/InstructorVehicle.css";
 
 export default function InstructorVehicle() {
     
     const token = localStorage.getItem("userToken");
+    const navigate = useNavigate();
 
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -24,6 +26,8 @@ export default function InstructorVehicle() {
     
     const [reportingOutOfService, setReportingOutOfService] = useState(false);
     const [processingAction, setProcessingAction] = useState(false);
+
+    const [latestRequest, setLatestRequest] = useState(null);
 
     const hasFetched = useRef(false);
 
@@ -88,6 +92,7 @@ export default function InstructorVehicle() {
             case "IN_USE": return "status-in-use";
             case "RESERVE": return "status-reserve";
             case "OUT_OF_SERVICE": return "status-out-of-service";
+            case "WAITING_FOR_PICKUP": return "status-waiting-for-pickup";
             default: return "";
         }
     };
@@ -96,6 +101,7 @@ export default function InstructorVehicle() {
         switch(status) {
             case "IN_USE": return "🚗";
             case "RESERVE": return "📅";
+            case "WAITING_FOR_PICKUP": return "⏳";
             case "OUT_OF_SERVICE": return "🔧";
             default: return "";
         }
@@ -281,6 +287,55 @@ export default function InstructorVehicle() {
         }
     };
 
+    const handlePickUp = async (vehicleId) => {
+        if (!window.confirm(`Are you sure you want to pick up this vehicle?`)) {
+            return;
+        }
+
+        if (!latestRequest) {
+            alert("No request found for this vehicle.");
+            return;
+        }
+
+        setProcessingAction(true);
+        try {
+            const payload = {
+                id: latestRequest.id,
+                instructor_email: latestRequest.instructor_email,
+                vehicle_id: vehicleId
+            };
+
+            await axios.patch(
+                "http://localhost:8080/car-request/inst/set-primary-car",
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            setVehicles(prev =>
+                prev.map(v =>
+                    v.id === vehicleId
+                        ? { ...v, status: "IN_USE" }
+                        : v
+                )
+            );
+
+            setLatestRequest(null);
+
+            alert("Vehicle picked up successfully!");
+
+        } catch (error) {
+            console.error("Error picking up vehicle:", error);
+            alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
+        } finally {
+            setProcessingAction(false);
+        }
+    };
+
     return (
         <div className="instructor-vehicle-container">
             <div className="instructor-vehicle-header">
@@ -289,9 +344,17 @@ export default function InstructorVehicle() {
                         <h1>My Vehicles</h1>
                         <p className="vehicle-subtitle">View and manage your assigned vehicles</p>
                     </div>
-                    <div className="vehicle-count">
-                        Total: {vehicles.length} {vehicles.length === 1 ? 'Vehicle' : 'Vehicles'}
-                    </div>
+                       <div className="header-actions">
+                            <button 
+                                className="request-vehicle-btn" 
+                                onClick={() => navigate("/instructor/request-vehicle")}
+                            >
+                                Available Vehicles
+                            </button>
+                            <div className="vehicle-count">
+                                Total: {vehicles.length} {vehicles.length === 1 ? 'Vehicle' : 'Vehicles'}
+                            </div>
+                        </div>
                 </div>
             </div>
 
@@ -433,6 +496,16 @@ export default function InstructorVehicle() {
                                                             title={!isMalfunctionFixed ? "Vehicle must be fixed before activation" : "Activate primary vehicle"}
                                                         >
                                                             ⚡ Activate
+                                                        </button>
+                                                    )}
+                                                    {vehicle.status === "WAITING_FOR_PICKUP" && (
+                                                        <button 
+                                                            className="pickup-btn" 
+                                                            onClick={() => handlePickUp(vehicle.id)}
+                                                            disabled={processingAction}
+                                                            title="Pick up this vehicle"
+                                                        >
+                                                            📋 Pick Up
                                                         </button>
                                                     )}
                                                 </div>

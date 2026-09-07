@@ -343,3 +343,9 @@
     border-radius: 8px;
     font-weight: 600;
 }
+
+.status-waiting-for-pickup {
+    background: rgba(234, 179, 8, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}

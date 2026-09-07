@@ -33,17 +33,14 @@ public class CarChangeRequestService {
         return requests.stream().map(CarRequestDTO::new).toList();
     }
 
-    public void createRequest(CarRequestDTO carRequestDTO){
+    public void createRequest(CarRequestDTO carRequestDTO,Instructor instructor){
         CarChangeRequest carChangeRequest = new CarChangeRequest();
 
         Vehicle vehicle = vehicleService.getById(carRequestDTO.getVehicle_id());
-        Instructor instructor = instructorService.findByEmail(carRequestDTO.getInstructor_email());
+
 
         if(vehicle == null ){
            throw new IllegalArgumentException("Vehicle does not exist");
-        }
-        if(instructor == null ){
-            throw new IllegalArgumentException("Instructor does not exist");
         }
 
         if( vehicle.getPrimaryInstructor() != null){
@@ -59,12 +56,31 @@ public class CarChangeRequestService {
     }
 
 
+    public void declineThatVehicleRequests(Vehicle vehicle){
+        List<CarChangeRequest> requests = carChangeRequestRepository.findByVehicle(vehicle);
+        for (CarChangeRequest carChangeRequest : requests) {
+            carChangeRequest.setStatus(CarRequestStatus.DECLINED);
+            carChangeRequestRepository.save(carChangeRequest);
+        }
+    }
+
+    @Transactional
     public void acceptRequest(CarRequestDTO carRequestDTO){
 
         CarChangeRequest carChangeRequest = carChangeRequestRepository.findById(carRequestDTO.getId()).orElse(null);
         if(carChangeRequest == null){
             throw new IllegalArgumentException("Car does not exist");
         }
+
+
+
+
+        Vehicle vehicle = vehicleService.getById(carRequestDTO.getVehicle_id());
+
+        declineThatVehicleRequests(vehicle);
+
+        vehicle.setStatus(VehicleStatus.WAITING_FOR_PICKUP);
+        vehicleService.save(vehicle);
 
         carChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
         carChangeRequestRepository.save(carChangeRequest);
@@ -95,7 +111,7 @@ public class CarChangeRequestService {
         }
 
 
-        Vehicle newVehicle = vehicleService.getById(dto.getId());
+        Vehicle newVehicle = vehicleService.getById(dto.getVehicle_id());
 
         if(newVehicle == null){
             throw new IllegalArgumentException("new vehicle not found");
@@ -118,16 +134,22 @@ public class CarChangeRequestService {
 
         newVehicle.setStatus(VehicleStatus.IN_USE);
 
-        if(newVehicle.getStatus() == VehicleStatus.AVAILABLE){
-            instructor.setVehicle(newVehicle);
-        }
-
+        instructor.setVehicle(newVehicle);
 
         instructor.setPrimaryVehicle(newVehicle);
         instructorService.save(instructor);
 
 
+    }
+
+    public CarRequestDTO findLatestRequest(Instructor instructor){
+
+        CarChangeRequest request =  carChangeRequestRepository.findTopByInstructorOrderByRequestDateDesc(instructor);
+        return new CarRequestDTO(request);
 
     }
+
+
+
 
 }

@@ -1,9 +1,12 @@
 package com.example.carschool.dto;
 
 import com.example.carschool.model.CarChangeRequest;
+import com.example.carschool.model.CarRequestStatus;
 import com.example.carschool.model.VehicleStatus;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter @Setter
 public class CarRequestDTO {
@@ -15,6 +18,10 @@ public class CarRequestDTO {
 
     private Long vehicle_id;
     private VehicleStatus vehicle_status;
+    private String registrationNumber;
+
+    private CarRequestStatus status;
+    private LocalDateTime request_date;
 
 
     public CarRequestDTO(){}
@@ -25,6 +32,9 @@ public class CarRequestDTO {
         this.instructor_name = request.getInstructor().getName() + " " + request.getInstructor().getLastname();
         this.vehicle_id = request.getVehicle().getId();
         this.vehicle_status = request.getVehicle().getStatus();
+        this.registrationNumber = request.getVehicle().getRegistrationNumber();
+        this.status = request.getStatus();
+        this.request_date = request.getRequestDate();
     }
 
 }

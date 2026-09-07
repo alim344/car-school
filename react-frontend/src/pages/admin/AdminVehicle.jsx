@@ -10,6 +10,7 @@ const filters = [
     { key: "AVAILABLE", label: "Available", endpoint: "/getByStatus/AVAILABLE" },
     { key: "IN_USE", label: "In Use", endpoint: "/getByStatus/IN_USE" },
     { key: "OUT_OF_SERVICE", label: "Out of Service", endpoint: "/getByStatus/OUT_OF_SERVICE" },
+    { key: "WAITING_FOR_PICKUP", label: "Waiting for Pickup", endpoint: "/getByStatus/WAITING_FOR_PICKUP" },
     { key: "RESERVE", label: "Reserve", endpoint: "/getByStatus/RESERVE" },
 ];
 
@@ -78,6 +79,7 @@ export default function VehicleManagement() {
             case "AVAILABLE": return "status-available";
             case "IN_USE": return "status-in-use";
             case "OUT_OF_SERVICE": return "status-out-of-service";
+            case "WAITING_FOR_PICKUP": return "status-waiting-for-pickup";
             case "RESERVE": return "status-reserve";
             default: return "";
         }
@@ -249,6 +251,7 @@ export default function VehicleManagement() {
                                         <span className="registration-number">{vehicle.registrationNumber}</span>
                                     </div>
                                     <span className={`status-badge ${getStatusBadgeClass(vehicle.status)}`}>
+                                        {vehicle.status.replace('_', ' ')}
                                     </span>
                                 </div>
 

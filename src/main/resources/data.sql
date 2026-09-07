@@ -487,3 +487,18 @@ SELECT setval(
 
 
 drop table vehicle_malfunction_record
+
+
+ALTER TYPE vehicle_status ADD VALUE 'WAITING_FOR_PICKUP';
+
+ALTER TABLE vehicles DROP CONSTRAINT vehicles_status_check;
+
+
+
+
+-- 1. Drop the existing restriction constraint
+ALTER TABLE vehicle DROP CONSTRAINT vehicle_status_check;
+
+-- 2. Add the updated constraint including WAITING_FOR_PICKUP
+ALTER TABLE vehicle ADD CONSTRAINT vehicle_status_check
+    CHECK (status IN ('AVAILABLE', 'IN_USE', 'OUT_OF_SERVICE', 'RESERVE', 'WAITING_FOR_PICKUP'));

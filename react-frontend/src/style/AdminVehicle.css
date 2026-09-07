@@ -486,3 +486,10 @@
 .vehicle-management-container::-webkit-scrollbar-thumb:hover {
     background: rgba(214, 251, 79, 0.5);
 }
+
+
+.filter-tab.active-waiting {
+    border-color: #fbbf24;
+    background: rgba(234, 179, 8, 0.15);
+    color: #fbbf24;
+}
