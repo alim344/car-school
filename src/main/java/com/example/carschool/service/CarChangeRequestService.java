@@ -1,13 +1,11 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.CarRequestDTO;
-import com.example.carschool.model.CarChangeRequest;
-import com.example.carschool.model.CarRequestStatus;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.Vehicle;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.CarChangeRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,5 +58,76 @@ public class CarChangeRequestService {
 
     }
 
+
+    public void acceptRequest(CarRequestDTO carRequestDTO){
+
+        CarChangeRequest carChangeRequest = carChangeRequestRepository.findById(carRequestDTO.getId()).orElse(null);
+        if(carChangeRequest == null){
+            throw new IllegalArgumentException("Car does not exist");
+        }
+
+        carChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
+        carChangeRequestRepository.save(carChangeRequest);
+
+    }
+
+    public void declineRequest(CarRequestDTO requestDTO){
+        CarChangeRequest carChangeRequest = carChangeRequestRepository.findById(requestDTO.getId()).orElse(null);
+        if(carChangeRequest == null){
+            throw new IllegalArgumentException("Car does not exist");
+        }
+
+        carChangeRequest.setStatus(CarRequestStatus.DECLINED);
+        carChangeRequestRepository.save(carChangeRequest);
+    }
+
+    @Transactional
+    public void setAsPrimaryCar(CarRequestDTO dto){
+
+        CarChangeRequest carChangeRequest = carChangeRequestRepository.findById(dto.getId()).orElse(null);
+        if(carChangeRequest == null){
+            throw new IllegalArgumentException("Car does not exist");
+        }
+
+        Instructor instructor = instructorService.findByEmail(dto.getInstructor_email());
+        if(instructor == null){
+            throw new IllegalArgumentException("Instructor not found");
+        }
+
+
+        Vehicle newVehicle = vehicleService.getById(dto.getId());
+
+        if(newVehicle == null){
+            throw new IllegalArgumentException("new vehicle not found");
+        }
+
+
+
+
+        Vehicle currentlyPrimaryVehicle = instructor.getPrimaryVehicle();
+        Vehicle currentlyActiveVehicle = instructor.getVehicle();
+
+        if(currentlyPrimaryVehicle.getStatus() == VehicleStatus.IN_USE ){
+            currentlyPrimaryVehicle.setStatus(VehicleStatus.AVAILABLE);
+            vehicleService.save(currentlyPrimaryVehicle);
+        }
+        if(currentlyActiveVehicle.getStatus() == VehicleStatus.RESERVE){
+            currentlyActiveVehicle.setStatus(VehicleStatus.AVAILABLE);
+            vehicleService.save(currentlyActiveVehicle);
+        }
+
+        newVehicle.setStatus(VehicleStatus.IN_USE);
+
+        if(newVehicle.getStatus() == VehicleStatus.AVAILABLE){
+            instructor.setVehicle(newVehicle);
+        }
+
+
+        instructor.setPrimaryVehicle(newVehicle);
+        instructorService.save(instructor);
+
+
+
+    }
 
 }

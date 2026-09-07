@@ -46,6 +46,23 @@ public class CarChangeRequestController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/accept")
+    public ResponseEntity<?> acceptRequest(@RequestBody CarRequestDTO dto){
+        carChangeRequestService.acceptRequest(dto);
+        return ResponseEntity.ok().build();
+    }
 
+    @PatchMapping("/decline")
+    public ResponseEntity<?> declineRequest(@RequestBody CarRequestDTO dto){
+        carChangeRequestService.declineRequest(dto);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PatchMapping("/set-primary-car")
+    public ResponseEntity<?> setAsPrimaryCar(@RequestBody  CarRequestDTO dto){
+        carChangeRequestService.setAsPrimaryCar(dto);
+        return ResponseEntity.ok().build();
+    }
 
 }

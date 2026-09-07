@@ -279,5 +279,10 @@ public class VehicleService {
 
     }
 
+    public void save(Vehicle vehicle){
+        vehicleRepository.save(vehicle);
+    }
+
+
 
 }

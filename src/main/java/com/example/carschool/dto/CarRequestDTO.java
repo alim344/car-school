@@ -8,16 +8,19 @@ import lombok.Setter;
 @Getter @Setter
 public class CarRequestDTO {
 
-    public String instructor_name;
-    public String instructor_email;
+    private Long id;
 
-    public Long vehicle_id;
-    public VehicleStatus vehicle_status;
+    private  String instructor_name;
+    private String instructor_email;
+
+    private Long vehicle_id;
+    private VehicleStatus vehicle_status;
 
 
     public CarRequestDTO(){}
 
     public CarRequestDTO(CarChangeRequest request) {
+        this.id = request.getId();
         this.instructor_email = request.getInstructor().getEmail();
         this.instructor_name = request.getInstructor().getName() + " " + request.getInstructor().getLastname();
         this.vehicle_id = request.getVehicle().getId();
