@@ -386,32 +386,34 @@
     background: #94a3b8;
 }
 
-
-/* =========================
-   ANIMATIONS
-========================= */
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+.accepted-class-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
 }
 
+.accepted-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
+.cancel-class-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
 
-        transform: translateY(20px) scale(0.98);
-    }
+.cancel-class-button:hover {
+    background-color: #c82333;
+}
 
-    to {
-        opacity: 1;
-
-        transform: translateY(0) scale(1);
-    }
+.cancel-class-button:active {
+    background-color: #bd2130;
 }

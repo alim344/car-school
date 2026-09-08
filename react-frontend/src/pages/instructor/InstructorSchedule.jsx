@@ -617,6 +617,43 @@ export default function InstructorSchedule() {
         setCreateModalOpen(false);
     };
 
+
+    const handleCancelClass = async (classId) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/practical-class/cancel/${classId}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            setClasses(prev =>
+                prev.map(cls =>
+                    cls.id === Number(classId)
+                        ? {
+                            ...cls,
+                            classStatus: "CANCELLED"
+                        }
+                        : cls
+                )
+            );
+
+            setSelectedClass(null);
+            alert("Class cancelled successfully.");
+
+        } catch (error) {
+            console.error("Error cancelling class:", error);
+            alert("Could not cancel the class.");
+        }
+    };
+
     
 
    
@@ -774,6 +811,7 @@ export default function InstructorSchedule() {
             <PracticalClassModal
                 selectedClass={selectedClass}
                 onClose={() => setSelectedClass(null)}
+                onCancel={handleCancelClass} 
             />
 
           

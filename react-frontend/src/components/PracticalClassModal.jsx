@@ -6,7 +6,8 @@ export default function PracticalClassModal({
     onClose,
     isCandidateView = false,
     onAccept,
-    onDecline
+    onDecline,
+    onCancel
 }) {
 
     if (!selectedClass) {
@@ -21,8 +22,14 @@ export default function PracticalClassModal({
     const isPending =
         props.status === "PENDING";
 
+     const isAccepted =
+        props.status === "ACCEPTED";
+
     const showCandidateActions =
         isCandidateView && isPending;
+
+    const showCancelAction =
+        isCandidateView && isAccepted;
 
 
     const formatTime = (date) => {
@@ -79,40 +86,7 @@ export default function PracticalClassModal({
 
                     </div>
 
-
-                    {showCandidateActions ? (
-
-                        <div className="pending-class-actions">
-
-                            <div className="pending-action-buttons">
-
-                                <button
-                                    className="decline-class-button"
-                                    onClick={() =>
-                                        onDecline(selectedClass.id)
-                                    }
-                                >
-                                    Decline
-                                </button>
-
-
-                                <button
-                                    className="accept-class-button"
-                                    onClick={() =>
-                                        onAccept(selectedClass.id)
-                                    }
-                                >
-                                    Accept
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    ) : (
-
-                        <>
-                            <div className={`class-info status-${status}`}>
+                     <div className={`class-info status-${status}`}>
                                 <span>Status</span>
                                 <strong>{props.status}</strong>
                             </div>
@@ -164,9 +138,51 @@ export default function PracticalClassModal({
                                     {props.remarks || "-"}
                                 </strong>
                             </div>
-                        </>
 
-                    )}
+
+                    {showCandidateActions ? (
+
+                        <div className="pending-class-actions">
+
+                            <div className="pending-action-buttons">
+
+                                <button
+                                    className="decline-class-button"
+                                    onClick={() =>
+                                        onDecline(selectedClass.id)
+                                    }
+                                >
+                                    Decline
+                                </button>
+
+
+                                <button
+                                    className="accept-class-button"
+                                    onClick={() =>
+                                        onAccept(selectedClass.id)
+                                    }
+                                >
+                                    Accept
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    ) : showCancelAction ? (
+                        <div className="accepted-class-actions">
+                            <div className="accepted-action-buttons">
+                                <button
+                                    className="cancel-class-button"
+                                    onClick={() =>
+                                        onCancel(selectedClass.id)
+                                    }
+                                >
+                                    Cancel Class
+                                </button>
+                            </div>
+                        </div>
+                    ) : null}
 
                 </div>
 

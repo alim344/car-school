@@ -218,6 +218,43 @@ export default function CandidateSchedule(){
             setRescheduleModalOpen(true);
         };
 
+        const handleCancelClass = async (classId) => {
+            try {
+                const response = await fetch(
+                    `http://localhost:8080/practical-class/cancel/${classId}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                // Update the class status to CANCELLED in the UI
+                setClasses(prev =>
+                    prev.map(cls =>
+                        cls.id === Number(classId)
+                            ? {
+                                ...cls,
+                                classStatus: "CANCELLED"
+                            }
+                            : cls
+                    )
+                );
+
+                setSelectedClass(null);
+                alert("Class cancelled successfully.");
+
+            } catch (error) {
+                console.error("Error cancelling class:", error);
+                alert("Could not cancel the class.");
+            }
+        };
+
 
     return(
 
@@ -238,6 +275,7 @@ export default function CandidateSchedule(){
                         isCandidateView={true}
                         onAccept={handleAcceptClass}
                         onDecline={handleDeclineClick}
+                        onCancel={handleCancelClass}
                     />
 
                      <DeclineClassModal
