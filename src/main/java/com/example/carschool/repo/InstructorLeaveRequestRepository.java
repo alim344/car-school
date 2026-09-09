@@ -13,6 +13,8 @@ public interface InstructorLeaveRequestRepository extends JpaRepository<Instruct
 
     List<InstructorLeaveRequest> findByInstructor(Instructor instructor);
 
+    List<InstructorLeaveRequest> findAllByOrderByRequestedAtDesc();
+
     List<InstructorLeaveRequest> findByInstructorAndStartDateBetween(Instructor instructor, LocalDate startDate, LocalDate endDate);
 
     List<InstructorLeaveRequest> findByInstructorAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(Instructor instructor, LeaveStatus status, LocalDate startDate, LocalDate endDate);

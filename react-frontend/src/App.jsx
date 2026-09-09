@@ -20,6 +20,7 @@ import InstructorVehicle from './pages/instructor/InstructorVehicle';
 import InstructorRequestVehicle from './pages/instructor/InstructorRequestVehicle';
 import VehicleRequests from './pages/admin/VehicleRequests';
 import InstructorLeaveRequest from './pages/instructor/InstructorLeaveRequests';
+import AdminLeaveRequests from './pages/admin/AdminLeaveRequests';
 
 export default function App() {
   return (
@@ -109,6 +110,11 @@ export default function App() {
         <Route path="/admin/vehicle-requests" element={
             <AdminLayout>
                 <VehicleRequests />
+            </AdminLayout>
+        } />
+         <Route path="/admin/leaves" element={
+            <AdminLayout>
+                <AdminLeaveRequests />
             </AdminLayout>
         } />
 

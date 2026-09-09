@@ -109,7 +109,7 @@ public class InstructorLeaveService {
 
 
     public List<LeaveRequestDTO> getAllLeaveRequests() {
-        return leaveRequestRepository.findAll().stream()
+        return leaveRequestRepository.findAllByOrderByRequestedAtDesc().stream()
                 .map(request -> {
                     int remainingDays = getRemainingLeaveDays(request.getInstructor());
                     return new LeaveRequestDTO(request, remainingDays);

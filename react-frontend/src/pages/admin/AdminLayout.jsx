@@ -13,7 +13,7 @@ export default function AdminLayout({ children }) {
     { id: 'practical-exam', label: 'Practical Exam',  path: '/admin/scheduler' },
     { id: 'vehicles', label: 'Vehicles',  path: '/admin/vehicles' },
     {id: 'vehicle-request', label: 'Vehicle Requests', path: '/admin/vehicle-requests'},
-    { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
+    { id: 'instructor-leaves', label: 'Leave Requests',  path: '/admin/leaves' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' }
     
    
