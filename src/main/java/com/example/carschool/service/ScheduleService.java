@@ -25,6 +25,9 @@ public class ScheduleService {
     @Autowired
     private ClassRequestRepository classRequestRepository;
 
+    @Autowired
+    private InstructorLeaveService instructorLeaveService;
+
 
 
     public List<PracticalClassDTO> getInstructorSchedule(Instructor instructor) {
@@ -57,6 +60,10 @@ public class ScheduleService {
         if (conflict) {
             throw new IllegalArgumentException(
                     "Instructor already has a class during this time.");}
+
+        if (instructorLeaveService.isOnLeave(instructor, createClassDTO.getStartTime().toLocalDate())) {
+            throw new IllegalArgumentException("Instructor is on approved leave during this time.");
+        }
 
         if (createClassDTO.getStartTime().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("Cannot schedule a class in the past.");
@@ -145,8 +152,19 @@ public class ScheduleService {
 
             start = pc.getScheduledStartTime();
             end = pc.getScheduledEndTime();
-            pc.setScheduledStartTime(start.plusWeeks(1));
-            pc.setScheduledEndTime(end.plusWeeks(1));
+
+            LocalDateTime shiftedStart = start.plusWeeks(1);
+            LocalDateTime shiftedEnd = end.plusWeeks(1);
+
+            if (instructorLeaveService.isOnLeave(instructor, shiftedStart.toLocalDate())) {
+                continue;
+            }
+
+
+
+
+            pc.setScheduledStartTime(shiftedStart);
+            pc.setScheduledEndTime(shiftedEnd);
             ClassDTOList.add(new CreateClassDTO(pc));
 
         }

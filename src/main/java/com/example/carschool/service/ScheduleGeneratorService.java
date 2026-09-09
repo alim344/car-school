@@ -20,6 +20,8 @@ public class ScheduleGeneratorService {
     @Autowired
     private PreferenceService preferenceService;
 
+    private InstructorLeaveService instructorLeaveService;
+
     public List<CreateClassDTO> generateDraftSchedule(
             Instructor instructor,
             LocalDate weekStartDate,
@@ -31,6 +33,12 @@ public class ScheduleGeneratorService {
         List<PracticalClass> existingClassesForWeek = practicalClassService.getByInstructorAndWeek(instructor);
         List<CreateClassDTO> newlyGeneratedDrafts = new ArrayList<>();
         List<PracticalClass> allScheduledClasses = new ArrayList<>(existingClassesForWeek);
+
+
+        //dobavljamo sick leaves ako ih ima
+        Set<LocalDate> leaveDates = instructorLeaveService.getLeaveDatesInRange(
+                instructor, weekStartDate, weekStartDate.plusDays(6)
+        );
 
         Map<Long, Preference> candidatePrefMap = preferences.stream().collect(Collectors.toMap(p -> p.getCandidate().getId(), p -> p));
 
@@ -55,7 +63,7 @@ public class ScheduleGeneratorService {
             if (candidateClassCounts.get(candidate.getId()) < 1) {
                 boolean scheduled = scheduleNextClassForCandidate(
                         candidate, instructor, candidatePrefMap.get(candidate.getId()),
-                        allScheduledClasses, newlyGeneratedDrafts, weekStartDate, algScheduleDTO
+                        allScheduledClasses, newlyGeneratedDrafts, weekStartDate, algScheduleDTO, leaveDates
                 );
                 if (scheduled) {
                     candidateClassCounts.put(candidate.getId(), 1);
@@ -68,7 +76,7 @@ public class ScheduleGeneratorService {
             if (candidateClassCounts.get(candidate.getId()) < 2) {
                 boolean scheduled = scheduleNextClassForCandidate(
                         candidate, instructor, candidatePrefMap.get(candidate.getId()),
-                        allScheduledClasses, newlyGeneratedDrafts, weekStartDate,algScheduleDTO
+                        allScheduledClasses, newlyGeneratedDrafts, weekStartDate,algScheduleDTO,leaveDates
                 );
                 if (scheduled) {
                     candidateClassCounts.put(candidate.getId(), candidateClassCounts.get(candidate.getId()) + 1);
@@ -90,7 +98,8 @@ public class ScheduleGeneratorService {
             List<PracticalClass> allScheduledClasses,
             List<CreateClassDTO> newlyGeneratedDrafts,
             LocalDate weekStartDate,
-            AlgScheduleDTO algScheduleDTO
+            AlgScheduleDTO algScheduleDTO,
+            Set<LocalDate> leaveDates
     ) {
 
 
@@ -102,7 +111,7 @@ public class ScheduleGeneratorService {
         //--------------------1. PRVI POKUSAJ - da svako dobije cas po svojoj preferenci
         for (TimePreference tp : timePrefs) {
             LocalDate date = tp.getDate();
-            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses)) continue;
+            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses,leaveDates)) continue;
             if (candidateHasClassOnDate(candidate, date, allScheduledClasses)) continue;
 
             LocalDateTime candidateStartWindow = LocalDateTime.of(date, tp.getStartTime());
@@ -124,7 +133,7 @@ public class ScheduleGeneratorService {
 
         for (TimePreference tp : timePrefs) {
             LocalDate date = tp.getDate();
-            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses)) continue;
+            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses,leaveDates)) continue;
             if (candidateHasClassOnDate(candidate, date, allScheduledClasses)) continue;
 
             LocalTime time_start = LocalTime.of(7, 0);
@@ -160,7 +169,7 @@ public class ScheduleGeneratorService {
         // ako nista od toga onda ga ubacujemo bilo gde
         for (int i = 0; i < 7; i++) {
             LocalDate date = weekStartDate.plusDays(i);
-            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses)) continue;
+            if (!isInstructorWorkingOnDate(date, algScheduleDTO, allScheduledClasses,leaveDates)) continue;
             if (candidateHasClassOnDate(candidate, date, allScheduledClasses)) continue;
 
             LocalTime time_start = LocalTime.of(7, 0);
@@ -261,8 +270,13 @@ public class ScheduleGeneratorService {
     private boolean isInstructorWorkingOnDate(
             LocalDate date,
             AlgScheduleDTO algScheduleDTO,
-            List<PracticalClass> allScheduledClasses
+            List<PracticalClass> allScheduledClasses,
+            Set<LocalDate> leaveDates
     ) {
+
+        if (leaveDates.contains(date)) {
+            return false;
+        }
         DayOfWeek day = date.getDayOfWeek();
 
         if (algScheduleDTO.getFullDayOff() != null && algScheduleDTO.getFullDayOff() == day) {
