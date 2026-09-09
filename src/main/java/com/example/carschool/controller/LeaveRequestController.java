@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,4 +33,17 @@ public class LeaveRequestController {
 
         return ResponseEntity.ok(instructorLeaveService.getLeaveRequestsByInstructor(instructor));
     }
+
+
+    @PostMapping("/inst/create")
+    public ResponseEntity<?> createRequest(@RequestBody LeaveRequestDTO leaveRequestDTO,HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+
+
+        instructorLeaveService.createLeaveRequest(leaveRequestDTO,instructor);
+        return ResponseEntity.ok().build();
+    }
+
 }

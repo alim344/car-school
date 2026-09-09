@@ -235,19 +235,19 @@ export default function InstructorRequestVehicle() {
                                 {latestRequest.request_date ? new Date(latestRequest.request_date).toLocaleDateString() : ''}
                             </span>
                             {latestRequest.pickedUp && (
-                                <span className="picked-up-badge">✅ Picked Up</span>
+                                <span className="picked-up-badge"> Picked Up</span>
                             )}
                         </div>
                         
                         {latestRequest.status === 'PENDING' && (
                             <div className="pending-warning">
-                                ⏳ Your request is pending approval. You cannot make new requests until it's resolved.
+                                 Your request is pending approval. You cannot make new requests until it's resolved.
                             </div>
                         )}
                         
                         {latestRequest.status === 'ACCEPTED' && !latestRequest.pickedUp && (
                             <div className="approved-warning">
-                                ✅ Your request was accepted! Click the button below to pick up your vehicle.
+                                 Your request was accepted! Click the button below to pick up your vehicle.
                                 <button 
                                     className="pickup-btn" 
                                     onClick={handlePickUp}

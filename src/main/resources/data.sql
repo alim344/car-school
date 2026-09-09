@@ -502,3 +502,59 @@ ALTER TABLE vehicle DROP CONSTRAINT vehicle_status_check;
 -- 2. Add the updated constraint including WAITING_FOR_PICKUP
 ALTER TABLE vehicle ADD CONSTRAINT vehicle_status_check
     CHECK (status IN ('AVAILABLE', 'IN_USE', 'OUT_OF_SERVICE', 'RESERVE', 'WAITING_FOR_PICKUP'));
+
+
+
+
+
+
+
+
+
+ALTER TABLE instructor_leave_request
+    DROP CONSTRAINT instructor_leave_request_status_check;
+
+ALTER TABLE instructor_leave_request
+    ADD CONSTRAINT instructor_leave_request_status_check
+        CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'USED'));
+
+
+
+
+
+
+
+
+
+
+
+-- 1. PENDING — sick leave request awaiting admin review, next week
+--    Should NOT block scheduling yet (only APPROVED blocks, per our earlier discussion)
+INSERT INTO instructor_leave_request
+(instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
+VALUES
+    (3, '2026-09-15', '2026-09-15', 'SICK', 'PENDING', 'Not feeling well, need the day off', NULL, '2026-09-09 08:30:00', NULL);
+
+-- 2. APPROVED — single day, this should block manual/copy/alg scheduling on this date
+INSERT INTO instructor_leave_request
+(instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
+VALUES
+    (3, '2026-09-17', '2026-09-17', 'PERSONAL', 'APPROVED', 'Family appointment', 'Approved, enjoy', '2026-09-08 09:00:00', '2026-09-08 14:00:00');
+
+-- 3. APPROVED — multi-day vacation, good for testing your range/getLeaveDatesInRange logic
+INSERT INTO instructor_leave_request
+(instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
+VALUES
+    (3, '2026-09-21', '2026-09-25', 'VACATION', 'APPROVED', 'Annual leave', 'Approved', '2026-08-20 10:00:00', '2026-08-21 09:15:00');
+
+-- 4. REJECTED — should have zero effect on scheduling, good negative test case
+INSERT INTO instructor_leave_request
+(instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
+VALUES
+    (3, '2026-09-14', '2026-09-14', 'SICK', 'REJECTED', 'Wanted the day off', 'Too many classes scheduled already, please reschedule instead', '2026-09-07 11:00:00', '2026-09-07 16:40:00');
+
+-- 5. USED — already-elapsed leave, for testing that past leave doesn't wrongly block future scheduling
+INSERT INTO instructor_leave_request
+(instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
+VALUES
+    (3, '2026-08-10', '2026-08-12', 'VACATION', 'USED', 'Summer trip', 'Approved and completed', '2026-07-01 09:00:00', '2026-07-02 12:00:00');

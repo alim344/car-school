@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,22 @@ public class InstructorLeaveService {
         return requests.stream().map(LeaveRequestDTO::new).toList();
     }
 
+
+
+    public void createLeaveRequest(LeaveRequestDTO leaveRequestDTO, Instructor instructor) {
+
+        InstructorLeaveRequest leaveRequest = new InstructorLeaveRequest();
+        leaveRequest.setStartDate(leaveRequestDTO.getStartDate());
+        leaveRequest.setEndDate(leaveRequestDTO.getEndDate());
+        leaveRequest.setRequestedAt(LocalDateTime.now());
+        leaveRequest.setStatus(LeaveStatus.PENDING);
+        leaveRequest.setType(leaveRequestDTO.getType());
+        leaveRequest.setReason(leaveRequestDTO.getReason());
+        leaveRequest.setInstructor(instructor);
+        leaveRequestRepository.save(leaveRequest);
+
+
+    }
 
 
 }

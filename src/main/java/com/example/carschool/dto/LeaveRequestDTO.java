@@ -35,6 +35,7 @@ public class LeaveRequestDTO {
     private LocalDateTime requestedAt;
     private LocalDateTime resolvedAt;
 
+    public LeaveRequestDTO() {}
 
     public LeaveRequestDTO(InstructorLeaveRequest request) {
         this.id = request.getId();
