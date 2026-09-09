@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.LeaveRequestDTO;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.InstructorLeaveRequest;
 import com.example.carschool.model.LeaveStatus;
@@ -42,6 +43,11 @@ public class InstructorLeaveService {
             }
         }
         return leaveDates;
+    }
+
+    public List<LeaveRequestDTO> getLeaveRequestsByInstructor(Instructor instructor) {
+        List<InstructorLeaveRequest> requests =  leaveRequestRepository.findByInstructor(instructor);
+        return requests.stream().map(LeaveRequestDTO::new).toList();
     }
 
 

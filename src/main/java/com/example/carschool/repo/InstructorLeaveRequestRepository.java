@@ -10,6 +10,9 @@ import java.util.List;
 
 public interface InstructorLeaveRequestRepository extends JpaRepository<InstructorLeaveRequest, Long> {
 
+
+    List<InstructorLeaveRequest> findByInstructor(Instructor instructor);
+
     List<InstructorLeaveRequest> findByInstructorAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(Instructor instructor, LeaveStatus status, LocalDate startDate, LocalDate endDate);
 
     boolean existsByInstructorAndStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqual(Instructor instructor, LeaveStatus status, LocalDate startDate, LocalDate endDate);
