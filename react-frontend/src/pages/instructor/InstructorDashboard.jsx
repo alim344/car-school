@@ -56,6 +56,15 @@ function CanceledClassCard({pc}){
 
 
 function AcceptedClassCard({ pc, onStart, onCancel }) {
+
+     const isFutureClass = () => {
+        const now = new Date();
+        const classStart = new Date(pc.scheduledStartTime);
+        return classStart > now;
+    };
+
+
+
     return (
         <div className="class-card accepted-card">
             <div className="class-card-name">{pc.candidateName}</div>
@@ -70,7 +79,9 @@ function AcceptedClassCard({ pc, onStart, onCancel }) {
              
             <div className="class-card-actions">
                 <button className="start-btn" onClick={() => onStart(pc.id)}>Start</button>
-                <button className="cancel-btn" onClick={() => onCancel(pc.id)}>Cancel</button>
+                 {isFutureClass() && (
+                    <button className="cancel-btn" onClick={() => onCancel(pc.id)}>Cancel</button>
+                )}
             </div>
         </div>
     );
@@ -98,6 +109,7 @@ export default function InstructorDashboard() {
     const [dashboardData, setDashboardData] = useState(null);
     const [loading,setLoading] = useState(true);
     const [error,setError] = useState(null);
+    const [isCancellingAll, setIsCancellingAll] = useState(false);
     const token  = localStorage.getItem("userToken");
 
     function sortByStartTime(classes) {
@@ -216,6 +228,48 @@ export default function InstructorDashboard() {
         }
     };
 
+
+     const handleCancelAllToday = async () => {
+        const confirmed = window.confirm(
+            "Are you sure you want to cancel ALL remaining classes for today?\n\n" +
+            "This action cannot be undone."
+        );
+        
+        if (!confirmed) return;
+
+        setIsCancellingAll(true);
+
+        try {
+            const response = await axios.patch(
+                'http://localhost:8080/practical-class/cancelToday',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            // Refresh the dashboard to show updated data
+            await refreshDashboard();
+
+            const cancelledCount = response.data?.length || 0;
+            alert(`✅ Successfully cancelled ${cancelledCount} class(es) for today.`);
+
+        } catch (error) {
+            console.error("Error cancelling all classes:", error);
+            alert("Failed to cancel classes. Please try again.");
+        } finally {
+            setIsCancellingAll(false);
+        }
+    };
+
+
+
+
+
+
+
     const handleEndClass = async () => {
         await refreshDashboard();
     };
@@ -283,6 +337,13 @@ export default function InstructorDashboard() {
                     <div className="class-section">
                         <div className="class-header">
                             <span>Upcoming Classes</span>
+                            <button 
+                                className="cancel-all-btn"
+                                onClick={handleCancelAllToday}
+                                disabled={isCancellingAll || acceptedClasses.length === 0}
+                            >
+                                {isCancellingAll ? 'Cancelling...' : 'Cancel All Today'}
+                            </button>
                         </div>
                         <div className="class-list">
                             {acceptedClasses.length === 0 && (

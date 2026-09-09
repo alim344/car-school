@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/practical-class")
 public class PracticalClassController {
@@ -61,6 +63,14 @@ public class PracticalClassController {
         return ResponseEntity.ok(practicalClassService.interruptClass(dto));
     }
 
+
+    @PatchMapping("/cancelToday")
+    public ResponseEntity<List<PracticalClassDTO>> cancelTodayClasses(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(practicalClassService.cancelByDay(instructor));
+    }
 
 
 

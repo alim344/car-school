@@ -210,4 +210,32 @@ public class PracticalClassService {
     }
 
 
+    public List<PracticalClassDTO> cancelByDay(Instructor instructor){
+
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfNextDay = startOfDay.plusDays(1);
+
+        List<PracticalClass> classes = practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor,now,startOfNextDay);
+
+
+        for(PracticalClass pc : classes){
+
+            if(pc.getClassStatus() != ClassStatus.CANCELLED && pc.getClassStatus() != ClassStatus.REJECTED){
+                pc.setClassStatus(ClassStatus.CANCELLED);
+                if(pc.getClassStatus() == ClassStatus.STARTED){
+                    pc.setActualEndTime(LocalDateTime.now());
+                }
+                practicalClassRepository.save(pc);
+            }
+
+        }
+
+
+
+        return classes.stream().map(PracticalClassDTO::new).toList();
+
+    }
+
+
 }

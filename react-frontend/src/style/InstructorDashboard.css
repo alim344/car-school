@@ -203,3 +203,40 @@
     white-space: nowrap;
 }
 
+
+
+.class-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.cancel-all-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.cancel-all-btn:hover:not(:disabled) {
+    background-color: #c82333;
+    transform: scale(1.02);
+}
+
+.cancel-all-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.cancel-all-btn:active:not(:disabled) {
+    transform: scale(0.98);
+}

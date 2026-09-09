@@ -25,11 +25,18 @@ export default function PracticalClassModal({
      const isAccepted =
         props.status === "ACCEPTED";
 
-    const showCandidateActions =
-        isCandidateView && isPending;
+    const isFutureClass = () => {
+        const now = new Date();
+        const classStart = new Date(selectedClass.start);
+        return classStart > now;
+    };
 
-    const showCancelAction =
-        isCandidateView && isAccepted;
+    const showCandidateActions =
+        isCandidateView && isPending && isFutureClass();
+
+    const showCancelAction = 
+        (isCandidateView && isAccepted && isFutureClass()) ||
+        (!isCandidateView && (isPending || isAccepted) && isFutureClass());
 
 
     const formatTime = (date) => {
