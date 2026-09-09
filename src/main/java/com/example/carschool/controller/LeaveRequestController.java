@@ -1,5 +1,6 @@
 package com.example.carschool.controller;
 
+import com.example.carschool.dto.AdminLeaveResponseDTO;
 import com.example.carschool.dto.LeaveRequestDTO;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.service.InstructorLeaveService;
@@ -45,5 +46,21 @@ public class LeaveRequestController {
         instructorLeaveService.createLeaveRequest(leaveRequestDTO,instructor);
         return ResponseEntity.ok().build();
     }
+
+
+    @PatchMapping("/handle")
+    public ResponseEntity<?> handleRequest(@RequestBody AdminLeaveResponseDTO adminLeaveResponseDTO){
+
+        instructorLeaveService.handleRequest(adminLeaveResponseDTO);
+        return ResponseEntity.ok().build();
+
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<LeaveRequestDTO>> getAllLeaveRequests(){
+        return ResponseEntity.ok(instructorLeaveService.getAllLeaveRequests());
+    }
+
+
 
 }

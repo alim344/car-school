@@ -28,5 +28,8 @@ public class Instructor extends User{
     @JoinColumn(name = "primary_vehicle_id", unique = true)
     private Vehicle primaryVehicle;
 
+    @Column(nullable = false)
+    private Integer annualLeaveAllowance = 30;
+
 
 }

@@ -9,7 +9,7 @@ export default function NavBar({showAuthButtons = false}){
     
     return(
         <nav className="navBar">
-            <div className="logo">McQueen</div>
+            <div className="logo">Impala</div>
             {showAuthButtons && (
             <div className="auth-buttons">
             <button className="btn-login" onClick={()=>navigate('/login')}>Log in</button>

@@ -19,6 +19,7 @@ public class LeaveRequestDTO {
 
     private String instructorName;
     private String instructorEmail;
+    private int remainingLeaveDays;
 
     private LocalDate startDate;
 
@@ -50,6 +51,12 @@ public class LeaveRequestDTO {
         this.status = request.getStatus();
         this.type = request.getType();
 
+
+    }
+
+    public LeaveRequestDTO(InstructorLeaveRequest request, int remainingLeaveDays) {
+        this(request);
+        this.remainingLeaveDays = remainingLeaveDays;
     }
 
 }

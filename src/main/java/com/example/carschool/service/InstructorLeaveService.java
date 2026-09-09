@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.AdminLeaveResponseDTO;
 import com.example.carschool.dto.LeaveRequestDTO;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.InstructorLeaveRequest;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +57,8 @@ public class InstructorLeaveService {
 
     public void createLeaveRequest(LeaveRequestDTO leaveRequestDTO, Instructor instructor) {
 
+        checkLeaveLimit(leaveRequestDTO.getStartDate(),leaveRequestDTO.getEndDate(), instructor);
+
         InstructorLeaveRequest leaveRequest = new InstructorLeaveRequest();
         leaveRequest.setStartDate(leaveRequestDTO.getStartDate());
         leaveRequest.setEndDate(leaveRequestDTO.getEndDate());
@@ -67,6 +71,85 @@ public class InstructorLeaveService {
 
 
     }
+
+    private void checkLeaveLimit(LocalDate startTime, LocalDate endTime , Instructor instructor) {
+        long requestedDays = ChronoUnit.DAYS.between(startTime, endTime) + 1;
+        int year = startTime.getYear();
+        int remaining = getRemainingLeaveDays(instructor);
+
+        if (requestedDays > remaining) {
+            throw new IllegalArgumentException(
+                    "This request needs " + requestedDays + " days, but only "
+                            + remaining + " remain for " + year + "."
+            );
+        }
+    }
+
+
+    public void handleRequest( AdminLeaveResponseDTO dto){
+
+        InstructorLeaveRequest request = leaveRequestRepository.findById(dto.getId()).orElse(null);
+        if(request == null){
+            throw new IllegalArgumentException("invalid request");
+        }
+
+        if(dto.isAccepted()){
+
+            checkLeaveLimit(request.getStartDate(), request.getEndDate(), request.getInstructor());
+            request.setStatus(LeaveStatus.APPROVED);
+        }else{
+            request.setStatus(LeaveStatus.REJECTED);
+        }
+
+        request.setAdminComment(dto.getResponse());
+        request.setResolvedAt(LocalDateTime.now());
+        leaveRequestRepository.save(request);
+
+    }
+
+
+    public List<LeaveRequestDTO> getAllLeaveRequests() {
+        return leaveRequestRepository.findAll().stream()
+                .map(request -> {
+                    int remainingDays = getRemainingLeaveDays(request.getInstructor());
+                    return new LeaveRequestDTO(request, remainingDays);
+                })
+                .toList();
+
+    }
+
+
+
+
+    public int getUsedLeaveDays(Instructor instructor) {
+
+
+        int currentYear = LocalDate.now().getYear();
+        List<InstructorLeaveRequest> requests = leaveRequestRepository.findByInstructorAndStartDateBetween(instructor,
+                LocalDate.of(currentYear,1,1), LocalDate.of(currentYear,12,31));
+
+
+        int totalDays = 0;
+        for(InstructorLeaveRequest request : requests){
+            if(request.getStatus() == LeaveStatus.APPROVED || request.getStatus() == LeaveStatus.USED){
+
+                totalDays += (int) ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate()) + 1;
+
+            }
+        }
+        return totalDays;
+
+    }
+
+
+     public int getRemainingLeaveDays(Instructor instructor) {
+        int currentYear = LocalDate.now().getYear();
+        return instructor.getAnnualLeaveAllowance() - getUsedLeaveDays(instructor);
+     }
+
+
+
+
 
 
 }

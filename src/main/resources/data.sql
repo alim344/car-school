@@ -523,7 +523,7 @@ ALTER TABLE instructor_leave_request
 
 
 
-
+UPDATE instructor SET annual_leave_allowance = 30 WHERE annual_leave_allowance IS NULL;
 
 
 
