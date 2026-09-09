@@ -53,6 +53,69 @@ export default function LocationNotes({
   const [loadingNotes, setLoadingNotes] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
+  const [roadRouteResult, setRoadRouteResult] = useState(null); 
+  const [routeGeomLoading, setRouteGeomLoading] = useState(false);
+  const [routeGeomError, setRouteGeomError] = useState(null);
+
+
+  const rawWaypoints = useMemo(() => {
+    if (!route?.pathGeoJson) return null;
+    try {
+      const geoJson = JSON.parse(route.pathGeoJson);
+      return geoJson.coordinates || null;
+    } catch (e) {
+      console.error("Error parsing GeoJSON:", e);
+      return null;
+    }
+  }, [route]);
+
+
+
+
+  const hasEnoughWaypoints = !!rawWaypoints && rawWaypoints.length >= 2;
+
+  
+useEffect(() => {
+  if (!hasEnoughWaypoints) return; 
+
+  let ignore = false;
+
+  async function fetchRoadRoute() {
+    setRouteGeomLoading(true);
+    setRouteGeomError(null);
+    try {
+      const coordsParam = rawWaypoints.map(([lng, lat]) => `${lng},${lat}`).join(";");
+      const url = `https://router.project-osrm.org/route/v1/driving/${coordsParam}?overview=full&geometries=geojson`;
+      const response = await axios.get(url);
+
+      
+      if (ignore) return;
+
+      if (response.data?.code !== "Ok" || !response.data?.routes?.length) {
+        setRouteGeomError(response.data?.message || "No route geometry returned");
+        return;
+      }
+
+      setRoadRouteResult({ routeId: route?.id, geometry: response.data.routes[0].geometry });
+    } catch (error) {
+      if (!ignore) {
+        console.error("Error fetching road route:", error);
+        setRouteGeomError(error.message || "Failed to fetch route");
+      }
+    } finally {
+      if (!ignore) setRouteGeomLoading(false);
+    }
+  }
+
+  fetchRoadRoute();
+  return () => { ignore = true; };
+}, [hasEnoughWaypoints, rawWaypoints, route?.id]);
+
+const effectiveRoadRoute =
+  hasEnoughWaypoints && roadRouteResult?.routeId === route?.id
+    ? roadRouteResult.geometry
+    : null;
+
 
  useEffect(() => {
     if (!classId) return;
@@ -161,15 +224,18 @@ const mapZoom = route?.pathGeoJson ? 14 : 13;
   };
 
   const renderRouteOnMap = () => {
-    if (route?.pathGeoJson) {
-      try {
-        const geoJson = JSON.parse(route.pathGeoJson);
-        return <GeoJSON data={geoJson} style={{ color: "#d6fb4f", weight: 4 }} />;
-      } catch  {
-        return null;
-      }
+    if (!route?.pathGeoJson) return null;
+
+    if (effectiveRoadRoute) {
+      return <GeoJSON key={`road-${route.id}`}   data={effectiveRoadRoute} style={{ color: "#d6fb4f", weight: 4 }} />;
     }
-    return null;
+
+    try {
+      const geoJson = JSON.parse(route.pathGeoJson);
+      return <GeoJSON key={`straight-${route.id}`} data={geoJson} style={{ color: "#d6fb4f", weight: 4, dashArray: "6,6" }} />;
+    } catch {
+      return null;
+    }
   };
 
   return (
@@ -177,7 +243,13 @@ const mapZoom = route?.pathGeoJson ? 14 : 13;
       <div className="map-section">
         <div className="map-header">
           <h3> LOCATION NOTES</h3>
-          <span className="map-instruction">Click on map to add a note</span>
+          <span className="map-instruction">
+  {routeGeomLoading
+    ? "Loading route..."
+    : routeGeomError
+    ? `Route error: ${routeGeomError}`
+    : "Click on map to add a note"}
+</span>
         </div>
         
         <div className="map-wrapper">

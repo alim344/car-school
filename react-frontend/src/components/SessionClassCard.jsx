@@ -228,7 +228,7 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
                 </div>
             </div>
 
-            <LocationNotes classId={pc.id} />
+            <LocationNotes classId={pc.id} route={selectedRoute}/>
 
             <div className="grade-remarks-section">
                 <div className="section-title">
