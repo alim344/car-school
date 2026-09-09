@@ -238,4 +238,15 @@ public class PracticalClassService {
     }
 
 
+
+    public void cancelClasses(LocalDateTime startTime, LocalDateTime endTime){
+       List<PracticalClass> pclasses =  practicalClassRepository.findByScheduledStartTimeBetween(startTime,endTime);
+       for(PracticalClass pc : pclasses){
+           pc.setClassStatus(ClassStatus.CANCELLED);
+           practicalClassRepository.save(pc);
+       }
+    }
+
+
+
 }

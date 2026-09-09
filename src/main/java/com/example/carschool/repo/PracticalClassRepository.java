@@ -30,6 +30,9 @@ public interface PracticalClassRepository extends JpaRepository<PracticalClass, 
     );
 
 
+    List<PracticalClass> findByScheduledStartTimeBetween( LocalDateTime startOfDay, LocalDateTime endOfDay);
+
+
 
 
 }

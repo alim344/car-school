@@ -8,6 +8,7 @@ import com.example.carschool.model.LeaveStatus;
 import com.example.carschool.repo.InstructorLeaveRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,7 +22,8 @@ public class InstructorLeaveService {
 
     @Autowired
     private InstructorLeaveRequestRepository leaveRequestRepository;
-
+    @Autowired
+    private PracticalClassService practicalClassService;
 
 
     public boolean isOnLeave(Instructor instructor, LocalDate date) {
@@ -86,6 +88,7 @@ public class InstructorLeaveService {
     }
 
 
+    @Transactional
     public void handleRequest( AdminLeaveResponseDTO dto){
 
         InstructorLeaveRequest request = leaveRequestRepository.findById(dto.getId()).orElse(null);
@@ -94,9 +97,10 @@ public class InstructorLeaveService {
         }
 
         if(dto.isAccepted()){
-
+            practicalClassService.cancelClasses(request.getStartDate().atTime(0 ,0),request.getEndDate().atTime(0 ,0));
             checkLeaveLimit(request.getStartDate(), request.getEndDate(), request.getInstructor());
             request.setStatus(LeaveStatus.APPROVED);
+
         }else{
             request.setStatus(LeaveStatus.REJECTED);
         }
