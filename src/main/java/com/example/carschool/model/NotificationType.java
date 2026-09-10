@@ -1,7 +1,7 @@
 package com.example.carschool.model;
 
 public enum NotificationType {
-
+    CLASS_FINISHED,
     CLASS_SCHEDULED,
     CLASS_CANCELLED,
     CLASS_REQUEST_ACCEPTED,
@@ -9,6 +9,9 @@ public enum NotificationType {
     LAST_CLASS_REMINDER,
     INSTRUCTOR_ON_LEAVE,
     EXAM_SCHEDULED,
+    EXAM_CANCELLED,
+    EXAM_PASS,
+    EXAM_FAIL,
 
     CLASS_CANCELLED_BY_CANDIDATE,
     NEW_CLASS_REQUEST,

@@ -29,6 +29,8 @@ public class PracticalClassService {
     private RouteService routeService;
     @Autowired
     private CandidateService candidateService;
+    @Autowired
+    private NotificationService notificationService;
 
     public PracticalClass findById(Long id){
         return practicalClassRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"PracticalClass not found with id: " + id));
@@ -110,8 +112,9 @@ public class PracticalClassService {
             pc.setRoute(route);
         }
 
-        practicalClassRepository.save(pc);
-        return new PracticalClassDTO(pc);
+        PracticalClass saved = practicalClassRepository.save(pc);
+        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),candidate.getId());
+        return new PracticalClassDTO(saved);
     }
 
     @Transactional
@@ -137,7 +140,8 @@ public class PracticalClassService {
             pc.setInterruptionReason(InterruptionReason.OTHER);
         }
         pc.setInterruptionNote(dto.getNote());
-        practicalClassRepository.save(pc);
+        PracticalClass saved = practicalClassRepository.save(pc);
+        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),saved.getCandidate().getId());
         return new PracticalClassDTO(pc);
     }
 
@@ -161,6 +165,7 @@ public class PracticalClassService {
         return pc;
     }
 
+    @Transactional
     public void cancelClass(Long classId){
         PracticalClass practicalClass = findById(classId);
 
@@ -170,6 +175,7 @@ public class PracticalClassService {
 
         practicalClass.setClassStatus(ClassStatus.CANCELLED);
         practicalClassRepository.save(practicalClass);
+        notificationService.createNotification(NotificationType.CLASS_CANCELLED,classId,practicalClass.getCandidate().getId());
     }
 
     public void save(PracticalClass practicalClass){
@@ -209,7 +215,7 @@ public class PracticalClassService {
         return practicalClassRepository.findByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(instructor, start, end);
     }
 
-
+    @Transactional
     public List<PracticalClassDTO> cancelByDay(Instructor instructor){
 
         LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
@@ -227,6 +233,7 @@ public class PracticalClassService {
                     pc.setActualEndTime(LocalDateTime.now());
                 }
                 practicalClassRepository.save(pc);
+                notificationService.createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,pc.getId(),pc.getCandidate().getId());
             }
 
         }
@@ -238,15 +245,20 @@ public class PracticalClassService {
     }
 
 
-
+    @Transactional
     public void cancelClasses(LocalDateTime startTime, LocalDateTime endTime){
        List<PracticalClass> pclasses =  practicalClassRepository.findByScheduledStartTimeBetween(startTime,endTime);
        for(PracticalClass pc : pclasses){
            pc.setClassStatus(ClassStatus.CANCELLED);
            practicalClassRepository.save(pc);
+           notificationService.createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,pc.getId(),pc.getCandidate().getId());
+
        }
     }
 
+    public PracticalClass saveClass(PracticalClass pc){
+        return practicalClassRepository.save(pc);
+    }
 
 
 }

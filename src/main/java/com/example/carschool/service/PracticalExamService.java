@@ -27,6 +27,8 @@ public class PracticalExamService {
     private CandidateService candidateService;
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public List<PracticalExamDTO> getAll(){
@@ -91,7 +93,8 @@ public class PracticalExamService {
         practicalExam.setAdmin(admin);
         practicalExam.setDateTime(createExamDTO.getDateTime());
         practicalExam.setStatus(ExamStatus.SCHEDULED);
-        practicalExamRepository.save(practicalExam);
+        PracticalExam saved = practicalExamRepository.save(practicalExam);
+        notificationService.createNotification(NotificationType.EXAM_SCHEDULED, saved.getId(), candidate.getId());
         return new PracticalExamDTO(practicalExam);
 
     }
@@ -105,7 +108,8 @@ public class PracticalExamService {
         candidate.setStatus(TrainingStatus.PENDING);
         candidateService.save(candidate);
 
-        practicalExamRepository.save(pe);
+        PracticalExam saved = practicalExamRepository.save(pe);
+        notificationService.createNotification(NotificationType.EXAM_CANCELLED,saved.getId(), candidate.getId());
         return new PracticalExamDTO(pe);
     }
 
@@ -119,7 +123,8 @@ public class PracticalExamService {
         candidateService.save(candidate);
 
         pe.setScore(practicalExamDTO.getScore());
-        practicalExamRepository.save(pe);
+        PracticalExam saved = practicalExamRepository.save(pe);
+        notificationService.createNotification(NotificationType.EXAM_PASS,saved.getId(), candidate.getId());
         return new PracticalExamDTO(pe);
     }
 
@@ -133,7 +138,8 @@ public class PracticalExamService {
         candidateService.save(candidate);
 
         pe.setScore(practicalExamDTO.getScore());
-        practicalExamRepository.save(pe);
+        PracticalExam saved = practicalExamRepository.save(pe);
+        notificationService.createNotification(NotificationType.EXAM_PASS,saved.getId(), candidate.getId());
         return new PracticalExamDTO(pe);
     }
 

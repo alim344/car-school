@@ -18,6 +18,9 @@ public class NotificationUtil {
         TITLES.put(NotificationType.LAST_CLASS_REMINDER, "Last class reminder");
         TITLES.put(NotificationType.INSTRUCTOR_ON_LEAVE, "Instructor on leave");
         TITLES.put(NotificationType.EXAM_SCHEDULED, "Exam scheduled");
+        TITLES.put(NotificationType.EXAM_CANCELLED, "Exam cancelled");
+        TITLES.put(NotificationType.EXAM_PASS, "Exam passed");
+        TITLES.put(NotificationType.EXAM_FAIL, "Exam failed");
 
         TITLES.put(NotificationType.CLASS_CANCELLED_BY_CANDIDATE, "Class cancelled");
         TITLES.put(NotificationType.NEW_CLASS_REQUEST, "New class request");
@@ -40,6 +43,9 @@ public class NotificationUtil {
         BODIES.put(NotificationType.LAST_CLASS_REMINDER, "Your class on %s is your last class");
         BODIES.put(NotificationType.INSTRUCTOR_ON_LEAVE, "Your instructor is on leave from %s to %s, you won't have classes this week");
         BODIES.put(NotificationType.EXAM_SCHEDULED, "Your exam has been scheduled for %s");
+        BODIES.put(NotificationType.EXAM_CANCELLED, "Your exam scheduled for %s has been cancelled");
+        BODIES.put(NotificationType.EXAM_PASS, "Congratulations! You passed your driving exam on %s");
+        BODIES.put(NotificationType.EXAM_FAIL, "Unfortunately, you did not pass your driving exam on %s");
 
         BODIES.put(NotificationType.CLASS_CANCELLED_BY_CANDIDATE, "Your class on %s was cancelled by the candidate");
         BODIES.put(NotificationType.NEW_CLASS_REQUEST, "You have a new class request for %s");

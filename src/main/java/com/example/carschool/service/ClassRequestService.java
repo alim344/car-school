@@ -3,6 +3,7 @@ package com.example.carschool.service;
 import com.example.carschool.dto.ClassRequestDTO;
 import com.example.carschool.model.ClassRequest;
 import com.example.carschool.model.Instructor;
+import com.example.carschool.model.NotificationType;
 import com.example.carschool.repo.ClassRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class ClassRequestService {
 
     @Autowired
     private ClassRequestRepository classRequestRepository;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public List<ClassRequestDTO> getInstructorRequests(Instructor instructor) {
@@ -30,6 +33,8 @@ public class ClassRequestService {
     }
 
     public void deleteRequest(Long requestId) {
+        ClassRequest request = classRequestRepository.findById(requestId).get();
+        notificationService.createNotification(NotificationType.CLASS_REQUEST_DENIED,null,request.getCandidate().getId());
        classRequestRepository.deleteById(requestId);
     }
 

@@ -27,7 +27,8 @@ public class ScheduleService {
 
     @Autowired
     private InstructorLeaveService instructorLeaveService;
-
+    @Autowired
+    private NotificationService notificationService;
 
 
     public List<PracticalClassDTO> getInstructorSchedule(Instructor instructor) {
@@ -49,7 +50,7 @@ public class ScheduleService {
     }
 
 
-
+    @Transactional
     public PracticalClassDTO createAClass(CreateClassDTO createClassDTO, Instructor instructor) {
         PracticalClass pc = new PracticalClass();
 
@@ -94,8 +95,10 @@ public class ScheduleService {
             pc.setLocation(createClassDTO.getLocation());
         }
 
-        practicalClassService.save(pc);
-        return new PracticalClassDTO(pc);
+        PracticalClass saved = practicalClassService.saveClass(pc);
+        notificationService.createNotification(NotificationType.CLASS_SCHEDULED, saved.getId(), candidate.getId());
+
+        return new PracticalClassDTO(saved);
 
     }
 
@@ -193,6 +196,7 @@ public class ScheduleService {
         request.setDate(dto.getDate());
         request.setInstructor(candidate.getInstructor());
         classRequestRepository.save(request);
+        notificationService.createNotification(NotificationType.NEW_CLASS_REQUEST, dto.getId(), candidate.getId());
 
         practicalClassService.deleteById(dto.getId());
 

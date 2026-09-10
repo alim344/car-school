@@ -38,6 +38,8 @@ public class ScheduleController {
     private ClassRequestService classRequestService;
     @Autowired
     private ScheduleGeneratorService scheduleGeneratorService;
+    @Autowired
+    private NotificationService notificationService;
 
 
     @GetMapping("/inst/candidate-prefs")
@@ -172,6 +174,8 @@ public class ScheduleController {
         Instructor instructor = instructorService.findByEmail(email);
         var createdClass = scheduleService.createAClass(createClassDTO, instructor);
         classRequestService.deleteRequest(requestId);
+        Candidate candidate = candidateService.getByEmail(createdClass.getCandidateEmail());
+        notificationService.createNotification(NotificationType.CLASS_REQUEST_ACCEPTED, createdClass.getId(),candidate.getId());
         return ResponseEntity.ok(createdClass);
 
     }
