@@ -33,4 +33,7 @@ public class Notification {
 
     @Column
     private LocalDateTime createdAt;
+
+
+    public Notification() {}
 }
