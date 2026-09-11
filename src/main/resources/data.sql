@@ -558,3 +558,61 @@ INSERT INTO instructor_leave_request
 (instructor_id, start_date, end_date, type, status, reason, admin_comment, requested_at, resolved_at)
 VALUES
     (3, '2026-08-10', '2026-08-12', 'VACATION', 'USED', 'Summer trip', 'Approved and completed', '2026-07-01 09:00:00', '2026-07-02 12:00:00');
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO notification (recipient_id, type, title, body, object_id, created_at) VALUES
+                                                                                      (6, 'CLASS_FINISHED', 'Class finished', 'Your class on 13 Sep 2026, 07:00 has been finished, check out class info!', NULL, NOW()),
+                                                                                      (6, 'CLASS_SCHEDULED', 'Class scheduled', 'Your class on 13 Sep 2026, 07:00 with Vladimir Jovanovic has been scheduled', NULL, NOW()),
+                                                                                      (6, 'CLASS_CANCELLED', 'Class cancelled', 'Your class on 13 Sep 2026, 07:00 was cancelled by your instructor', NULL, NOW()),
+                                                                                      (6, 'CLASS_REQUEST_ACCEPTED', 'Request accepted', 'Your request for a class on 13 Sep 2026, 07:00 was accepted', NULL, NOW()),
+                                                                                      (6, 'CLASS_REQUEST_DENIED', 'Request denied', 'Your request for a class on 13 Sep 2026, 07:00 was denied', NULL, NOW()),
+                                                                                      (6, 'LAST_CLASS_REMINDER', 'Last class reminder', 'Your class on 13 Sep 2026, 07:00 is your last class', NULL, NOW()),
+                                                                                      (6, 'INSTRUCTOR_ON_LEAVE', 'Instructor on leave', 'Your instructor is on leave from 20 Sep 2026, 00:00 to 27 Sep 2026, 00:00, you won''t have classes', NULL, NOW()),
+                                                                                      (6, 'EXAM_SCHEDULED', 'Exam scheduled', 'Your exam has been scheduled for 25 Sep 2026, 09:00', NULL, NOW()),
+                                                                                      (6, 'EXAM_CANCELLED', 'Exam cancelled', 'Your exam scheduled for 25 Sep 2026, 09:00 has been cancelled', NULL, NOW()),
+                                                                                      (6, 'EXAM_PASS', 'Exam passed', 'Congratulations! You passed your driving exam on 25 Sep 2026, 09:00', NULL, NOW()),
+                                                                                      (6, 'EXAM_FAIL', 'Exam failed', 'Unfortunately, you did not pass your driving exam on 25 Sep 2026, 09:00', NULL, NOW());
+
+ALTER TABLE notification DROP CONSTRAINT notification_type_check;
+
+
+
+ALTER TABLE notification ADD CONSTRAINT notification_type_check
+    CHECK (type IN (
+                    'CLASS_SCHEDULED',
+                    'CLASS_CANCELLED',
+                    'CLASS_REQUEST_ACCEPTED',
+                    'CLASS_REQUEST_DENIED',
+                    'LAST_CLASS_REMINDER',
+                    'INSTRUCTOR_ON_LEAVE',
+                    'EXAM_SCHEDULED',
+                    'EXAM_CANCELLED',
+                    'EXAM_PASS',
+                    'EXAM_FAIL',
+                    'CLASS_FINISHED',
+                    'CLASS_CANCELLED_BY_CANDIDATE',
+                    'NEW_CLASS_REQUEST',
+                    'WEEKLY_SCHEDULE_REMINDER',
+                    'CAR_FIXED',
+                    'INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED',
+                    'INSTRUCTOR_VEHICLE_REQUEST_DENIED',
+                    'INSTRUCTOR_LEAVE_REQUEST_ACCEPTED',
+                    'INSTRUCTOR_LEAVE_REQUEST_DENIED'
+        ));
+
+
+
+
+
+

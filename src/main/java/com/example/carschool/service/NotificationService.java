@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.NotificationDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Notification;
@@ -46,6 +47,12 @@ public class NotificationService {
           createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,null,candidate.getId(),leaveStart.toString(),leaveEnd.toString());
       }
 
+    }
+
+
+    public List<NotificationDTO> getByCandidate(Long userId) {
+        List<Notification> notificationList = notificationRepository.findByRecipientId(userId);
+        return notificationList.stream().map(NotificationDTO::new).toList();
     }
 
 
