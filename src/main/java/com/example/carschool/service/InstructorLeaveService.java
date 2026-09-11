@@ -2,9 +2,7 @@ package com.example.carschool.service;
 
 import com.example.carschool.dto.AdminLeaveResponseDTO;
 import com.example.carschool.dto.LeaveRequestDTO;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.InstructorLeaveRequest;
-import com.example.carschool.model.LeaveStatus;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.InstructorLeaveRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,8 @@ public class InstructorLeaveService {
     private InstructorLeaveRequestRepository leaveRequestRepository;
     @Autowired
     private PracticalClassService practicalClassService;
+    @Autowired
+    private NotificationService notificationService;
 
 
     public boolean isOnLeave(Instructor instructor, LocalDate date) {
@@ -100,6 +100,9 @@ public class InstructorLeaveService {
             practicalClassService.cancelClasses(request.getStartDate().atTime(0 ,0),request.getEndDate().atTime(0 ,0));
             checkLeaveLimit(request.getStartDate(), request.getEndDate(), request.getInstructor());
             request.setStatus(LeaveStatus.APPROVED);
+            if(request.getType() == LeaveType.SICK ){
+                notificationService.notifyInstructorCandidates(request.getInstructor(), request.getStartDate(), request.getEndDate());
+            }
 
         }else{
             request.setStatus(LeaveStatus.REJECTED);

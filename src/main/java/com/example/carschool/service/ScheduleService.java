@@ -96,7 +96,7 @@ public class ScheduleService {
         }
 
         PracticalClass saved = practicalClassService.saveClass(pc);
-        notificationService.createNotification(NotificationType.CLASS_SCHEDULED, saved.getId(), candidate.getId());
+        notificationService.createNotification(NotificationType.CLASS_SCHEDULED, saved.getId(), candidate.getId(),saved.getScheduledStartTime().toString(),saved.getInstructor().getName() + " " + saved.getInstructor().getLastname());
 
         return new PracticalClassDTO(saved);
 
@@ -196,7 +196,6 @@ public class ScheduleService {
         request.setDate(dto.getDate());
         request.setInstructor(candidate.getInstructor());
         classRequestRepository.save(request);
-        notificationService.createNotification(NotificationType.NEW_CLASS_REQUEST, dto.getId(), candidate.getId());
 
         practicalClassService.deleteById(dto.getId());
 

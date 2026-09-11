@@ -94,7 +94,7 @@ public class PracticalExamService {
         practicalExam.setDateTime(createExamDTO.getDateTime());
         practicalExam.setStatus(ExamStatus.SCHEDULED);
         PracticalExam saved = practicalExamRepository.save(practicalExam);
-        notificationService.createNotification(NotificationType.EXAM_SCHEDULED, saved.getId(), candidate.getId());
+        notificationService.createNotification(NotificationType.EXAM_SCHEDULED, saved.getId(), candidate.getId(),createExamDTO.getDateTime().toString());
         return new PracticalExamDTO(practicalExam);
 
     }
@@ -109,7 +109,7 @@ public class PracticalExamService {
         candidateService.save(candidate);
 
         PracticalExam saved = practicalExamRepository.save(pe);
-        notificationService.createNotification(NotificationType.EXAM_CANCELLED,saved.getId(), candidate.getId());
+        notificationService.createNotification(NotificationType.EXAM_CANCELLED,saved.getId(), candidate.getId(),saved.getDateTime().toString());
         return new PracticalExamDTO(pe);
     }
 
@@ -124,7 +124,7 @@ public class PracticalExamService {
 
         pe.setScore(practicalExamDTO.getScore());
         PracticalExam saved = practicalExamRepository.save(pe);
-        notificationService.createNotification(NotificationType.EXAM_PASS,saved.getId(), candidate.getId());
+        notificationService.createNotification(NotificationType.EXAM_PASS,saved.getId(), candidate.getId(),saved.getDateTime().toString());
         return new PracticalExamDTO(pe);
     }
 
@@ -139,7 +139,7 @@ public class PracticalExamService {
 
         pe.setScore(practicalExamDTO.getScore());
         PracticalExam saved = practicalExamRepository.save(pe);
-        notificationService.createNotification(NotificationType.EXAM_PASS,saved.getId(), candidate.getId());
+        notificationService.createNotification(NotificationType.EXAM_FAIL,saved.getId(), candidate.getId(),saved.getDateTime().toString());
         return new PracticalExamDTO(pe);
     }
 

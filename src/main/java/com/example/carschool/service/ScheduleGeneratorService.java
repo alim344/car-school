@@ -20,6 +20,7 @@ public class ScheduleGeneratorService {
     @Autowired
     private PreferenceService preferenceService;
 
+    @Autowired
     private InstructorLeaveService instructorLeaveService;
 
     public List<CreateClassDTO> generateDraftSchedule(

@@ -3,11 +3,19 @@ package com.example.carschool.util;
 import com.example.carschool.model.NotificationType;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.EnumMap;
 import java.util.Map;
 
 @Component
 public class NotificationUtil {
+
+
+    private static final DateTimeFormatter DATE_TIME_FORMAT =
+            DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm");
+
+
 
     private static final Map<NotificationType, String> TITLES = new EnumMap<>(NotificationType.class);
     static {
@@ -36,12 +44,13 @@ public class NotificationUtil {
 
     private static final Map<NotificationType, String> BODIES = new EnumMap<>(NotificationType.class);
     static {
+        BODIES.put(NotificationType.CLASS_FINISHED, "Your class on %s  has been finished, check out class info!");
         BODIES.put(NotificationType.CLASS_SCHEDULED, "Your class on %s with %s has been scheduled");
         BODIES.put(NotificationType.CLASS_CANCELLED, "Your class on %s was cancelled by your instructor");
         BODIES.put(NotificationType.CLASS_REQUEST_ACCEPTED, "Your request for a class on %s was accepted");
         BODIES.put(NotificationType.CLASS_REQUEST_DENIED, "Your request for a class on %s was denied");
         BODIES.put(NotificationType.LAST_CLASS_REMINDER, "Your class on %s is your last class");
-        BODIES.put(NotificationType.INSTRUCTOR_ON_LEAVE, "Your instructor is on leave from %s to %s, you won't have classes this week");
+        BODIES.put(NotificationType.INSTRUCTOR_ON_LEAVE, "Your instructor is on leave from %s to %s, you won't have classes");
         BODIES.put(NotificationType.EXAM_SCHEDULED, "Your exam has been scheduled for %s");
         BODIES.put(NotificationType.EXAM_CANCELLED, "Your exam scheduled for %s has been cancelled");
         BODIES.put(NotificationType.EXAM_PASS, "Congratulations! You passed your driving exam on %s");
@@ -67,7 +76,9 @@ public class NotificationUtil {
         return String.format(template, args);
     }
 
-
+    public static String formatDateTime(LocalDateTime dateTime) {
+        return dateTime.format(DATE_TIME_FORMAT);
+    }
 
 
 

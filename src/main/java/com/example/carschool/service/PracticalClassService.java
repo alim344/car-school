@@ -113,7 +113,7 @@ public class PracticalClassService {
         }
 
         PracticalClass saved = practicalClassRepository.save(pc);
-        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),candidate.getId());
+        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),candidate.getId(),saved.getScheduledStartTime().toString());
         return new PracticalClassDTO(saved);
     }
 
@@ -141,7 +141,7 @@ public class PracticalClassService {
         }
         pc.setInterruptionNote(dto.getNote());
         PracticalClass saved = practicalClassRepository.save(pc);
-        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),saved.getCandidate().getId());
+        notificationService.createNotification(NotificationType.CLASS_FINISHED,saved.getId(),saved.getCandidate().getId(),saved.getScheduledStartTime().toString());
         return new PracticalClassDTO(pc);
     }
 
@@ -175,7 +175,7 @@ public class PracticalClassService {
 
         practicalClass.setClassStatus(ClassStatus.CANCELLED);
         practicalClassRepository.save(practicalClass);
-        notificationService.createNotification(NotificationType.CLASS_CANCELLED,classId,practicalClass.getCandidate().getId());
+        notificationService.createNotification(NotificationType.CLASS_CANCELLED,classId,practicalClass.getCandidate().getId(),practicalClass.getScheduledStartTime().toString());
     }
 
     public void save(PracticalClass practicalClass){
@@ -233,7 +233,7 @@ public class PracticalClassService {
                     pc.setActualEndTime(LocalDateTime.now());
                 }
                 practicalClassRepository.save(pc);
-                notificationService.createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,pc.getId(),pc.getCandidate().getId());
+                notificationService.createNotification(NotificationType.CLASS_CANCELLED,pc.getId(),pc.getCandidate().getId(),pc.getScheduledStartTime().toString());
             }
 
         }
@@ -251,7 +251,7 @@ public class PracticalClassService {
        for(PracticalClass pc : pclasses){
            pc.setClassStatus(ClassStatus.CANCELLED);
            practicalClassRepository.save(pc);
-           notificationService.createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,pc.getId(),pc.getCandidate().getId());
+           //notificationService.createNotification(NotificationType.INSTRUCTOR_ON_LEAVE,pc.getId(),pc.getCandidate().getId());
 
        }
     }
