@@ -26,6 +26,8 @@ import InstructorNotifications from './pages/instructor/InstructorNotifications'
 import InstructorCandidates from './pages/instructor/InstructorCandidates';
 import CandidatePage from './pages/instructor/CandidatePage';
 import FinishedPracticalClass from './components/FinishedPracticalClass';
+import InstructorCandidateAnalytics from './pages/instructor/InstructorCandidateAnalytics';
+
 
 export default function App() {
   return (
@@ -84,6 +86,11 @@ export default function App() {
         <Route path="/instructor/candidates/:id/class/:classId" element={
           <InstructorLayout>
             <FinishedPracticalClass />
+          </InstructorLayout>
+        } />
+        <Route path="/instructor/analytics" element={
+          <InstructorLayout>
+            <InstructorCandidateAnalytics />
           </InstructorLayout>
         } />
 

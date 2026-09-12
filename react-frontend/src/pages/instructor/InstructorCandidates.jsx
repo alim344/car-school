@@ -9,12 +9,6 @@ const STATUS_LABELS = {
   PASSED: "Passed",
 };
 
-const STATUS_ICONS = {
-  PRACTICAL: "🚗",
-  PENDING: "⏸️",
-  EXAM_SCHEDULED: "📝",
-  PASSED: "🎓",
-};
 
 const STATUS_ORDER = ["PRACTICAL", "PENDING", "EXAM_SCHEDULED", "PASSED"];
 
@@ -117,6 +111,7 @@ export default function InstructorCandidates() {
                 }`}
           </p>
         </div>
+         
       </div>
 
       {!loading && !error && candidates.length > 0 && (
@@ -172,7 +167,6 @@ export default function InstructorCandidates() {
 
       {!loading && !error && candidates.length === 0 && (
         <div className="instructor-candidates__empty">
-          <span className="instructor-candidates__empty-icon">👥</span>
           <p>You have no assigned candidates yet.</p>
         </div>
       )}
@@ -182,7 +176,6 @@ export default function InstructorCandidates() {
         candidates.length > 0 &&
         filteredCandidates.length === 0 && (
           <div className="instructor-candidates__empty">
-            <span className="instructor-candidates__empty-icon">🔍</span>
             <p>No candidates match your filters.</p>
           </div>
         )}
@@ -201,9 +194,7 @@ export default function InstructorCandidates() {
               >
                 <header className="instructor-candidates__group-header">
                   <div className="instructor-candidates__group-title">
-                    <span className="instructor-candidates__group-icon">
-                      {STATUS_ICONS[status]}
-                    </span>
+                    
                     <h2>{STATUS_LABELS[status]}</h2>
                     <span
                       className={`instructor-candidates__badge instructor-candidates__badge--${statusKey}`}
