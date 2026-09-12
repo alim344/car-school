@@ -21,6 +21,7 @@ import InstructorRequestVehicle from './pages/instructor/InstructorRequestVehicl
 import VehicleRequests from './pages/admin/VehicleRequests';
 import InstructorLeaveRequest from './pages/instructor/InstructorLeaveRequests';
 import AdminLeaveRequests from './pages/admin/AdminLeaveRequests';
+import CandidateNotifications from './pages/candidate/CandidateNotifications';
 
 export default function App() {
   return (
@@ -70,6 +71,11 @@ export default function App() {
         <Route path="/candidate/preference" element={
           <CandidateLayout>
             <CandidatePreference />
+          </CandidateLayout>
+        } />
+        <Route path="/candidate/notif" element={
+          <CandidateLayout>
+            <CandidateNotifications />
           </CandidateLayout>
         } />
 

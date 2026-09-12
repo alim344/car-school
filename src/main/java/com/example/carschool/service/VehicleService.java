@@ -22,6 +22,8 @@ public class VehicleService {
     private VehicleBrandRepository vehicleBrandRepository;
     @Autowired
     private VehicleMalfunctionRecordService vehicleMalfunctionRecordService;
+    @Autowired
+    private NotificationService notificationService;
 
     public List<Vehicle> getAll() {
         return vehicleRepository.findAll();
@@ -96,12 +98,15 @@ public class VehicleService {
                 instructor.setVehicle(vehicle);
                 instructor.setPrimaryVehicle(vehicle);
                 vehicle.setStatus(VehicleStatus.IN_USE);
+                notificationService.createNotification(NotificationType.NEW_CAR_ASSIGNED, vehicle.getId(), instructor.getId(),vehicle.getRegistrationNumber());
             }else{
                 if (primary.getStatus() != VehicleStatus.OUT_OF_SERVICE) {
                     throw new IllegalStateException("Instructor already has an active vehicle; primary must be OUT_OF_SERVICE to assign a reserve");
                 }
                 instructor.setVehicle(vehicle);
                 vehicle.setStatus(VehicleStatus.RESERVE);
+                notificationService.createNotification(NotificationType.RESERVE_ASSIGNED, vehicle.getId(), instructor.getId(),vehicle.getRegistrationNumber());
+
             }
 
 

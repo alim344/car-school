@@ -51,7 +51,7 @@ public class NotificationService {
 
 
     public List<NotificationDTO> getByCandidate(Long userId) {
-        List<Notification> notificationList = notificationRepository.findByRecipientId(userId);
+        List<Notification> notificationList = notificationRepository.findByRecipientIdOrderByCreatedAtDesc(userId);
         return notificationList.stream().map(NotificationDTO::new).toList();
     }
 

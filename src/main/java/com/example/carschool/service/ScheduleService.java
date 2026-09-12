@@ -195,13 +195,16 @@ public class ScheduleService {
         request.setCandidate(candidate);
         request.setDate(dto.getDate());
         request.setInstructor(candidate.getInstructor());
-        classRequestRepository.save(request);
-
+        ClassRequest saved = classRequestRepository.save(request);
+        notificationService.createNotification(NotificationType.NEW_CLASS_REQUEST, saved.getId(),saved.getInstructor().getId(),saved.getDate().toString() );
         practicalClassService.deleteById(dto.getId());
 
     }
 
+    @Transactional
     public void declineClass(Long pc_id){
+        PracticalClass pc = practicalClassService.findById(pc_id);
+        notificationService.createNotification(NotificationType.CLASS_CANCELLED_BY_CANDIDATE,pc_id,pc.getInstructor().getId(),pc.getScheduledStartTime().toString());
         practicalClassService.deleteById(pc_id);
     }
 

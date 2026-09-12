@@ -59,11 +59,13 @@ public class NotificationUtil {
         BODIES.put(NotificationType.CLASS_CANCELLED_BY_CANDIDATE, "Your class on %s was cancelled by the candidate");
         BODIES.put(NotificationType.NEW_CLASS_REQUEST, "You have a new class request for %s");
         BODIES.put(NotificationType.WEEKLY_SCHEDULE_REMINDER, "Don't forget to schedule your classes for next week");
-        BODIES.put(NotificationType.CAR_FIXED, "Your vehicle has been fixed and is ready for use");
+        BODIES.put(NotificationType.CAR_FIXED, "Your vehicle (%s) has been fixed and is ready for use");
         BODIES.put(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED, "Your vehicle request has been accepted");
         BODIES.put(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_DENIED, "Your vehicle request has been denied");
         BODIES.put(NotificationType.INSTRUCTOR_LEAVE_REQUEST_ACCEPTED, "Your leave request has been accepted");
         BODIES.put(NotificationType.INSTRUCTOR_LEAVE_REQUEST_DENIED, "Your leave request has been denied");
+        BODIES.put(NotificationType.NEW_CAR_ASSIGNED, "New car has been assigned to you. Check it out - (%s)");
+        BODIES.put(NotificationType.RESERVE_ASSIGNED, "Reserve has been assigned to you - (%s). Pick it up!");
     }
 
 

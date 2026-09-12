@@ -11,7 +11,7 @@ export default function InstructorLayout({ children }) {
   const menuItems = [
     
     { id: 'schedule', label: 'Schedule',  path: '/candidate' },
-    { id: 'notifications', label: 'Notifications',  path: '/candidate/notifications' },
+    { id: 'notifications', label: 'Notifications',  path: '/candidate/notif' },
     { id: 'preferences', label: 'Preference',  path: '/candidate/preference' },
     { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' },

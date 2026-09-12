@@ -20,6 +20,8 @@ public class CarChangeRequestService {
     private VehicleService vehicleService;
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private NotificationService notificationService;
 
     public List<CarChangeRequest> findAll(){
         return carChangeRequestRepository.findAll();
@@ -63,6 +65,7 @@ public class CarChangeRequestService {
         List<CarChangeRequest> requests = carChangeRequestRepository.findByVehicle(vehicle);
         for (CarChangeRequest carChangeRequest : requests) {
             carChangeRequest.setStatus(CarRequestStatus.DECLINED);
+            notificationService.createNotification(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_DENIED, carChangeRequest.getId(), carChangeRequest.getInstructor().getId());
             carChangeRequestRepository.save(carChangeRequest);
         }
     }
@@ -86,10 +89,12 @@ public class CarChangeRequestService {
         vehicleService.save(vehicle);
 
         carChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
+        notificationService.createNotification(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED, carChangeRequest.getId(), carChangeRequest.getInstructor().getId());
         carChangeRequestRepository.save(carChangeRequest);
 
     }
 
+    @Transactional
     public void declineRequest(CarRequestDTO requestDTO){
         CarChangeRequest carChangeRequest = carChangeRequestRepository.findById(requestDTO.getId()).orElse(null);
         if(carChangeRequest == null){
@@ -97,6 +102,8 @@ public class CarChangeRequestService {
         }
 
         carChangeRequest.setStatus(CarRequestStatus.DECLINED);
+        notificationService.createNotification(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_DENIED, carChangeRequest.getId(), carChangeRequest.getInstructor().getId());
+
         carChangeRequestRepository.save(carChangeRequest);
     }
 

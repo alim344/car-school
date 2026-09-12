@@ -103,9 +103,11 @@ public class InstructorLeaveService {
             if(request.getType() == LeaveType.SICK ){
                 notificationService.notifyInstructorCandidates(request.getInstructor(), request.getStartDate(), request.getEndDate());
             }
-
+            notificationService.createNotification(NotificationType.INSTRUCTOR_LEAVE_REQUEST_ACCEPTED, request.getId(), request.getInstructor().getId());
         }else{
             request.setStatus(LeaveStatus.REJECTED);
+            notificationService.createNotification(NotificationType.INSTRUCTOR_LEAVE_REQUEST_DENIED, request.getId(), request.getInstructor().getId());
+
         }
 
         request.setAdminComment(dto.getResponse());
