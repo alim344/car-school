@@ -12,6 +12,7 @@ public enum NotificationType {
     EXAM_CANCELLED,
     EXAM_PASS,
     EXAM_FAIL,
+    TIME_PREF_REMINDER,
 
     CLASS_CANCELLED_BY_CANDIDATE,
     NEW_CLASS_REQUEST,

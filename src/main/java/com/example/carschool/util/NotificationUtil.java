@@ -29,6 +29,7 @@ public class NotificationUtil {
         TITLES.put(NotificationType.EXAM_CANCELLED, "Exam cancelled");
         TITLES.put(NotificationType.EXAM_PASS, "Exam passed");
         TITLES.put(NotificationType.EXAM_FAIL, "Exam failed");
+        TITLES.put(NotificationType.TIME_PREF_REMINDER, "Time preference reminder");
 
         TITLES.put(NotificationType.CLASS_CANCELLED_BY_CANDIDATE, "Class cancelled");
         TITLES.put(NotificationType.NEW_CLASS_REQUEST, "New class request");
@@ -38,6 +39,8 @@ public class NotificationUtil {
         TITLES.put(NotificationType.INSTRUCTOR_VEHICLE_REQUEST_DENIED, "Vehicle request denied");
         TITLES.put(NotificationType.INSTRUCTOR_LEAVE_REQUEST_ACCEPTED, "Leave request accepted");
         TITLES.put(NotificationType.INSTRUCTOR_LEAVE_REQUEST_DENIED, "Leave request denied");
+        TITLES.put(NotificationType.NEW_CAR_ASSIGNED, "New car assigned");
+        TITLES.put(NotificationType.RESERVE_ASSIGNED, "Reserve assigned");
     }
 
 
@@ -55,6 +58,7 @@ public class NotificationUtil {
         BODIES.put(NotificationType.EXAM_CANCELLED, "Your exam scheduled for %s has been cancelled");
         BODIES.put(NotificationType.EXAM_PASS, "Congratulations! You passed your driving exam on %s");
         BODIES.put(NotificationType.EXAM_FAIL, "Unfortunately, you did not pass your driving exam on %s");
+        BODIES.put(NotificationType.TIME_PREF_REMINDER, "Update your preferences!! If not they will be transferred from next week!!!");
 
         BODIES.put(NotificationType.CLASS_CANCELLED_BY_CANDIDATE, "Your class on %s was cancelled by the candidate");
         BODIES.put(NotificationType.NEW_CLASS_REQUEST, "You have a new class request for %s");

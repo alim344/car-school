@@ -3,6 +3,7 @@ package com.example.carschool.service;
 import com.example.carschool.dto.CandidateDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
+import com.example.carschool.model.NotificationType;
 import com.example.carschool.model.TrainingStatus;
 import com.example.carschool.repo.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
+
 
     public List<Candidate> getByInstructor(Instructor instructor) {
         return candidateRepository.findByInstructor(instructor);

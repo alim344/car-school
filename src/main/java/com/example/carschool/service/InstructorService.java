@@ -6,9 +6,11 @@ import com.example.carschool.dto.PracticalClassDTO;
 import com.example.carschool.dto.VehicleInstructorDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
+import com.example.carschool.model.NotificationType;
 import com.example.carschool.model.PracticalClass;
 import com.example.carschool.repo.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,6 +27,9 @@ public class InstructorService {
     private PracticalClassService practicalClassService;
     @Autowired
     private ClassRequestService classRequestService;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
     public Instructor findByEmail(String email) {
@@ -85,6 +90,15 @@ public class InstructorService {
     public List<VehicleInstructorDTO> getInstructorsForVehicleAssignment(){
         List<Instructor> instructors = instructorRepository.findByVehicleIsNull();
         return instructors.stream().map(VehicleInstructorDTO::new).toList();
+    }
+
+
+
+    @Scheduled(cron = "0 0 12 * * SAT")
+    public void createWeeklyScheduleReminder(){
+        List<Instructor> instructors = instructorRepository.findAll();
+        instructors.forEach(i-> notificationService.createNotification(NotificationType.WEEKLY_SCHEDULE_REMINDER,null,i.getId()));
+
     }
 
 }

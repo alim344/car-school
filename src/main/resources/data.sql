@@ -590,6 +590,7 @@ ALTER TABLE notification DROP CONSTRAINT notification_type_check;
 
 ALTER TABLE notification ADD CONSTRAINT notification_type_check
     CHECK (type IN (
+                    'CLASS_FINISHED',
                     'CLASS_SCHEDULED',
                     'CLASS_CANCELLED',
                     'CLASS_REQUEST_ACCEPTED',
@@ -600,7 +601,8 @@ ALTER TABLE notification ADD CONSTRAINT notification_type_check
                     'EXAM_CANCELLED',
                     'EXAM_PASS',
                     'EXAM_FAIL',
-                    'CLASS_FINISHED',
+                    'TIME_PREF_REMINDER',
+
                     'CLASS_CANCELLED_BY_CANDIDATE',
                     'NEW_CLASS_REQUEST',
                     'WEEKLY_SCHEDULE_REMINDER',
@@ -608,7 +610,9 @@ ALTER TABLE notification ADD CONSTRAINT notification_type_check
                     'INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED',
                     'INSTRUCTOR_VEHICLE_REQUEST_DENIED',
                     'INSTRUCTOR_LEAVE_REQUEST_ACCEPTED',
-                    'INSTRUCTOR_LEAVE_REQUEST_DENIED'
+                    'INSTRUCTOR_LEAVE_REQUEST_DENIED',
+                    'NEW_CAR_ASSIGNED',
+                    'RESERVE_ASSIGNED'
         ));
 
 

@@ -1,13 +1,11 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.NotificationDTO;
-import com.example.carschool.model.Candidate;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.Notification;
-import com.example.carschool.model.NotificationType;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.NotificationRepository;
 import com.example.carschool.util.NotificationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -54,6 +52,16 @@ public class NotificationService {
         List<Notification> notificationList = notificationRepository.findByRecipientIdOrderByCreatedAtDesc(userId);
         return notificationList.stream().map(NotificationDTO::new).toList();
     }
+
+
+    @Scheduled(cron = "0 0 10  * * Wed")
+    public void createCandidatePreferenceReminder(){
+
+        List<Candidate> candidates= candidateService.getCandidatesByStatus(TrainingStatus.PRACTICAL);
+        candidates.forEach(c->createNotification(NotificationType.TIME_PREF_REMINDER,null,c.getId()));
+
+    }
+
 
 
 }
