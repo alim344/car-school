@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../../style/CandidatePage.css";
 
 const API_URL = "http://localhost:8080";
@@ -34,6 +34,7 @@ function formatDateTime(value) {
 
 export default function CandidatePage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
 
   const [candidate, setCandidate] = useState(null);
@@ -79,6 +80,12 @@ export default function CandidatePage() {
     const initials =
       (f ? f[0].toUpperCase() : "") + (l ? l[0].toUpperCase() : "");
     return initials || "?";
+  }
+
+  function goToClass(cls) {
+    navigate(`/instructor/candidates/${id}/class/${cls.id}`, {
+      state: { classItem: cls, candidateId: id },
+    });
   }
 
   if (loading) {
@@ -198,7 +205,15 @@ export default function CandidatePage() {
                 {classes.map((cls, index) => {
                   const classStatusKey = (cls.classStatus || "").toLowerCase();
                   return (
-                    <tr key={cls.id} className="candidate-page__row">
+                    <tr key={cls.id} className="candidate-page__row" onClick={() => goToClass(cls)}
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          goToClass(cls);
+                        }
+                      }}
+                      role="button">
                       <td>{index + 1}</td>
                       <td>{formatDateTime(cls.scheduledStartTime)}</td>
                       <td>{formatDateTime(cls.scheduledEndTime)}</td>
