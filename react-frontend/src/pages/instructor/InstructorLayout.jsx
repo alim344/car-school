@@ -14,7 +14,9 @@ export default function InstructorLayout({ children }) {
     { id: 'vehicle', label: 'Vehicle',  path: '/instructor/vehicle' },
     { id: 'students', label: 'Students',  path: '/instructor/students' },
     { id: 'leave', label: 'Leave Request',  path: '/instructor/leave-request' },
+    { id: 'norifications', label: 'Notifications',  path: '/instructor/notif' },
     { id: 'profile', label: 'Profile',  path: '/instructor/profile' },
+
    
   ];
 

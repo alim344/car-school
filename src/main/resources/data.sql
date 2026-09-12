@@ -617,6 +617,19 @@ ALTER TABLE notification ADD CONSTRAINT notification_type_check
 
 
 
+INSERT INTO notification (recipient_id, type, title, body, object_id, created_at) VALUES
+                                                                                      (3, 'CLASS_CANCELLED_BY_CANDIDATE', 'Class cancelled', 'Your class on 13 Sep 2026, 07:00 was cancelled by the candidate', NULL, NOW()),
+                                                                                      (3, 'NEW_CLASS_REQUEST', 'New class request', 'You have a new class request for 15 Sep 2026, 10:00', NULL, NOW()),
+                                                                                      (3, 'WEEKLY_SCHEDULE_REMINDER', 'Weekly schedule reminder', 'Don''t forget to schedule your classes for next week', NULL, NOW()),
+                                                                                      (3, 'CAR_FIXED', 'Vehicle fixed', 'Your vehicle (Skoda Fabia - NS123AB) has been fixed and is ready for use', NULL, NOW()),
+                                                                                      (3, 'INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED', 'Vehicle request accepted', 'Your vehicle request has been accepted', NULL, NOW()),
+                                                                                      (3, 'INSTRUCTOR_VEHICLE_REQUEST_DENIED', 'Vehicle request denied', 'Your vehicle request has been denied', NULL, NOW()),
+                                                                                      (3, 'INSTRUCTOR_LEAVE_REQUEST_ACCEPTED', 'Leave request accepted', 'Your leave request has been accepted', NULL, NOW()),
+                                                                                      (3, 'INSTRUCTOR_LEAVE_REQUEST_DENIED', 'Leave request denied', 'Your leave request has been denied', NULL, NOW()),
+                                                                                      (3, 'NEW_CAR_ASSIGNED', 'New car assigned', 'New car has been assigned to you. Check it out - (Skoda Fabia - NS123AB)', NULL, NOW()),
+                                                                                      (3, 'RESERVE_ASSIGNED', 'Reserve assigned', 'Reserve has been assigned to you - (Golf 7 - BG456CD). Pick it up!', NULL, NOW());
+
+
 
 
 

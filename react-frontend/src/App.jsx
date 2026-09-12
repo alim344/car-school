@@ -22,6 +22,7 @@ import VehicleRequests from './pages/admin/VehicleRequests';
 import InstructorLeaveRequest from './pages/instructor/InstructorLeaveRequests';
 import AdminLeaveRequests from './pages/admin/AdminLeaveRequests';
 import CandidateNotifications from './pages/candidate/CandidateNotifications';
+import InstructorNotifications from './pages/instructor/InstructorNotifications';
 
 export default function App() {
   return (
@@ -59,6 +60,11 @@ export default function App() {
         <Route path="/instructor/leave-request" element={
           <InstructorLayout>
             <InstructorLeaveRequest />
+          </InstructorLayout>
+        } />
+        <Route path="/instructor/notif" element={
+          <InstructorLayout>
+            <InstructorNotifications />
           </InstructorLayout>
         } />
 
