@@ -13,11 +13,24 @@ const TRAINING_STATUS_LABELS = {
 };
 
 const CLASS_STATUS_LABELS = {
+  PENDING: "Pending",
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+  STARTED: "In progress",
+  ENDED: "Ended",
+  BAD_END: "Interrupted",
+  CANCELLED: "Cancelled",
+};
+
+const EXAM_STATUS_LABELS = {
   SCHEDULED: "Scheduled",
-  COMPLETED: "Completed",
+  PASSED: "Passed",
+  FAILED: "Failed",
   CANCELLED: "Cancelled",
   PENDING: "Pending",
+  FINISHED: "Finished",
 };
+
 
 function formatDateTime(value) {
   if (!value) return "—";
@@ -32,11 +45,49 @@ function formatDateTime(value) {
   });
 }
 
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  return d.toLocaleDateString([], {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}
+
 function formatAvgGrade(value) {
   if (value == null) return "—";
   const n = Number(value);
   if (Number.isNaN(n)) return "—";
   return n.toFixed(2);
+}
+
+
+function getNextClass(classes) {
+  const now = new Date();
+
+  const DEAD_STATUSES = new Set(["CANCELLED", "REJECTED", "ENDED", "BAD_END"]);
+
+  const future = classes.filter((c) => {
+    if (!c.scheduledStartTime) return false;
+    const start = new Date(c.scheduledStartTime);
+    if (Number.isNaN(start.getTime())) return false;
+    if (start <= now) return false;
+    return !DEAD_STATUSES.has(c.classStatus);
+  });
+
+  if (future.length === 0) return null;
+
+  const accepted = future.filter((c) => c.classStatus === "ACCEPTED" || c.classStatus === "STARTED");
+  const pending = future.filter((c) => c.classStatus === "PENDING");
+  const pool = accepted.length > 0 ? accepted : pending;
+
+  if (pool.length === 0) return null;
+
+  return pool.sort(
+    (a, b) => new Date(a.scheduledStartTime) - new Date(b.scheduledStartTime)
+  )[0];
 }
 
 export default function CandidatePage() {
@@ -128,6 +179,12 @@ export default function CandidatePage() {
   const classes = Array.isArray(candidate.classes) ? candidate.classes : [];
   const gradeList = Array.isArray(candidate.gradeList)? candidate.gradeList : [];
   const statusKey = (candidate.trainingStatus || "").toLowerCase();
+  const examList = Array.isArray(candidate.examList) ? candidate.examList  : [];
+
+  const cancelledCount = classes.filter( (c) => c.classStatus === "CANCELLED").length;
+
+  const isPractical = candidate.trainingStatus === "PRACTICAL";
+  const nextClass = isPractical ? getNextClass(classes) : null;
 
  
   return (
@@ -191,9 +248,109 @@ export default function CandidatePage() {
                 {formatAvgGrade(candidate.avgGrade)}
               </span>
             </span>
+
+            <span className="candidate-page__stat">
+              <span className="candidate-page__stat-label">Cancellations</span>
+              <span
+                className={`candidate-page__stat-value ${
+                  cancelledCount > 0 ? "candidate-page__stat-value--warn" : ""
+                }`}
+              >
+                {cancelledCount}
+              </span>
+            </span>
+
           </div>
         </div>
       </header>
+
+
+      {isPractical && (
+        <div
+          className={`candidate-page__next-class ${
+            !nextClass ? "candidate-page__next-class--empty" : ""
+          }`}
+        >
+          <span className="candidate-page__next-class-label">
+            {nextClass ? "Next class" : "No upcoming classes"}
+          </span>
+
+          {nextClass ? (
+            <>
+              <span className="candidate-page__next-class-time">
+                {formatDateTime(nextClass.scheduledStartTime)}
+              </span>
+              {nextClass.location && (
+                <span className="candidate-page__next-class-location">
+                  📍 {nextClass.location}
+                </span>
+              )}
+              <span
+                className={`candidate-page__badge candidate-page__badge--${(
+                  nextClass.classStatus || ""
+                ).toLowerCase()}`}
+              >
+                {CLASS_STATUS_LABELS[nextClass.classStatus] ||
+                  nextClass.classStatus ||
+                  "—"}
+              </span>
+            </>
+          ) : (
+            <span className="candidate-page__next-class-hint">
+              Nothing is scheduled for this candidate right now.
+            </span>
+          )}
+        </div>
+      )}
+
+      {examList.length > 0 && (
+        <section className="candidate-page__exams">
+          <header className="candidate-page__exams-header">
+            <h2>Exams</h2>
+            <span className="candidate-page__section-count">
+              {examList.length}{" "}
+              {examList.length === 1 ? "exam" : "exams"}
+            </span>
+          </header>
+
+          <div className="candidate-page__exams-list">
+            {examList.map((exam) => {
+              const examStatusKey = (exam.status || "").toLowerCase();
+              return (
+                <div
+                  key={exam.id}
+                  className={`candidate-page__exam-card candidate-page__exam-card--${examStatusKey}`}
+                >
+                  <div className="candidate-page__exam-main">
+                    <span className="candidate-page__exam-date">
+                      {formatDate(exam.dateTime)}
+                    </span>
+                    <span
+                      className={`candidate-page__badge candidate-page__badge--${examStatusKey}`}
+                    >
+                      {EXAM_STATUS_LABELS[exam.status] || exam.status || "—"}
+                    </span>
+                  </div>
+
+                  <div className="candidate-page__exam-meta">
+                    {exam.score != null && (
+                      <span className="candidate-page__exam-score">
+                        Score: <strong>{exam.score}</strong>
+                      </span>
+                    )}
+                    {exam.admin_name && (
+                      <span className="candidate-page__exam-admin">
+                        Examiner: {exam.admin_name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
 
        <hr className="candidate-page__divider" />
 

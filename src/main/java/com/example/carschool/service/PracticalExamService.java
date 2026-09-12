@@ -63,7 +63,7 @@ public class PracticalExamService {
 
 
     public List<PracticalExamDTO> getByCandidate(Candidate candidate){
-        List<PracticalExam> practicalExams = practicalExamRepository.findByCandidate(candidate);
+        List<PracticalExam> practicalExams = practicalExamRepository.findByCandidateOrderByDateTimeDesc(candidate);
         List<PracticalExamDTO> practicalExamDTOs = new ArrayList<>();
         for (PracticalExam practicalExam : practicalExams) {
             practicalExamDTOs.add(new PracticalExamDTO(practicalExam));

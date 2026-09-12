@@ -350,3 +350,175 @@
   transform: translateX(0);
 }
 
+
+
+
+.candidate-page__stat-value--warn {
+  color: #f59e0b;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+}
+
+.candidate-page__next-class {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0 0 24px 0;
+  padding: 14px 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(214, 251, 79, 0.12),
+    rgba(214, 251, 79, 0.04)
+  );
+  border: 1px solid rgba(214, 251, 79, 0.28);
+  border-left: 4px solid rgb(214, 251, 79);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(214, 251, 79, 0.08);
+}
+
+.candidate-page__next-class--empty {
+  background: rgba(148, 163, 184, 0.06);
+  border-color: rgba(148, 163, 184, 0.18);
+  border-left-color: #94a3b8;
+  box-shadow: none;
+}
+
+.candidate-page__next-class-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgb(214, 251, 79);
+  flex-shrink: 0;
+}
+
+.candidate-page__next-class--empty .candidate-page__next-class-label {
+  color: #94a3b8;
+}
+
+.candidate-page__next-class-time {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.3px;
+}
+
+.candidate-page__next-class-location {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.candidate-page__next-class-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.candidate-page__exams {
+  margin-bottom: 24px;
+}
+
+.candidate-page__exams-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid rgba(23, 162, 184, 0.15);
+}
+
+.candidate-page__exams-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #17a2b8;
+  letter-spacing: 0.4px;
+}
+
+.candidate-page__exams-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.candidate-page__exam-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #17a2b8;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.candidate-page__exam-card:hover {
+  border-color: rgba(23, 162, 184, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.candidate-page__exam-card--passed {
+  border-left-color: #28a745;
+}
+
+.candidate-page__exam-card--failed {
+  border-left-color: #dc3545;
+}
+
+.candidate-page__exam-card--cancelled {
+  border-left-color: #94a3b8;
+}
+
+.candidate-page__exam-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.candidate-page__exam-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.3px;
+}
+
+.candidate-page__exam-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.candidate-page__exam-score strong {
+  color: rgb(214, 251, 79);
+  font-weight: 700;
+}
+
+.candidate-page__badge--passed {
+  background: rgba(40, 167, 69, 0.15);
+  color: #4ade80;
+  border-color: rgba(40, 167, 69, 0.25);
+}
+
+.candidate-page__badge--failed {
+  background: rgba(220, 53, 69, 0.15);
+  color: #f87171;
+  border-color: rgba(220, 53, 69, 0.25);
+}
+
+.candidate-page__badge--cancelled {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.candidate-page__badge--finished {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.25);
+}

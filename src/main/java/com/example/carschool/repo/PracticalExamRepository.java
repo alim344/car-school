@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface PracticalExamRepository extends JpaRepository<PracticalExam, Long> {
 
-    List<PracticalExam> findByCandidate(Candidate candidate);
+    List<PracticalExam> findByCandidateOrderByDateTimeDesc(Candidate candidate);
+
     List<PracticalExam> findByStatus(ExamStatus status);
     List<PracticalExam> findByAdmin(Admin admin);
 
