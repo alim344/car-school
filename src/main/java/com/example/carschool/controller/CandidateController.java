@@ -6,6 +6,7 @@ import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,14 @@ public class CandidateController {
 
         return ResponseEntity.ok(candidateService.getPendingCandidates());
 
+    }
+
+    @GetMapping("/inst-getAll")
+    public ResponseEntity<List<CandidateDTO>> getAll(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(candidateService.getAllDtoByInstructor(instructor));
     }
 
 

@@ -5,9 +5,11 @@ import com.example.carschool.model.TrainingStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class CandidateDTO {
+import java.util.List;
+
+@Getter @Setter
+public class CandidateProfileDTO {
+
 
     private Long id;
     private String firstName;
@@ -15,21 +17,25 @@ public class CandidateDTO {
     private String email;
     private String category;
     private Integer numberOfClassesLeft;
+    private Integer numberOfCompletedClasses;
+    private Integer totalNumberOfClasses;
     private TrainingStatus trainingStatus;
+    List<PracticalClassDTO> classes;
 
-    public CandidateDTO() {
 
-    }
+    public CandidateProfileDTO() {}
 
-    public CandidateDTO(Candidate candidate) {
+    public CandidateProfileDTO(Candidate candidate, List<PracticalClassDTO> classes) {
         this.id = candidate.getId();
-        this.category = candidate.getCategory().toString();
         this.firstName = candidate.getName();
         this.lastName = candidate.getLastname();
         this.email = candidate.getEmail();
-        this.trainingStatus = candidate.getStatus();
+        this.category = candidate.getCategory().toString();
+        this.numberOfCompletedClasses = candidate.getNumberOfCompletedClasses();
+        this.totalNumberOfClasses = candidate.getTotalRequiredClasses();
         this.numberOfClassesLeft = candidate.getTotalRequiredClasses() - candidate.getNumberOfCompletedClasses();
+        this.trainingStatus = candidate.getStatus();
+        this.classes = classes;
     }
-
 
 }

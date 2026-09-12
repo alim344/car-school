@@ -23,6 +23,16 @@ public class CandidateService {
         return candidateRepository.findByInstructor(instructor);
     }
 
+    public Candidate getById(Long id) {
+        return candidateRepository.findById(id).orElse(null);
+    }
+
+
+    public List<CandidateDTO> getAllDtoByInstructor(Instructor instructor) {
+        List<Candidate> candidates = getByInstructor(instructor);
+        return candidates.stream().map(CandidateDTO::new).toList();
+    }
+
     public List<Candidate> getActiveCandidatesByInstructor(Instructor instructor) {
         return candidateRepository.findByInstructorAndStatus(instructor, TrainingStatus.PRACTICAL);
     }

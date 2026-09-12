@@ -1,0 +1,312 @@
+
+.candidate-page {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  padding: 32px 40px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #e2e8f0;
+}
+
+.candidate-page__header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 0 28px;
+}
+
+.candidate-page__avatar {
+  flex-shrink: 0;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(214, 251, 79, 0.12);
+  border: 3px solid rgba(214, 251, 79, 0.35);
+  box-shadow: 0 0 0 4px rgba(214, 251, 79, 0.06);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.candidate-page__avatar:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 4px rgba(214, 251, 79, 0.12),
+              0 12px 40px rgba(214, 251, 79, 0.15);
+}
+
+.candidate-page__avatar-initials {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: rgb(214, 251, 79);
+  user-select: none;
+}
+
+.candidate-page__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.candidate-page__name {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: 0.4px;
+  word-break: break-word;
+}
+
+.candidate-page__email {
+  margin: 0;
+  font-size: 15px;
+  color: #94a3b8;
+  letter-spacing: 0.2px;
+  word-break: break-word;
+}
+
+.candidate-page__quick-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 6px;
+}
+
+.candidate-page__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.candidate-page__stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.candidate-page__stat-value {
+  font-size: 15px;
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+.candidate-page__divider {
+  border: none;
+  border-top: 2px solid rgba(214, 251, 79, 0.15);
+  margin: 0 0 28px 0;
+}
+
+.candidate-page__section {
+  margin-top: 8px;
+}
+
+.candidate-page__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.candidate-page__section-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: rgb(214, 251, 79);
+  letter-spacing: 0.4px;
+}
+
+.candidate-page__section-count {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.candidate-page__table-wrapper {
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 16px;
+  border: 1px solid rgba(214, 251, 79, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.candidate-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 860px;
+}
+
+.candidate-page__table thead {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 2px solid rgba(214, 251, 79, 0.1);
+}
+
+.candidate-page__table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #94a3b8;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: #1a2332;
+  z-index: 1;
+}
+
+.candidate-page__table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+  vertical-align: middle;
+}
+
+.candidate-page__row {
+  transition: background 0.2s ease;
+}
+
+.candidate-page__row:hover {
+  background: rgba(214, 251, 79, 0.05);
+}
+
+.candidate-page__row:last-child td {
+  border-bottom: none;
+}
+
+.candidate-page__cell-ellipsis {
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candidate-page__badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.candidate-page__badge--practical {
+  background: rgba(214, 251, 79, 0.12);
+  color: rgb(214, 251, 79);
+  border-color: rgba(214, 251, 79, 0.25);
+}
+
+.candidate-page__badge--pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.candidate-page__badge--exam_scheduled {
+  background: rgba(23, 162, 184, 0.15);
+  color: #17a2b8;
+  border-color: rgba(23, 162, 184, 0.25);
+}
+
+.candidate-page__badge--passed {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.candidate-page__badge--theory {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.candidate-page__badge--scheduled {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.candidate-page__badge--completed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.candidate-page__badge--cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.candidate-page__tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #1f2937;
+  background: rgb(214, 251, 79);
+  border-radius: 10px;
+}
+
+.candidate-page__loading,
+.candidate-page__error,
+.candidate-page__empty,
+.candidate-page__empty-inline {
+  padding: 60px 20px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border: 1px solid rgba(214, 251, 79, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.candidate-page__empty-inline {
+  padding: 40px 20px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.candidate-page__loading {
+  color: #94a3b8;
+}
+
+.candidate-page__error {
+  color: #f8d7da;
+  background: rgba(248, 215, 218, 0.08);
+  border-color: rgba(220, 53, 69, 0.2);
+  border-left: 4px solid #dc3545;
+}
+
+.candidate-page__empty {
+  color: #94a3b8;
+}
+
+.candidate-page__table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.candidate-page__table-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0 0 16px 16px;
+}
+
+.candidate-page__table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(214, 251, 79, 0.2);
+  border-radius: 4px;
+}
+
+.candidate-page__table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(214, 251, 79, 0.3);
+}

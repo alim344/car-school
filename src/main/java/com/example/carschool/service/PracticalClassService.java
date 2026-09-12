@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.CandidateProfileDTO;
 import com.example.carschool.dto.EndClassDTO;
 import com.example.carschool.dto.InterruptionClassDTO;
 import com.example.carschool.dto.PracticalClassDTO;
@@ -260,5 +261,14 @@ public class PracticalClassService {
         return practicalClassRepository.save(pc);
     }
 
+
+    public CandidateProfileDTO getAllABoutCandidate(Long candidateId){
+        Candidate candidate = candidateService.getById(candidateId);
+        if(candidate == null){
+            throw new IllegalArgumentException("Candidate doesnt exist");
+        }
+        List<PracticalClass> classes = findByCandidate(candidate);
+        return new CandidateProfileDTO(candidate,classes.stream().map(PracticalClassDTO::new).toList());
+    }
 
 }

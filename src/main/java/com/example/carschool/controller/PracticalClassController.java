@@ -1,9 +1,6 @@
 package com.example.carschool.controller;
 
-import com.example.carschool.dto.EndClassDTO;
-import com.example.carschool.dto.InterruptionClassDTO;
-import com.example.carschool.dto.PracticalClassDTO;
-import com.example.carschool.dto.SetRouteDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.service.PracticalClassService;
@@ -72,6 +69,11 @@ public class PracticalClassController {
         return ResponseEntity.ok(practicalClassService.cancelByDay(instructor));
     }
 
+
+    @GetMapping("/candidate/{id}")
+    public ResponseEntity<CandidateProfileDTO> getAllAboutCandidate(@PathVariable  Long id){
+        return ResponseEntity.ok(practicalClassService.getAllABoutCandidate(id));
+    }
 
 
 }

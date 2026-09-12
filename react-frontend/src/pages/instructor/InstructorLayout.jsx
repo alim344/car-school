@@ -11,10 +11,10 @@ export default function InstructorLayout({ children }) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', path: '/instructor' },
     { id: 'schedule', label: 'Schedule',  path: '/instructor/schedule' },
+    { id: 'notifications', label: 'Notifications',  path: '/instructor/notif' },
     { id: 'vehicle', label: 'Vehicle',  path: '/instructor/vehicle' },
-    { id: 'students', label: 'Students',  path: '/instructor/students' },
+    { id: 'students', label: 'Candidates',  path: '/instructor/candidates' },
     { id: 'leave', label: 'Leave Request',  path: '/instructor/leave-request' },
-    { id: 'norifications', label: 'Notifications',  path: '/instructor/notif' },
     { id: 'profile', label: 'Profile',  path: '/instructor/profile' },
 
    
