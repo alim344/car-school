@@ -1,0 +1,198 @@
+
+.route-notes-map {
+  margin-top: 28px;
+  padding: 20px 22px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.route-notes-map__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.route-notes-map__title {
+  margin: 0 0 2px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(214, 251, 79);
+  letter-spacing: 0.3px;
+}
+
+.route-notes-map__meta {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.route-notes-map__wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(214, 251, 79, 0.12);
+}
+
+.route-notes-map__canvas {
+  border-radius: 12px;
+  z-index: 0;
+}
+
+.route-notes-map__route-missing {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f59e0b;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 500;
+}
+
+.route-notes-map__note {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: rgba(214, 251, 79, 0.06);
+  border: 1px solid rgba(214, 251, 79, 0.2);
+  border-left: 4px solid rgb(214, 251, 79);
+  border-radius: 12px;
+  animation: routeNoteFadeIn 0.25s ease;
+}
+
+
+
+.route-notes-map__note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.route-notes-map__note-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #1f2937;
+  background: rgb(214, 251, 79);
+  padding: 3px 10px;
+  border-radius: 10px;
+}
+
+.route-notes-map__note-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  transition: color 0.2s ease;
+}
+
+.route-notes-map__note-close:hover {
+  color: #dc3545;
+}
+
+.route-notes-map__note-body {
+  margin: 0 0 6px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.route-notes-map__note-coords {
+  margin: 0;
+  font-size: 11px;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.route-notes-map__hint {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+.route-notes-map__state {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.route-notes-map__state--error {
+  color: #f8d7da;
+  background: rgba(248, 215, 218, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  border-left: 4px solid #dc3545;
+}
+
+.route-note-marker {
+  background: transparent;
+  border: none;
+}
+
+.route-note-marker__inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+  transition: transform 0.2s ease, filter 0.2s ease;
+  cursor: pointer;
+}
+
+.route-note-marker__inner:hover {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 12px rgba(214, 251, 79, 0.6));
+}
+
+.route-note-marker--active .route-note-marker__inner {
+  transform: scale(1.2);
+  filter: drop-shadow(0 0 12px rgba(214, 251, 79, 0.85));
+}
+
+.route-notes-map .leaflet-control-zoom {
+  border: 1px solid rgba(214, 251, 79, 0.25) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.route-notes-map .leaflet-control-zoom a {
+  background: #1a2332 !important;
+  color: rgb(214, 251, 79) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  font-weight: 700;
+}
+
+.route-notes-map .leaflet-control-zoom a:hover {
+  background: #243447 !important;
+}
+
+.route-notes-map .leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #94a3b8 !important;
+  font-size: 10px;
+}
+
+.route-notes-map .leaflet-control-attribution a {
+  color: rgb(214, 251, 79) !important;
+}

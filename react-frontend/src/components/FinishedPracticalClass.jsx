@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import "../style/FinishedPracticalClass.css";
+import RouteNotesMap from "../components/RouteNotesMap";
 
 const API_URL = "http://localhost:8080";
 
@@ -228,6 +229,7 @@ export default function FinishedPracticalClass() {
           </p>
         </div>
       </section>
+      <RouteNotesMap classId={classId} />
 
     </div>
   );
