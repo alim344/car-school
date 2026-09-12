@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../style/CandidatePage.css";
 
-const API_URL = "http://localhost:8080";
+
 
 const TRAINING_STATUS_LABELS = {
   THEORY: "Theory",
@@ -32,6 +32,13 @@ function formatDateTime(value) {
   });
 }
 
+function formatAvgGrade(value) {
+  if (value == null) return "—";
+  const n = Number(value);
+  if (Number.isNaN(n)) return "—";
+  return n.toFixed(2);
+}
+
 export default function CandidatePage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -48,7 +55,7 @@ export default function CandidatePage() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_URL}/practical-class/candidate/${id}`, {
+        const res = await fetch(`http://localhost:8080/practical-class/candidate/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) {
@@ -121,8 +128,16 @@ export default function CandidatePage() {
   const classes = Array.isArray(candidate.classes) ? candidate.classes : [];
   const statusKey = (candidate.trainingStatus || "").toLowerCase();
 
+ 
   return (
     <div className="candidate-page">
+      <button
+        type="button"
+        className="candidate-page__back-btn"
+        onClick={() => navigate("/instructor/candidates")}
+      >
+        ← Back to candidates
+      </button>
    
       <header className="candidate-page__header">
         <div className="candidate-page__avatar">
@@ -166,6 +181,13 @@ export default function CandidatePage() {
               <span className="candidate-page__stat-label">Left</span>
               <span className="candidate-page__stat-value">
                 {candidate.numberOfClassesLeft ?? 0}
+              </span>
+            </span>
+
+             <span className="candidate-page__stat">
+              <span className="candidate-page__stat-label">Avg grade</span>
+              <span className="candidate-page__stat-value candidate-page__stat-value--grade">
+                {formatAvgGrade(candidate.avgGrade)}
               </span>
             </span>
           </div>

@@ -268,7 +268,31 @@ public class PracticalClassService {
             throw new IllegalArgumentException("Candidate doesnt exist");
         }
         List<PracticalClass> classes = practicalClassRepository.findByCandidateOrderByScheduledStartTimeDesc(candidate);
-        return new CandidateProfileDTO(candidate,classes.stream().map(PracticalClassDTO::new).toList());
+        List<PracticalClassDTO> dtos = new ArrayList<>();
+        int count = 0;
+        int total = 0;
+
+        List<Integer> grades = new ArrayList<>();
+        for(PracticalClass pc : classes){
+
+            PracticalClassDTO dto = new PracticalClassDTO(pc);
+            if(pc.getClassStatus() == ClassStatus.ENDED){
+                count++;
+                total+= pc.getGrade();
+                grades.add(pc.getGrade());
+            }
+            dtos.add(dto);
+
+        }
+
+        double avg = (double) total /count;
+
+
+        return new  CandidateProfileDTO(candidate,dtos,avg,grades);
+
+
+
+
     }
 
 
