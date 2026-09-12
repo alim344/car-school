@@ -267,8 +267,15 @@ public class PracticalClassService {
         if(candidate == null){
             throw new IllegalArgumentException("Candidate doesnt exist");
         }
-        List<PracticalClass> classes = findByCandidate(candidate);
+        List<PracticalClass> classes = practicalClassRepository.findByCandidateOrderByScheduledStartTimeDesc(candidate);
         return new CandidateProfileDTO(candidate,classes.stream().map(PracticalClassDTO::new).toList());
+    }
+
+
+    public Route getRouteForClass(Long id){
+        PracticalClass pclass = practicalClassRepository.findById(id).get();
+
+        return pclass.getRoute();
     }
 
 }

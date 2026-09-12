@@ -47,10 +47,7 @@ public class LocationNoteService {
     }
 
     public List<LocationNoteDTO> getNotesForClass(Long classId) {
-        return locationNoteRepository.findByPracticalClassId(classId)
-                .stream()
-                .map(LocationNoteDTO::new)
-                .toList();
+        return locationNoteRepository.findByPracticalClassId(classId).stream().map(LocationNoteDTO::new).toList();
     }
 
 

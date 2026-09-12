@@ -2,7 +2,9 @@ package com.example.carschool.controller;
 
 import com.example.carschool.dto.*;
 import com.example.carschool.model.Instructor;
+import com.example.carschool.model.Route;
 import com.example.carschool.service.InstructorService;
+import com.example.carschool.service.LocationNoteService;
 import com.example.carschool.service.PracticalClassService;
 import com.example.carschool.service.RouteService;
 import com.example.carschool.util.TokenUtils;
@@ -24,6 +26,8 @@ public class PracticalClassController {
     private TokenUtils tokenUtils;
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private LocationNoteService locationNoteService;
 
 
     @PatchMapping("/start/{classId}")
@@ -73,6 +77,13 @@ public class PracticalClassController {
     @GetMapping("/candidate/{id}")
     public ResponseEntity<CandidateProfileDTO> getAllAboutCandidate(@PathVariable  Long id){
         return ResponseEntity.ok(practicalClassService.getAllABoutCandidate(id));
+    }
+
+    @GetMapping("/route/{id}")
+    public ResponseEntity<RouteNoteDTO> getClassRouteMoreInfo(@PathVariable Long id){
+        Route route = practicalClassService.getRouteForClass(id);
+        List<LocationNoteDTO> notes = locationNoteService.getNotesForClass(id);
+        return ResponseEntity.ok(new RouteNoteDTO(route,notes));
     }
 
 
