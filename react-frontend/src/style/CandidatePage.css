@@ -108,7 +108,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
+}
+
+.candidate-page__divider {
+  border: none;
+  border-top: 2px solid rgba(214, 251, 79, 0.15);
+  margin: 0 0 28px 0;
+}
+
+.candidate-page__chart-section{
+  margin-top: 40px;
 }
 
 .candidate-page__section-header h2 {

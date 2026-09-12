@@ -23,11 +23,12 @@ public class CandidateProfileDTO {
     private List<PracticalClassDTO> classes;
     private double avgGrade;
     private List<Integer> gradeList;
+    private List<PracticalExamDTO> examList;
 
 
     public CandidateProfileDTO() {}
 
-    public CandidateProfileDTO(Candidate candidate, List<PracticalClassDTO> classes, double avgGrade, List<Integer> gradeList) {
+    public CandidateProfileDTO(Candidate candidate, List<PracticalClassDTO> classes, double avgGrade, List<Integer> gradeList, List<PracticalExamDTO> examList) {
         this.id = candidate.getId();
         this.firstName = candidate.getName();
         this.lastName = candidate.getLastname();
@@ -40,6 +41,7 @@ public class CandidateProfileDTO {
         this.classes = classes;
         this.avgGrade = avgGrade;
         this.gradeList = gradeList;
+        this.examList = examList;
     }
 
 }

@@ -633,3 +633,79 @@ INSERT INTO notification (recipient_id, type, title, body, object_id, created_at
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO practical_class
+(scheduled_start_time, scheduled_end_time, actual_start_time, actual_end_time,
+ instructor_id, candidate_id, class_status, route_id, grade, comment, remarks,
+ interruption_reason, interruption_note, location)
+VALUES
+    ('2025-11-03 08:00', '2025-11-03 09:00', '2025-11-03 08:00', '2025-11-03 09:00', 3, 6, 'ENDED', NULL, 1, 'First lesson, very nervous with clutch control', NULL, NULL, NULL, NULL),
+    ('2025-11-06 08:00', '2025-11-06 09:00', '2025-11-06 08:00', '2025-11-06 09:00', 3, 6, 'ENDED', NULL, 1, 'Struggled with parallel parking', NULL, NULL, NULL, NULL),
+    ('2025-11-09 08:00', '2025-11-09 09:00', '2025-11-09 08:00', '2025-11-09 09:00', 3, 6, 'ENDED', NULL, 2, 'Better clutch control today', NULL, NULL, NULL, NULL),
+    ('2025-11-12 08:00', '2025-11-12 09:00', '2025-11-12 08:00', '2025-11-12 09:00', 3, 6, 'ENDED', NULL, 2, 'Improved lane discipline', NULL, NULL, NULL, NULL),
+    ('2025-11-15 08:00', '2025-11-15 09:00', '2025-11-15 08:00', '2025-11-15 09:00', 3, 6, 'ENDED', NULL, 2, 'Good progress on roundabouts', NULL, NULL, NULL, NULL),
+    ('2025-11-18 08:00', '2025-11-18 09:00', '2025-11-18 08:00', '2025-11-18 09:00', 3, 6, 'ENDED', NULL, 1, 'Off day, rushed some turns', NULL, NULL, NULL, NULL),
+    ('2025-11-21 08:00', '2025-11-21 09:00', '2025-11-21 08:00', '2025-11-21 09:00', 3, 6, 'ENDED', NULL, 2, 'Solid highway merge practice', NULL, NULL, NULL, NULL),
+    ('2025-11-24 08:00', '2025-11-24 09:00', '2025-11-24 08:00', '2025-11-24 09:00', 3, 6, 'ENDED', NULL, 2, 'Confident with three-point turns', NULL, NULL, NULL, NULL),
+    ('2025-11-27 08:00', '2025-11-27 09:00', '2025-11-27 08:00', '2025-11-27 09:00', 3, 6, 'ENDED', NULL, 3, 'Good improvement on parking', NULL, NULL, NULL, NULL),
+    ('2025-11-30 08:00', '2025-11-30 09:00', '2025-11-30 08:00', '2025-11-30 09:00', 3, 6, 'ENDED', NULL, 3, 'Handling night driving well', NULL, NULL, NULL, NULL),
+    ('2025-12-03 08:00', '2025-12-03 09:00', '2025-12-03 08:00', '2025-12-03 09:00', 3, 6, 'ENDED', NULL, 2, 'Slight regression with mirror checks', NULL, NULL, NULL, NULL),
+    ('2025-12-06 08:00', '2025-12-06 09:00', '2025-12-06 08:00', '2025-12-06 09:00', 3, 6, 'ENDED', NULL, 3, 'Better again, good hazard awareness', NULL, NULL, NULL, NULL),
+    ('2025-12-09 08:00', '2025-12-09 09:00', '2025-12-09 08:00', '2025-12-09 09:00', 3, 6, 'ENDED', NULL, 3, 'Excellent roundabout handling', NULL, NULL, NULL, NULL),
+    ('2025-12-12 08:00', '2025-12-12 09:00', '2025-12-12 08:00', '2025-12-12 09:00', 3, 6, 'ENDED', NULL, 3, 'Good but needs work on reverse parking', NULL, NULL, NULL, NULL),
+    ('2025-12-15 08:00', '2025-12-15 09:00', '2025-12-15 08:00', '2025-12-15 09:00', 3, 6, 'ENDED', NULL, 3, 'Confident in city traffic', NULL, NULL, NULL, NULL),
+    ('2025-12-18 08:00', '2025-12-18 09:00', '2025-12-18 08:00', '2025-12-18 09:00', 3, 6, 'ENDED', NULL, 4, 'Smooth gear changes throughout', NULL, NULL, NULL, NULL),
+    ('2025-12-21 08:00', '2025-12-21 09:00', '2025-12-21 08:00', '2025-12-21 09:00', 3, 6, 'ENDED', NULL, 3, 'Handled bad weather conditions well', NULL, NULL, NULL, NULL),
+    ('2025-12-24 08:00', '2025-12-24 09:00', '2025-12-24 08:00', '2025-12-24 09:00', 3, 6, 'ENDED', NULL, 3, 'A bit distracted, holiday traffic', NULL, NULL, NULL, NULL),
+    ('2025-12-27 08:00', '2025-12-27 09:00', '2025-12-27 08:00', '2025-12-27 09:00', 3, 6, 'ENDED', NULL, 4, 'Back on track, good focus', NULL, NULL, NULL, NULL),
+    ('2025-12-30 08:00', '2025-12-30 09:00', '2025-12-30 08:00', '2025-12-30 09:00', 3, 6, 'ENDED', NULL, 4, 'Excellent parallel parking now', NULL, NULL, NULL, NULL),
+    ('2026-01-02 08:00', '2026-01-02 09:00', '2026-01-02 08:00', '2026-01-02 09:00', 3, 6, 'ENDED', NULL, 3, 'Good highway driving, minor speed control issue', NULL, NULL, NULL, NULL),
+    ('2026-01-05 08:00', '2026-01-05 09:00', '2026-01-05 08:00', '2026-01-05 09:00', 3, 6, 'ENDED', NULL, 4, 'Very confident overall', NULL, NULL, NULL, NULL),
+    ('2026-01-08 08:00', '2026-01-08 09:00', '2026-01-08 08:00', '2026-01-08 09:00', 3, 6, 'ENDED', NULL, 4, 'Excellent judgment at intersections', NULL, NULL, NULL, NULL),
+    ('2026-01-11 08:00', '2026-01-11 09:00', '2026-01-11 08:00', '2026-01-11 09:00', 3, 6, 'ENDED', NULL, 3, 'Slight hesitation merging onto highway', NULL, NULL, NULL, NULL),
+    ('2026-01-14 08:00', '2026-01-14 09:00', '2026-01-14 08:00', '2026-01-14 09:00', 3, 6, 'ENDED', NULL, 4, 'Great recovery, smooth merge today', NULL, NULL, NULL, NULL),
+    ('2026-01-17 08:00', '2026-01-17 09:00', '2026-01-17 08:00', '2026-01-17 09:00', 3, 6, 'ENDED', NULL, 4, 'Ready for more complex routes', NULL, NULL, NULL, NULL),
+    ('2026-01-20 08:00', '2026-01-20 09:00', '2026-01-20 08:00', '2026-01-20 09:00', 3, 6, 'ENDED', NULL, 4, 'Handled roundabout under pressure well', NULL, NULL, NULL, NULL),
+    ('2026-01-23 08:00', '2026-01-23 09:00', '2026-01-23 08:00', '2026-01-23 09:00', 3, 6, 'ENDED', NULL, 5, 'Flawless lesson, exam-ready performance', NULL, NULL, NULL, NULL),
+    ('2026-01-26 08:00', '2026-01-26 09:00', '2026-01-26 08:00', '2026-01-26 09:00', 3, 6, 'ENDED', NULL, 4, 'Very strong, one minor mirror check missed', NULL, NULL, NULL, NULL),
+    ('2026-01-29 08:00', '2026-01-29 09:00', '2026-01-29 08:00', '2026-01-29 09:00', 3, 6, 'ENDED', NULL, 5, 'Excellent, no notes', NULL, NULL, NULL, NULL),
+    ('2026-02-01 08:00', '2026-02-01 09:00', '2026-02-01 08:00', '2026-02-01 09:00', 3, 6, 'ENDED', NULL, 5, 'Ready for exam', NULL, NULL, NULL, NULL),
+    ('2026-02-04 08:00', '2026-02-04 09:00', '2026-02-04 08:00', '2026-02-04 09:00', 3, 6, 'ENDED', NULL, 4, 'Good, kept sharp before exam', NULL, NULL, NULL, NULL),
+    ('2026-02-07 08:00', '2026-02-07 09:00', '2026-02-07 08:00', '2026-02-07 09:00', 3, 6, 'ENDED', NULL, 5, 'Excellent final practice run', NULL, NULL, NULL, NULL),
+    ('2026-02-10 08:00', '2026-02-10 09:00', '2026-02-10 08:00', '2026-02-10 09:00', 3, 6, 'ENDED', NULL, 5, 'Perfect execution, fully prepared', NULL, NULL, NULL, NULL),
+    ('2026-02-13 08:00', '2026-02-13 09:00', '2026-02-13 08:00', '2026-02-13 09:00', 3, 6, 'ENDED', NULL, 4, 'Good, minor nerves showing', NULL, NULL, NULL, NULL),
+    ('2026-02-16 08:00', '2026-02-16 09:00', '2026-02-16 08:00', '2026-02-16 09:00', 3, 6, 'ENDED', NULL, 5, 'Calm and controlled, great session', NULL, NULL, NULL, NULL),
+    ('2026-02-19 08:00', '2026-02-19 09:00', '2026-02-19 08:00', '2026-02-19 09:00', 3, 6, 'ENDED', NULL, 5, 'Excellent, confident and precise', NULL, NULL, NULL, NULL),
+    ('2026-02-22 08:00', '2026-02-22 09:00', '2026-02-22 08:00', '2026-02-22 09:00', 3, 6, 'ENDED', NULL, 5, 'Fully exam-ready, no concerns', NULL, NULL, NULL, NULL),
+    ('2026-02-25 08:00', '2026-02-25 09:00', '2026-02-25 08:00', '2026-02-25 09:00', 3, 6, 'ENDED', NULL, 5, 'Final lesson before exam, excellent', NULL, NULL, NULL, NULL);
+
+
+
+
+
+
+

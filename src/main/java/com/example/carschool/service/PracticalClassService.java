@@ -1,9 +1,6 @@
 package com.example.carschool.service;
 
-import com.example.carschool.dto.CandidateProfileDTO;
-import com.example.carschool.dto.EndClassDTO;
-import com.example.carschool.dto.InterruptionClassDTO;
-import com.example.carschool.dto.PracticalClassDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.PracticalClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +29,9 @@ public class PracticalClassService {
     private CandidateService candidateService;
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private PracticalExamService practicalExamService;
 
     public PracticalClass findById(Long id){
         return practicalClassRepository.findById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,"PracticalClass not found with id: " + id));
@@ -288,7 +288,10 @@ public class PracticalClassService {
         double avg = (double) total /count;
 
 
-        return new  CandidateProfileDTO(candidate,dtos,avg,grades);
+        List<PracticalExamDTO> examDtos = practicalExamService.getByCandidate(candidate);
+
+
+        return new  CandidateProfileDTO(candidate,dtos,avg,grades,examDtos);
 
 
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../../style/CandidatePage.css";
-
+import GradeLineChart from "../../components/GradeLineChart";
 
 
 const TRAINING_STATUS_LABELS = {
@@ -126,6 +126,7 @@ export default function CandidatePage() {
     "Unnamed candidate";
 
   const classes = Array.isArray(candidate.classes) ? candidate.classes : [];
+  const gradeList = Array.isArray(candidate.gradeList)? candidate.gradeList : [];
   const statusKey = (candidate.trainingStatus || "").toLowerCase();
 
  
@@ -193,6 +194,19 @@ export default function CandidatePage() {
           </div>
         </div>
       </header>
+
+       <hr className="candidate-page__divider" />
+
+      <section className="candidate-page__chart-section">
+        <header className="candidate-page__section-header">
+          <h2>Grade progression</h2>
+          <span className="candidate-page__section-count">
+            {gradeList.length}{" "}
+            {gradeList.length === 1 ? "graded class" : "graded classes"}
+          </span>
+        </header>
+        <GradeLineChart grades={gradeList} />
+      </section>
 
       <hr className="candidate-page__divider" />
 
