@@ -744,10 +744,29 @@ VALUES
 
 
 
+INSERT INTO instructor_documents
+(document_type, expiry_date, instructor_id)
+VALUES
+    ('DRIVING_LICENSE', '2026-08-15', 3),
+    ('INSTRUCTOR_LICENSE', '2026-09-30', 3),
+    ('MEDICAL_CERTIFICATE', '2025-12-01', 3);
 
 
 
 
+UPDATE instructor SET category = 'B'  WHERE id = 3;
+UPDATE instructor SET category = 'B'  WHERE id = 10;
+UPDATE instructor SET category = 'B'  WHERE id = 23;
+UPDATE instructor SET category = 'B'  WHERE id = 26;
+UPDATE instructor SET category = 'B'  WHERE id = 28;
+UPDATE instructor SET category = 'A'  WHERE id = 29;
+UPDATE instructor SET category = 'B'  WHERE id = 30;
+UPDATE instructor SET category = 'C'  WHERE id = 32;
+UPDATE instructor SET category = 'B'  WHERE id = 31;
+UPDATE instructor SET category = 'B'  WHERE id = 27;
+UPDATE instructor SET category = 'D'  WHERE id = 25;
+UPDATE instructor SET category = 'B'  WHERE id = 24;
 
 
 
+ALTER TABLE instructor DROP COLUMN category;

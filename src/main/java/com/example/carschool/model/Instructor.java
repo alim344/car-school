@@ -14,8 +14,6 @@ public class Instructor extends User{
     private List<Candidate> candidates;
 
 
-    @OneToMany(mappedBy = "instructor")
-    private List<InstructorDocuments> documents;
 
     @Column(nullable = false)
     private Integer maxCapacity;
@@ -32,4 +30,7 @@ public class Instructor extends User{
     private Integer annualLeaveAllowance = 30;
 
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }

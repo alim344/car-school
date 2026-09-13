@@ -2,6 +2,7 @@ package com.example.carschool.controller;
 
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.InstructorDashboardDTO;
+import com.example.carschool.dto.InstructorProfileDTO;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,12 @@ public class InstructorController {
     }
 
 
+    @GetMapping("/profile")
+    public ResponseEntity<InstructorProfileDTO>  getProfile(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        return ResponseEntity.ok(instructorService.getInstructorProfile(email));
+    }
 
 
 

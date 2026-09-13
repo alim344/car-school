@@ -1,13 +1,8 @@
 package com.example.carschool.service;
 
-import com.example.carschool.dto.InstructorDTO;
-import com.example.carschool.dto.InstructorDashboardDTO;
-import com.example.carschool.dto.PracticalClassDTO;
-import com.example.carschool.dto.VehicleInstructorDTO;
-import com.example.carschool.model.Candidate;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.NotificationType;
-import com.example.carschool.model.PracticalClass;
+import com.example.carschool.dto.*;
+import com.example.carschool.model.*;
+import com.example.carschool.repo.InstructorDocumentsRepository;
 import com.example.carschool.repo.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,6 +25,8 @@ public class InstructorService {
 
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private InstructorDocumentsRepository instructorDocumentsRepository;
 
 
     public Instructor findByEmail(String email) {
@@ -99,6 +96,13 @@ public class InstructorService {
         List<Instructor> instructors = instructorRepository.findAll();
         instructors.forEach(i-> notificationService.createNotification(NotificationType.WEEKLY_SCHEDULE_REMINDER,null,i.getId()));
 
+    }
+
+
+    public InstructorProfileDTO getInstructorProfile(String instructorEmail) {
+        Instructor instructor = instructorRepository.findByEmail(instructorEmail);
+        List<InstructorDocuments> documents = instructorDocumentsRepository.findByInstructor(instructor);
+        return new InstructorProfileDTO(instructor,documents.stream().map(DocumentDTO::new).toList());
     }
 
 }
