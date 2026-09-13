@@ -1,12 +1,10 @@
 package com.example.carschool.controller;
 
 import com.example.carschool.dto.*;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Route;
-import com.example.carschool.service.InstructorService;
-import com.example.carschool.service.LocationNoteService;
-import com.example.carschool.service.PracticalClassService;
-import com.example.carschool.service.RouteService;
+import com.example.carschool.service.*;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ public class PracticalClassController {
     private InstructorService instructorService;
     @Autowired
     private LocationNoteService locationNoteService;
+    @Autowired
+    private CandidateService candidateService;
 
 
     @PatchMapping("/start/{classId}")
@@ -77,6 +77,14 @@ public class PracticalClassController {
     @GetMapping("/candidate/{id}")
     public ResponseEntity<CandidateProfileDTO> getAllAboutCandidate(@PathVariable  Long id){
         return ResponseEntity.ok(practicalClassService.getAllABoutCandidate(id));
+    }
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<CandidateProfileDTO> getCandidateProfile(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Candidate candidate = candidateService.getByEmail(email);
+        return ResponseEntity.ok(practicalClassService.getAllABoutCandidate(candidate.getId()));
     }
 
     @GetMapping("/route/{id}")

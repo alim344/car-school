@@ -1,0 +1,456 @@
+.candidate-own-profile {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 100vh;
+  padding: 32px 40px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #e2e8f0;
+}
+
+.candidate-own-profile__header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 0 28px;
+}
+
+.candidate-own-profile__avatar {
+  flex-shrink: 0;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(214, 251, 79, 0.12);
+  border: 3px solid rgba(214, 251, 79, 0.35);
+  box-shadow: 0 0 0 4px rgba(214, 251, 79, 0.06);
+}
+
+.candidate-own-profile__avatar-initials {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: rgb(214, 251, 79);
+  user-select: none;
+}
+
+.candidate-own-profile__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.candidate-own-profile__name {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: 0.4px;
+}
+
+.candidate-own-profile__email {
+  margin: 0;
+  font-size: 15px;
+  color: #94a3b8;
+}
+
+.candidate-own-profile__quick-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 6px;
+}
+
+.candidate-own-profile__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.candidate-own-profile__stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.candidate-own-profile__stat-value {
+  font-size: 15px;
+  color: #e2e8f0;
+  font-weight: 700;
+}
+
+.candidate-own-profile__stat-value--grade {
+  color: rgb(214, 251, 79);
+}
+
+.candidate-own-profile__divider {
+  border: none;
+  border-top: 2px solid rgba(214, 251, 79, 0.15);
+  margin: 20px
+}
+
+.candidate-own-profile__progress {
+  padding: 20px 22px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 16px;
+  border: 1px solid rgba(214, 251, 79, 0.15);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.candidate-own-profile__progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.candidate-own-profile__progress-title {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.candidate-own-profile__progress-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+.candidate-own-profile__progress-bar {
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+.candidate-own-profile__progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(214, 251, 79, 0.7), rgb(214, 251, 79));
+  transition: width 0.5s ease;
+  box-shadow: 0 0 12px rgba(214, 251, 79, 0.4);
+}
+
+.candidate-own-profile__progress-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.candidate-own-profile__next-class {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 20px;
+  margin-bottom: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(214, 251, 79, 0.12),
+    rgba(214, 251, 79, 0.04)
+  );
+  border: 1px solid rgba(214, 251, 79, 0.28);
+  border-left: 4px solid rgb(214, 251, 79);
+  border-radius: 14px;
+}
+
+.candidate-own-profile__next-class--empty {
+  background: rgba(148, 163, 184, 0.06);
+  border-color: rgba(148, 163, 184, 0.18);
+  border-left-color: #94a3b8;
+}
+
+.candidate-own-profile__next-class-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgb(214, 251, 79);
+}
+
+.candidate-own-profile__next-class--empty .candidate-own-profile__next-class-label {
+  color: #94a3b8;
+}
+
+.candidate-own-profile__next-class-time {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.candidate-own-profile__next-class-location {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.candidate-own-profile__next-class-hint {
+  font-size: 13px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.candidate-own-profile__next-exam {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 20px;
+  margin-bottom: 22px;
+  background: linear-gradient(
+    135deg,
+    rgba(23, 162, 184, 0.12),
+    rgba(23, 162, 184, 0.04)
+  );
+  border: 1px solid rgba(23, 162, 184, 0.28);
+  border-left: 4px solid #17a2b8;
+  border-radius: 14px;
+}
+
+.candidate-own-profile__next-exam-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #17a2b8;
+}
+
+.candidate-own-profile__next-exam-time {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.candidate-own-profile__section {
+  margin-top: 24px;
+}
+
+.candidate-own-profile__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+
+.candidate-own-profile__section-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(214, 251, 79);
+  letter-spacing: 0.4px;
+}
+
+.candidate-own-profile__section-count {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.candidate-own-profile__checklist {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.candidate-own-profile__check-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.25s ease;
+}
+
+.candidate-own-profile__check-item.is-done {
+  border-left: 4px solid rgb(214, 251, 79);
+}
+
+.candidate-own-profile__check-item.is-pending {
+  border-left: 4px solid #64748b;
+  opacity: 0.75;
+}
+
+.candidate-own-profile__check-icon {
+  font-size: 20px;
+}
+
+.candidate-own-profile__check-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.candidate-own-profile__check-item.is-pending .candidate-own-profile__check-text {
+  color: #94a3b8;
+}
+
+.candidate-own-profile__exams-list {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.candidate-own-profile__exam-card {
+  padding: 14px 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #17a2b8;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidate-own-profile__exam-card--passed {
+  border-left-color: #4ade80;
+}
+
+.candidate-own-profile__exam-card--failed {
+  border-left-color: #f87171;
+}
+
+.candidate-own-profile__exam-card--cancelled {
+  border-left-color: #94a3b8;
+}
+
+.candidate-own-profile__exam-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.candidate-own-profile__exam-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.candidate-own-profile__exam-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.candidate-own-profile__exam-score strong {
+  color: rgb(214, 251, 79);
+}
+
+.candidate-own-profile__badge {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.candidate-own-profile__badge--pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.candidate-own-profile__badge--accepted {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.candidate-own-profile__badge--started {
+  background: rgba(214, 251, 79, 0.12);
+  color: rgb(214, 251, 79);
+  border-color: rgba(214, 251, 79, 0.25);
+}
+.candidate-own-profile__badge--ended {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.25);
+}
+.candidate-own-profile__badge--bad_end,
+.candidate-own-profile__badge--rejected,
+.candidate-own-profile__badge--failed {
+  background: rgba(220, 53, 69, 0.15);
+  color: #f87171;
+  border-color: rgba(220, 53, 69, 0.25);
+}
+.candidate-own-profile__badge--cancelled {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+.candidate-own-profile__badge--theory,
+.candidate-own-profile__badge--pending-status {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+.candidate-own-profile__badge--practical,
+.candidate-own-profile__badge--scheduled {
+  background: rgba(23, 162, 184, 0.15);
+  color: #17a2b8;
+  border-color: rgba(23, 162, 184, 0.25);
+}
+.candidate-own-profile__badge--exam_scheduled {
+  background: rgba(23, 162, 184, 0.15);
+  color: #17a2b8;
+  border-color: rgba(23, 162, 184, 0.25);
+}
+.candidate-own-profile__badge--passed {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.candidate-own-profile__link-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 22px;
+  border-radius: 12px;
+  border: 1px solid rgba(214, 251, 79, 0.25);
+  background: rgba(214, 251, 79, 0.08);
+  color: rgb(214, 251, 79);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.25s ease;
+}
+
+.candidate-own-profile__link-btn:hover {
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.7));
+  color: #1f2937;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(214, 251, 79, 0.25);
+}
+
+.candidate-own-profile__state {
+  padding: 60px 20px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border: 1px solid rgba(214, 251, 79, 0.08);
+  color: #94a3b8;
+}
+
+.candidate-own-profile__state--error {
+  color: #f8d7da;
+  background: rgba(248, 215, 218, 0.08);
+  border-color: rgba(220, 53, 69, 0.2);
+  border-left: 4px solid #dc3545;
+}

@@ -68,7 +68,7 @@ export default function CandidateSchedule(){
             if (location.state?.openDecline) {
                 navigate(location.pathname, { replace: true, state: {} });
             }
-            // eslint-disable-next-line react-hooks/exhaustive-deps
+            
         }, []);
 
 
@@ -249,7 +249,7 @@ export default function CandidateSchedule(){
                     throw new Error(`HTTP ${response.status}`);
                 }
 
-                // Update the class status to CANCELLED in the UI
+          
                 setClasses(prev =>
                     prev.map(cls =>
                         cls.id === Number(classId)
