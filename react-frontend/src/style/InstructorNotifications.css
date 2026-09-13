@@ -350,16 +350,7 @@
   flex-direction: column;
 }
 
-@keyframes inSlideUp {
-  from {
-    transform: translateY(30px) scale(0.96);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
+
 
 .instructor-notifications__modal-header {
   display: flex;
@@ -520,4 +511,35 @@
 
 .instructor-notifications__modal::-webkit-scrollbar-thumb:hover {
   background: rgba(214, 251, 79, 0.3);
+}
+
+
+
+.instructor-notifications__goto-btn {
+  padding: 12px 24px;
+  background: linear-gradient(
+    135deg,
+    rgb(214, 251, 79),
+    rgba(214, 251, 79, 0.75)
+  );
+  border: none;
+  border-radius: 12px;
+  color: #1f2937;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.instructor-notifications__goto-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(214, 251, 79, 0.3);
+  background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+}
+
+.instructor-notifications__goto-btn:active {
+  transform: translateY(0);
 }

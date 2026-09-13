@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import "../../style/InstructorNotifications.css";
+import { useNavigate } from "react-router-dom";
 
 
 const TYPE_LABELS = {
@@ -49,6 +50,54 @@ const CATEGORY_FILTERS = [
   { value: "leave", label: "Leave" },
 ];
 
+
+const TYPE_NAVIGATION = {
+  CLASS_CANCELLED_BY_CANDIDATE: {
+    path: "/instructor/schedule",
+    label: "Go to schedule",
+  },
+  NEW_CLASS_REQUEST: {
+    path: "/instructor/schedule",
+    label: "Go to schedule",
+  },
+  WEEKLY_SCHEDULE_REMINDER: {
+    path: "/instructor/schedule",
+    label: "Go to schedule",
+  },
+
+  CAR_FIXED: {
+    path: "/instructor/vehicle",
+    label: "Go to vehicles",
+  },
+  NEW_CAR_ASSIGNED: {
+    path: "/instructor/vehicle",
+    label: "Go to vehicles",
+  },
+  RESERVE_ASSIGNED: {
+    path: "/instructor/vehicle",
+    label: "Go to vehicles",
+  },
+
+  INSTRUCTOR_LEAVE_REQUEST_ACCEPTED: {
+    path: "/instructor/leave-request",
+    label: "Go to leaves",
+  },
+  INSTRUCTOR_LEAVE_REQUEST_DENIED: {
+    path: "/instructor/leave-request",
+    label: "Go to leaves",
+  },
+
+  INSTRUCTOR_VEHICLE_REQUEST_ACCEPTED: {
+    path: "/instructor/request-vehicle",
+    label: "Go to vehicle requests",
+  },
+  INSTRUCTOR_VEHICLE_REQUEST_DENIED: {
+    path: "/instructor/request-vehicle",
+    label: "Go to vehicle requests",
+  },
+};
+
+
 export default function InstructorNotifications() {
   const token = localStorage.getItem("userToken");
   const [notifications, setNotifications] = useState([]);
@@ -57,6 +106,8 @@ export default function InstructorNotifications() {
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [searchTerm, setSearchTerm] = useState("");
   const [selected, setSelected] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let cancelled = false;
@@ -232,15 +283,20 @@ export default function InstructorNotifications() {
         <NotificationModal
           notification={selected}
           onClose={() => setSelected(null)}
+          onNavigate={(path) => {
+            setSelected(null);
+            navigate(path);
+          }}
         />
       )}
     </div>
   );
 }
 
-function NotificationModal({ notification, onClose }) {
+function NotificationModal({ notification, onClose,onNavigate }) {
   const category = TYPE_CATEGORY[notification.type] || "schedule";
   const icon = TYPE_ICONS[notification.type] || "🔔";
+  const nav = TYPE_NAVIGATION[notification.type] || null;
 
   function handleBackdropClick(e) {
     if (e.target === e.currentTarget) {
@@ -295,14 +351,7 @@ function NotificationModal({ notification, onClose }) {
             <p>{notification.body || "—"}</p>
           </div>
 
-          {notification.objectId != null && (
-            <div className="instructor-notifications__field">
-              <span className="instructor-notifications__field-label">
-                Related item
-              </span>
-              <span>#{notification.objectId}</span>
-            </div>
-          )}
+         
         </div>
 
         <div className="instructor-notifications__modal-actions">
@@ -313,6 +362,15 @@ function NotificationModal({ notification, onClose }) {
           >
             Close
           </button>
+           {nav && (
+            <button
+              type="button"
+              className="instructor-notifications__goto-btn"
+              onClick={() => onNavigate(nav.path)}
+            >
+              {nav.label} →
+            </button>
+          )}
         </div>
       </div>
     </div>
