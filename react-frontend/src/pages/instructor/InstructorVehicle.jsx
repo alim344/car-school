@@ -336,6 +336,13 @@ export default function InstructorVehicle() {
         }
     };
 
+
+    function goToFuelRecord(vehicle) {
+        navigate(`/instructor/vehicles/${vehicle.id}/fuel`, {
+            state: { vehicle },
+        });
+    }
+
     return (
         <div className="instructor-vehicle-container">
             <div className="instructor-vehicle-header">
@@ -404,7 +411,18 @@ export default function InstructorVehicle() {
                                     const isMalfunctionLoading = loadingMalfunction[vehicle.id];
                                     
                                     return (
-                                        <tr key={vehicle.id} className={`vehicle-row status-${vehicle.status.toLowerCase()}`}>
+                                        <tr key={vehicle.id}
+                                            className={`vehicle-row status-${vehicle.status.toLowerCase()} vehicle-row--clickable`}
+                                            onClick={() => goToFuelRecord(vehicle)}
+                                            tabIndex={0}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter" || e.key === " ") {
+                                                e.preventDefault();
+                                                goToFuelRecord(vehicle);
+                                                }
+                                            }}
+                                            role="button"
+                                            >
                                             <td>
                                                 <span className="registration-number">{vehicle.registrationNumber}</span>
                                             </td>
@@ -446,7 +464,7 @@ export default function InstructorVehicle() {
                                                     </div>
                                                 )}
                                             </td>
-                                            <td>
+                                            <td onClick={(e)=> e.stopPropagation()}>
                                                 <div className="action-buttons">
                                                     {vehicle.status === "IN_USE" && (
                                                         <>

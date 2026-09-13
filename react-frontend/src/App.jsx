@@ -27,6 +27,7 @@ import InstructorCandidates from './pages/instructor/InstructorCandidates';
 import CandidatePage from './pages/instructor/CandidatePage';
 import FinishedPracticalClass from './components/FinishedPracticalClass';
 import InstructorCandidateAnalytics from './pages/instructor/InstructorCandidateAnalytics';
+import InstructorFuelRecord from './pages/instructor/InstructorFuelRecord';
 
 
 export default function App() {
@@ -93,6 +94,13 @@ export default function App() {
             <InstructorCandidateAnalytics />
           </InstructorLayout>
         } />
+
+        <Route path="/instructor/vehicles/:id/fuel" element={
+          <InstructorLayout>
+            <InstructorFuelRecord />
+          </InstructorLayout>
+        } />
+
 
 
         <Route path="/candidate" element={

@@ -4,6 +4,7 @@ import com.example.carschool.dto.FuelRecordDTO;
 import com.example.carschool.model.FuelRecord;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.Vehicle;
+import com.example.carschool.model.VehicleStatus;
 import com.example.carschool.repo.FuelRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +41,8 @@ public class FuelRecordService {
     public void saveFuelRecord(FuelRecordDTO fuelRecordDTO, Instructor instructor){
         FuelRecord fuelRecord = new FuelRecord();
         Vehicle vehicle = vehicleService.getById(fuelRecordDTO.getVehicleId());
+        if(vehicle.getStatus() != VehicleStatus.IN_USE && vehicle.getStatus() != VehicleStatus.RESERVE){}
+
         fuelRecord.setVehicle(vehicle);
         fuelRecord.setRefuelDate(fuelRecordDTO.getRefuelDate());
         fuelRecord.setInstructor(instructor);
