@@ -22,7 +22,7 @@ public class InstructorProfileDTO {
 
 
     public InstructorProfileDTO(Instructor instructor, List<DocumentDTO> documents) {
-        this.name = instructor.getName();
+        this.name = instructor.getName() + " " + instructor.getLastname();
         this.email = instructor.getEmail();
         this.category = instructor.getCategory();
         this.activeVehicleRegistration = instructor.getVehicle().getRegistrationNumber();

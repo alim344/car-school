@@ -105,4 +105,12 @@ public class InstructorService {
         return new InstructorProfileDTO(instructor,documents.stream().map(DocumentDTO::new).toList());
     }
 
+
+    public void changeDateOfDocument(Long documentId,LocalDate date){
+        InstructorDocuments documents = instructorDocumentsRepository.findById(documentId).get();
+        documents.setExpiryDate(date);
+        instructorDocumentsRepository.save(documents);
+
+    }
+
 }

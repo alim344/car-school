@@ -7,10 +7,9 @@ import com.example.carschool.service.InstructorService;
 import com.example.carschool.util.TokenUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -45,6 +44,12 @@ public class InstructorController {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
         return ResponseEntity.ok(instructorService.getInstructorProfile(email));
+    }
+
+    @PatchMapping("/date/{id}")
+    public ResponseEntity<?> changeDocumentsDate(@PathVariable Long id, @RequestParam LocalDate date){
+        instructorService.changeDateOfDocument(id, date);
+        return ResponseEntity.ok().build();
     }
 
 

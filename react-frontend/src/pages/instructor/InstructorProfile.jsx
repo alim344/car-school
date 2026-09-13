@@ -60,6 +60,17 @@ function getInitials(name) {
   return (first + last).toUpperCase() || "?";
 }
 
+
+function toInputDate(value) {
+  if (!value) return "";
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return "";
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 export default function InstructorProfile() {
  
   const token = localStorage.getItem("userToken");
@@ -67,6 +78,11 @@ export default function InstructorProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [editingDoc, setEditingDoc] = useState(null);
+  const [newDate, setNewDate] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,6 +113,63 @@ export default function InstructorProfile() {
       cancelled = true;
     };
   }, [token]);
+
+
+   function openEditDate(doc) {
+    setEditingDoc(doc);
+    setNewDate(toInputDate(doc.expiryDate));
+    setSaveError(null);
+  }
+
+  function closeEditDate() {
+    if (saving) return;
+    setEditingDoc(null);
+    setNewDate("");
+    setSaveError(null);
+  }
+
+  async function handleUpdateDate(e) {
+    e.preventDefault();
+    if (!editingDoc || !newDate) return;
+
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      await axios.patch(
+        `http://localhost:8080/instructor/date/${editingDoc.id}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: { date: newDate },
+        }
+      );
+
+      setProfile((prev) => {
+        if (!prev) return prev;
+        const docs = Array.isArray(prev.documents) ? prev.documents : [];
+        return {
+          ...prev,
+          documents: docs.map((d) =>
+            d.id === editingDoc.id ? { ...d, expiryDate: newDate } : d
+          ),
+        };
+      });
+
+      setEditingDoc(null);
+      setNewDate("");
+    } catch (err) {
+      console.error("Error updating document date:", err);
+      setSaveError(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to update the document date."
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
 
   if (loading) {
     return (
@@ -234,7 +307,17 @@ export default function InstructorProfile() {
                 >
 
                   <div className="instructor-profile__doc-body">
-                    <h3 className="instructor-profile__doc-title">{label}</h3>
+                     <div className="instructor-profile__doc-header">
+                        <h3 className="instructor-profile__doc-title">{label}</h3>
+                        <button
+                            type="button"
+                            className="instructor-profile__doc-edit-btn"
+                            onClick={() => openEditDate(doc)}
+                            title="Change expiry date"
+                        >
+                            Update date
+                        </button>
+                      </div>   
                     <p className="instructor-profile__doc-expiry">
                       Expires: <strong>{formatDate(doc.expiryDate)}</strong>
                     </p>
@@ -263,6 +346,77 @@ export default function InstructorProfile() {
           </div>
         )}
       </section>
+
+
+      {editingDoc && (
+        <div
+          className="instructor-profile__modal-overlay"
+          onClick={closeEditDate}
+        >
+          <div
+            className="instructor-profile__modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="instructor-profile__modal-header">
+              <h3>Change expiry date</h3>
+              <button
+                type="button"
+                className="instructor-profile__modal-close"
+                onClick={closeEditDate}
+                disabled={saving}
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
+
+            <form
+              onSubmit={handleUpdateDate}
+              className="instructor-profile__form"
+            >
+              <p className="instructor-profile__modal-subtitle">
+                {DOCUMENT_TYPE_LABELS[editingDoc.documentType] ||
+                  editingDoc.documentType}
+              </p>
+
+              {saveError && (
+                <div className="instructor-profile__form-error">
+                  ⚠️ {saveError}
+                </div>
+              )}
+
+              <label className="instructor-profile__field">
+                <span>New expiry date *</span>
+                <input
+                  type="date"
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                  required
+                  disabled={saving}
+                />
+              </label>
+
+              <div className="instructor-profile__modal-actions">
+                <button
+                  type="button"
+                  className="instructor-profile__btn instructor-profile__btn--ghost"
+                  onClick={closeEditDate}
+                  disabled={saving}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="instructor-profile__btn instructor-profile__btn--primary"
+                  disabled={saving || !newDate}
+                >
+                  {saving ? "Saving…" : "Save date"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

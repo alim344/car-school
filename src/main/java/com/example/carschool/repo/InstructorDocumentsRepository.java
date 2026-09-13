@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface InstructorDocumentsRepository extends JpaRepository<InstructorDocuments, Integer> {
+public interface InstructorDocumentsRepository extends JpaRepository<InstructorDocuments, Long> {
 
     List<InstructorDocuments> findByInstructor(Instructor instructor);
 
