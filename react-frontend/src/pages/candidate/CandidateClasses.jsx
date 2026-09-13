@@ -69,10 +69,10 @@ export default function CandidateClasses() {
   }, [token]);
 
   function goToClass(cls) {
-    navigate(`/candidate/classes/${cls.id}`, {
-      state: { classItem: cls },
-    });
-  }
+  navigate(`/candidate/classes/${cls.id}`, {
+    state: { classItem: cls, role: "candidate" },
+  });
+}
 
 
   const counts = {

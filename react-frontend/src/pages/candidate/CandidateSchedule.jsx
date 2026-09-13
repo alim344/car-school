@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import WeeklyCalendar from "../../components/WeeklyCalendar";
 import "../../style/CandidateSchedule.css"
 import PracticalClassModal from "../../components/PracticalClassModal";
@@ -13,14 +13,20 @@ export default function CandidateSchedule(){
 
     const [selectedClass, setSelectedClass] = useState(null);
 
-    const [declineModalOpen, setDeclineModalOpen] = useState(false);
-
-    const [classToDecline, setClassToDecline] = useState(null);
+    const location = useLocation();
 
     const [rescheduleModalOpen, setRescheduleModalOpen] = useState(false);
+
+    const [declineModalOpen, setDeclineModalOpen] = useState(
+        () => !!(location.state?.openDecline && location.state?.classToDecline)
+    );
+    const [classToDecline, setClassToDecline] = useState(
+        () => location.state?.classToDecline ?? null
+    );
     
 
-   
+    const navigate = useNavigate();
+    
     const token = localStorage.getItem("userToken");
     
     
@@ -57,6 +63,13 @@ export default function CandidateSchedule(){
             setDeclineModalOpen(true);
         };
 
+
+        useEffect(() => {
+            if (location.state?.openDecline) {
+                navigate(location.pathname, { replace: true, state: {} });
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
 
 
         const handleAcceptClass = async (classId) => {
@@ -171,6 +184,8 @@ export default function CandidateSchedule(){
         setSelectedClass(info.event);
     };
 
+
+   
 
     const handleSkipWeek = async () => {
 

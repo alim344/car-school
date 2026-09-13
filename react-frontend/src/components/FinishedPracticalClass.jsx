@@ -6,10 +6,13 @@ import RouteNotesMap from "../components/RouteNotesMap";
 const API_URL = "http://localhost:8080";
 
 const CLASS_STATUS_LABELS = {
-  SCHEDULED: "Scheduled",
-  COMPLETED: "Completed",
-  CANCELLED: "Cancelled",
   PENDING: "Pending",
+  ACCEPTED: "Accepted",
+  REJECTED: "Rejected",
+  STARTED: "In progress",
+  ENDED: "Ended",
+  BAD_END: "Interrupted",
+  CANCELLED: "Cancelled",
 };
 
 function formatDateTime(value) {
@@ -45,12 +48,17 @@ export default function FinishedPracticalClass() {
   const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
 
+  const role = location.state?.role || "instructor";
+
   const passed = location.state?.classItem || null;
   const candidateId = location.state?.candidateId || null;
 
   const [classItem, setClassItem] = useState(passed);
   const [loading, setLoading] = useState(!passed);
   const [error, setError] = useState(null);
+
+  const [accepting, setAccepting] = useState(false);
+  const [acceptError, setAcceptError] = useState(null);
 
   useEffect(() => {
     if (passed) return;
@@ -84,11 +92,57 @@ export default function FinishedPracticalClass() {
   }, [classId, passed]);
 
   function goBack() {
+    if (role === "candidate") {
+      navigate("/candidate/classes");
+      return;
+    }
     if (candidateId) {
       navigate(`/instructor/candidates/${candidateId}`);
     } else {
       navigate(-1);
     }
+  }
+
+
+  async function handleAccept() {
+    if (!classItem) return;
+    setAccepting(true);
+    setAcceptError(null);
+    try {
+      const res = await fetch(
+        `${API_URL}/schedule/cand/accept-class/${classItem.id}`,
+        {
+          method: "PATCH",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) {
+        throw new Error(`Request failed with status ${res.status}`);
+      }
+      setClassItem((prev) =>
+        prev ? { ...prev, classStatus: "ACCEPTED" } : prev
+      );
+    } catch (err) {
+      setAcceptError(err.message || "Could not accept the class.");
+    } finally {
+      setAccepting(false);
+    }
+  }
+
+  function handleDecline() {
+    if (!classItem) return;
+    navigate("/candidate", {
+      state: {
+        openDecline: true,
+        classToDecline: {
+          id: classItem.id,
+          scheduledStartTime: classItem.scheduledStartTime,
+          scheduledEndTime: classItem.scheduledEndTime,
+          location: classItem.location,
+          candidateName: classItem.candidateName,
+        },
+      },
+    });
   }
 
   if (loading) {
@@ -150,13 +204,38 @@ export default function FinishedPracticalClass() {
       <header className="finished-class__header">
         <div className="finished-class__title-group">
           <h1>Class details</h1>
+          
           <p className="finished-class__subtitle">
             {classItem.candidateName || "—"}
             {classItem.candidateEmail ? ` · ${classItem.candidateEmail}` : ""}
           </p>
         </div>
+        
 
         <div className="finished-class__header-badges">
+          {role === "candidate" && classItem.classStatus === "PENDING" && (
+            <div className="finished-class__actions">
+              <button
+                type="button"
+                className="finished-class__action-btn finished-class__action-btn--accept"
+                onClick={handleAccept}
+                disabled={accepting}
+              >
+                {accepting ? "Accepting…" : "✓ Accept"}
+              </button>
+              <button
+                type="button"
+                className="finished-class__action-btn finished-class__action-btn--decline"
+                onClick={handleDecline}
+                disabled={accepting}
+              >
+                ✕ Decline
+              </button>
+              {acceptError && (
+                <span className="finished-class__action-error">⚠️ {acceptError}</span>
+              )}
+            </div>
+          )}
           <span
             className={`finished-class__badge finished-class__badge--${statusKey}`}
           >
@@ -168,6 +247,8 @@ export default function FinishedPracticalClass() {
             <span className="finished-class__tag">last class</span>
           )}
         </div>
+
+        
       </header>
 
       <hr className="finished-class__divider" />

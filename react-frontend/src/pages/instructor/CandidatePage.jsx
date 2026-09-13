@@ -141,10 +141,10 @@ export default function CandidatePage() {
   }
 
   function goToClass(cls) {
-    navigate(`/instructor/candidates/${id}/class/${cls.id}`, {
-      state: { classItem: cls, candidateId: id },
-    });
-  }
+  navigate(`/instructor/candidates/${id}/class/${cls.id}`, {
+    state: { classItem: cls, candidateId: id }, 
+  });
+}
 
   if (loading) {
     return (
