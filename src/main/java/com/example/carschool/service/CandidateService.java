@@ -1,6 +1,7 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.CandidateDTO;
+import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.model.NotificationType;

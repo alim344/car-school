@@ -1,6 +1,8 @@
 package com.example.carschool.controller;
 
 import com.example.carschool.dto.CandidateDTO;
+import com.example.carschool.dto.InstructorDTO;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
 import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorService;
@@ -54,6 +56,14 @@ public class CandidateController {
     }
 
 
+    @GetMapping("/get-inst-name")
+    public ResponseEntity<InstructorDTO> getInstructor(HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Candidate candidate = candidateService.getByEmail(email);
 
+        Instructor instructor = candidate.getInstructor();
+        return ResponseEntity.ok(new InstructorDTO(instructor));
+    }
 
 }

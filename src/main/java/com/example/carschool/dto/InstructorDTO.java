@@ -9,6 +9,7 @@ public class InstructorDTO {
 
     private String name;
     private String email;
+    private Long id;
 
     public InstructorDTO() {}
 
@@ -18,6 +19,7 @@ public class InstructorDTO {
     }
 
     public InstructorDTO(Instructor instructor) {
+        this.id = instructor.getId();
         this.name = instructor.getName() + " " + instructor.getLastname();
         this.email = instructor.getEmail();
     }
