@@ -89,7 +89,7 @@ public class PracticalExamController {
     }
 
 
-    @PatchMapping("/admin/cancel")
+    @PatchMapping("/cancel")
     public ResponseEntity<PracticalExamDTO> cancelExam(@RequestBody PracticalExamDTO dto){
         return ResponseEntity.ok(practicalExamService.cancelExam(dto));
     }

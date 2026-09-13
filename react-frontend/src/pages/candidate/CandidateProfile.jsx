@@ -2,9 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "../../style/CandidateProfile.css";
 import GradeLineChart from "../../components/GradeLineChart";
+import ExamDetailsModal from "../../components/ExamDetailsModal";
 
-
-
+const EXAM_STATUS_LABELS = {
+  SCHEDULED: "Scheduled",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  FAILED: "Failed",
+};
 
 
 const CLASS_STATUS_LABELS = {
@@ -17,14 +22,7 @@ const CLASS_STATUS_LABELS = {
   CANCELLED: "Cancelled",
 };
 
-const EXAM_STATUS_LABELS = {
-  SCHEDULED: "Scheduled",
-  PASSED: "Passed",
-  FAILED: "Failed",
-  CANCELLED: "Cancelled",
-  PENDING: "Pending",
-  FINISHED: "Finished",
-};
+
 
 function formatDateTime(value) {
   if (!value) return "—";
@@ -97,6 +95,9 @@ export default function CandidateOwnProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+ const [selectedExam, setSelectedExam] = useState(null);
+
 
   useEffect(() => {
    
@@ -188,7 +189,44 @@ export default function CandidateOwnProfile() {
 
   const initials = getInitials(profile.firstName, profile.lastName);
 
+  async function handleCancelExam(exam) {
+        if (!exam) return;
+    
+        try {
+            const res = await axios.patch(
+            "http://localhost:8080/p-exam/cancel",
+            {
+                id: exam.id,
+            
+                status: exam.status,
+            },
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                },
+            }
+            );
 
+            const updated = res.data;
+
+            setProfile((prev) => {
+            if (!prev) return prev;
+            const list = Array.isArray(prev.examList) ? prev.examList : [];
+            return {
+                ...prev,
+                examList: list.map((e) =>
+                e.id === exam.id ? { ...e, ...updated } : e
+                ),
+            };
+            });
+
+            setSelectedExam((prev) => (prev ? { ...prev, ...updated } : prev));
+        } catch (err) {
+            console.error("Error cancelling exam:", err);
+            throw err; 
+        }
+    }
 
   return (
     <div className="candidate-own-profile">
@@ -315,7 +353,9 @@ export default function CandidateOwnProfile() {
                 return (
                   <div
                     key={exam.id}
+                    type = "button"
                     className={`candidate-own-profile__exam-card candidate-own-profile__exam-card--${key}`}
+                    onClick={() => setSelectedExam(exam)}
                   >
                     <div className="candidate-own-profile__exam-main">
                       <span className="candidate-own-profile__exam-date">
@@ -358,6 +398,13 @@ export default function CandidateOwnProfile() {
         </header>
         <GradeLineChart grades={gradeList} />
       </section>
+
+      <ExamDetailsModal
+        isOpen={!!selectedExam}
+        exam={selectedExam}
+        onClose={() => setSelectedExam(null)}
+        onCancel={handleCancelExam}
+        />
 
       
       
