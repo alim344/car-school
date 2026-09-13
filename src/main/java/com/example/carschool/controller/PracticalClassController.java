@@ -86,5 +86,11 @@ public class PracticalClassController {
         return ResponseEntity.ok(new RouteNoteDTO(route,notes));
     }
 
+    @GetMapping("/report")
+    public ResponseEntity<List<PracticalClassDTO>> getCandidateClasses(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        return ResponseEntity.ok(practicalClassService.getByCandidate(email));
+    }
 
 }

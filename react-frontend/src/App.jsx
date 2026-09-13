@@ -27,6 +27,7 @@ import InstructorCandidates from './pages/instructor/InstructorCandidates';
 import CandidatePage from './pages/instructor/CandidatePage';
 import FinishedPracticalClass from './components/FinishedPracticalClass';
 import InstructorFuelRecord from './pages/instructor/InstructorFuelRecord';
+import CandidateClasses from './pages/candidate/CandidateClasses';
 
 
 export default function App() {
@@ -111,6 +112,16 @@ export default function App() {
         <Route path="/candidate/notif" element={
           <CandidateLayout>
             <CandidateNotifications />
+          </CandidateLayout>
+        } />
+        <Route path="/candidate/classes" element={
+          <CandidateLayout>
+            <CandidateClasses />
+          </CandidateLayout>
+        } />
+        <Route path="/candidate/classes/:id" element={
+          <CandidateLayout>
+            <FinishedPracticalClass />
           </CandidateLayout>
         } />
 

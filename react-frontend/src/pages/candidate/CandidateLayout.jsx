@@ -1,25 +1,36 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 import NavBar from '../../components/NavBar';
 import '../../style/CandidateLayout.css'
 
 export default function InstructorLayout({ children }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const location = useLocation();
+  
 
   const menuItems = [
     
     { id: 'schedule', label: 'Schedule',  path: '/candidate' },
     { id: 'notifications', label: 'Notifications',  path: '/candidate/notif' },
     { id: 'preferences', label: 'Preference',  path: '/candidate/preference' },
-    { id: 'reports', label: 'Reports',  path: '/candidate/reports' },
+    { id: 'classes', label: 'Class Reports',  path: '/candidate/classes' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' },
    
   ];
 
+  const activeTab = menuItems
+    .filter((item) =>
+      item.path === '/instructor'
+        ? location.pathname === '/instructor'
+        : location.pathname.startsWith(item.path)
+    )
+    .sort((a, b) => b.path.length - a.path.length)[0]?.id || 'dashboard';
+
+ 
+
   const handleTabClick = (tabId, path) => {
-    setActiveTab(tabId);
+  
     navigate(path);
   };
 

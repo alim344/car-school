@@ -305,4 +305,10 @@ public class PracticalClassService {
         return pclass.getRoute();
     }
 
+    public List<PracticalClassDTO> getByCandidate(String email){
+        Candidate candidate = candidateService.getByEmail(email);
+        List<PracticalClass> classes = practicalClassRepository.findByCandidateOrderByScheduledStartTimeDesc(candidate);
+        return classes.stream().map(PracticalClassDTO::new).toList();
+    }
+
 }
