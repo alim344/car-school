@@ -5,11 +5,13 @@ import "../../style/CandidateSchedule.css"
 import PracticalClassModal from "../../components/PracticalClassModal";
 import DeclineClassModal from "../../components/DeclineClassModal";
 import RescheduleClassModal from "../../components/RescheduleCLassModal";
+import { buildLeaveEvents, toBlockedRanges } from "../../utils/leaveEvents";
 
 
 export default function CandidateSchedule(){
 
     const [classes, setClasses] = useState([]);
+    const [leaves, setLeaves] = useState([]);
 
     const [selectedClass, setSelectedClass] = useState(null);
 
@@ -24,6 +26,7 @@ export default function CandidateSchedule(){
         () => location.state?.classToDecline ?? null
     );
     
+    const leaveEvents = buildLeaveEvents(leaves, { source: "instructor" });
 
     const navigate = useNavigate();
     
@@ -48,6 +51,20 @@ export default function CandidateSchedule(){
                 .catch(error => {
                     console.error("Error fetching schedule:", error);
                 });
+
+
+
+
+
+                fetch("http://localhost:8080/leave/cand-get", {
+                    headers: { Authorization: `Bearer ${token}` }
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        return response.json();
+                    })
+                    .then(data => setLeaves(data))
+                    .catch(error => console.error("Error fetching instructor leaves:", error));
         }, [token]);
 
         const handleDeclineClick = (classId) => {
@@ -181,6 +198,7 @@ export default function CandidateSchedule(){
     };
         
     const handleEventClick = (info) => {
+        if (info.event.display === "background") return;
         setSelectedClass(info.event);
     };
 
@@ -277,7 +295,8 @@ export default function CandidateSchedule(){
             
                     <div className="candidate-calendar-section">
                         <WeeklyCalendar
-                            events={events}
+                            events={[...leaveEvents, ...events]}
+                            blockedRanges={toBlockedRanges(leaves)}
                             onEventClick={handleEventClick}
                             onTimeSelect={() => {}}
                         />

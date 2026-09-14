@@ -2,7 +2,9 @@ package com.example.carschool.controller;
 
 import com.example.carschool.dto.AdminLeaveResponseDTO;
 import com.example.carschool.dto.LeaveRequestDTO;
+import com.example.carschool.model.Candidate;
 import com.example.carschool.model.Instructor;
+import com.example.carschool.service.CandidateService;
 import com.example.carschool.service.InstructorLeaveService;
 import com.example.carschool.service.InstructorService;
 import com.example.carschool.util.TokenUtils;
@@ -25,6 +27,8 @@ public class LeaveRequestController {
     private TokenUtils tokenUtils;
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private CandidateService candidateService;
 
     @GetMapping("/inst/get")
     public ResponseEntity<List<LeaveRequestDTO>> getByInstructor(HttpServletRequest request){
@@ -67,6 +71,14 @@ public class LeaveRequestController {
         String email = tokenUtils.getEmailFromToken(token);
         Instructor instructor = instructorService.findByEmail(email);
         return ResponseEntity.ok(instructorLeaveService.getApprovedRequestsByInstructor(instructor));
+    }
+
+    @GetMapping("/cand-get")
+    public ResponseEntity<List<LeaveRequestDTO>> getApprovedLeaveRequestsByInstructor(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Candidate candidate = candidateService.getByEmail(email);
+        return ResponseEntity.ok(instructorLeaveService.getApprovedRequestsByInstructor(candidate.getInstructor()));
     }
 
 

@@ -4,6 +4,8 @@ import WeeklyCalendar from "../../components/WeeklyCalendar";
 import TimePrefForm from "../../components/TimePrefModal";
 
 import "../../style/CandidatePreference.css";
+import {
+    buildLeaveEvents,isOverlappingLeave,toBlockedRanges} from "../../utils/leaveEvents";
 
 export default function CandidatePreference() {
 
@@ -16,9 +18,13 @@ export default function CandidatePreference() {
     const [newPrefEnd, setNewPrefEnd] = useState(null);
     const [preferenceStatus,setPreferenceStatus] = useState(null);
 
+    const [leaves, setLeaves] = useState([]);
+
     const token = localStorage.getItem("userToken");
 
     const hasDrafts = prefs.some(p => !p.id.startsWith("existing-"));
+
+    const leaveEvents = buildLeaveEvents(leaves, { source: "instructor" });
 
     useEffect(() => {
         fetch("http://localhost:8080/pref/candidate/get", {
@@ -50,7 +56,17 @@ export default function CandidatePreference() {
             .catch(error => {
                 console.error("Error fetching candidate preference:", error);
             });
-    }, [token]);
+
+            fetch("http://localhost:8080/leave/cand-get", {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })
+                .then(data => setLeaves(data))
+                .catch(error => console.error("Error fetching instructor leaves:", error));
+            }, [token]);
 
     const getNextWeekRange = () => {
         const today = new Date();
@@ -99,6 +115,12 @@ export default function CandidatePreference() {
             alert("This time overlaps with an existing preference.");
             return;
         }
+
+        if (isOverlappingLeave(info.start, info.end, leaves)) {
+            alert("Your instructor is on leave on this day.");
+            return;
+        }
+
 
         setNewPrefStart(info.start);
         setNewPrefEnd(info.end);
@@ -221,7 +243,8 @@ export default function CandidatePreference() {
             <div className="candidate-preference-calendar">
                 <WeeklyCalendar
                     events={[]}
-                    preferenceEvents={preferenceEvents}
+                    preferenceEvents={[...leaveEvents, ...preferenceEvents]}
+                    blockedRanges={toBlockedRanges(leaves)}
                     onTimeSelect={handleTimeSelect}
                     onEventClick={() => {}}
                     initialDate={nextWeekRange.start}
