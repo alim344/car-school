@@ -61,6 +61,13 @@ public class LeaveRequestController {
         return ResponseEntity.ok(instructorLeaveService.getAllLeaveRequests());
     }
 
+    @GetMapping("/get-approved")
+    public ResponseEntity<List<LeaveRequestDTO>> getApprovedLeaveRequests(HttpServletRequest request){
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+        return ResponseEntity.ok(instructorLeaveService.getApprovedRequestsByInstructor(instructor));
+    }
 
 
 }

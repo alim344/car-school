@@ -157,6 +157,10 @@ public class InstructorLeaveService {
      }
 
 
+     public List<LeaveRequestDTO> getApprovedRequestsByInstructor(Instructor instructor) {
+        List<InstructorLeaveRequest> requests = leaveRequestRepository.findByInstructorAndStatus(instructor, LeaveStatus.APPROVED);
+        return requests.stream().map(LeaveRequestDTO::new).toList();
+     }
 
 
 

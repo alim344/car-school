@@ -6,6 +6,7 @@ import "../style/WeeklyCalendar.css";
 export default function WeeklyCalendar({
     events = [],
     preferenceEvents = [],
+    blockedRanges = [],
     onEventClick = () => {},
     onTimeSelect = () => {},
     initialDate,
@@ -16,6 +17,22 @@ export default function WeeklyCalendar({
         ...preferenceEvents,
         ...events
     ];
+
+    const selectAllow = (selectInfo) => {
+        const toLocalDateStr = (dateObj) => {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const d = String(dateObj.getDate()).padStart(2, "0");
+            return `${y}-${m}-${d}`;
+        };
+
+        const selStart = toLocalDateStr(selectInfo.start);
+        const selEnd = toLocalDateStr(new Date(selectInfo.end.getTime() - 1));
+
+        return !blockedRanges.some(range => {
+            return selStart <= range.end && selEnd >= range.start;
+        });
+    };
 
     return (
         <FullCalendar
@@ -41,7 +58,7 @@ export default function WeeklyCalendar({
 
             selectable={selectable}
             selectMirror={true}
-
+            selectAllow={selectAllow}
             select={onTimeSelect}
 
             eventClick={onEventClick}

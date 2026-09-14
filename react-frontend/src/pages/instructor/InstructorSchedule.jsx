@@ -8,6 +8,17 @@ import AlgScheduleModal from "../../components/AlgScheduleModal";
 
 import "../../style/InstructorSchedule.css";
 
+function nextDay(isoDate) {
+    const [y, m, d] = isoDate.split("-").map(Number);
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    dt.setUTCDate(dt.getUTCDate() + 1);
+    const yy = dt.getUTCFullYear();
+    const mm = String(dt.getUTCMonth() + 1).padStart(2, "0");
+    const dd = String(dt.getUTCDate()).padStart(2, "0");
+    return `${yy}-${mm}-${dd}`;
+}
+
+
 export default function InstructorSchedule() {
 
     
@@ -45,7 +56,7 @@ export default function InstructorSchedule() {
     const [isGenerating, setIsGenerating] = useState(false);
 
     
- 
+   const [leaves, setLeaves] = useState([]);
 
     const token = localStorage.getItem("userToken");
 
@@ -86,6 +97,25 @@ export default function InstructorSchedule() {
             .catch(error => {
                 console.error("Error fetching class requests:", error);
             });
+
+
+            fetch("http://localhost:8080/leave/get-approved", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    setLeaves(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching leaves:", error);
+                });
     }, [token]);
 
     const fetchCandidatesForAlg = async () => {
@@ -112,6 +142,33 @@ export default function InstructorSchedule() {
             setLoadingCandidates(false);
         }
     };
+
+
+   const leaveEvents = leaves.flatMap(leave => {
+        const events = [];
+        let cursor = leave.startDate; 
+        const end = leave.endDate;    
+
+        while (cursor <= end) {
+            events.push({
+                id: `leave-${leave.id}-${cursor}`,
+                start: `${cursor}T00:00:00`,
+                end: `${cursor}T23:59:59`,
+                display: "background",
+                classNames: ["leave-block"],
+                extendedProps: {
+                    isLeave: true,
+                    leaveId: leave.id,
+                    leaveType: leave.type,
+                    reason: leave.reason
+                }
+            });
+
+            cursor = nextDay(cursor);
+        }
+
+        return events;
+    });
 
    
 
@@ -189,6 +246,7 @@ export default function InstructorSchedule() {
     
 
     const calendarEvents = [
+        ...leaveEvents,
         ...preferenceEvents,
          ...requestEvents,
         ...events,
@@ -213,6 +271,25 @@ export default function InstructorSchedule() {
 
         return existingOverlap || draftOverlap;
     };
+
+
+    const toLocalDateStr = (dateObj) => {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+        const d = String(dateObj.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+    };
+
+    const isOnLeave = (start, end) => {
+        const startDay = toLocalDateStr(start);
+        const endDay = toLocalDateStr(new Date(end.getTime() - 1));
+
+        return leaves.some(leave => {
+            return startDay <= leave.endDate && endDay >= leave.startDate;
+        });
+    };
+
+
 
     const handleRequestClick = (request) => {
         setSelectedRequest(prev =>
@@ -402,6 +479,11 @@ export default function InstructorSchedule() {
         if (acceptRequestOpen) {
             setNewClassStart(info.start);
             setNewClassEnd(info.end);
+            return;
+        }
+
+        if (isOnLeave(info.start, info.end)) {
+            alert("You are on leave on this day.");
             return;
         }
 
@@ -666,6 +748,7 @@ export default function InstructorSchedule() {
                 <WeeklyCalendar
                     events={calendarEvents}
                     preferenceEvents={preferenceEvents}
+                    blockedRanges={leaves.map(l => ({ start: l.startDate, end: l.endDate }))}
                     onTimeSelect={handleTimeSelect}
                     onEventClick={handleEventClick}
                 />
