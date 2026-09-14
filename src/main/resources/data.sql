@@ -769,4 +769,4 @@ UPDATE instructor SET category = 'B'  WHERE id = 24;
 
 
 
-ALTER TABLE instructor DROP COLUMN category;
+ALTER TABLE instructor_change_request DROP COLUMN status;

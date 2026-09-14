@@ -1,12 +1,11 @@
 package com.example.carschool.service;
 
 import com.example.carschool.dto.CandidateDTO;
+import com.example.carschool.dto.InstructorChangeRequestDTO;
 import com.example.carschool.dto.InstructorDTO;
-import com.example.carschool.model.Candidate;
-import com.example.carschool.model.Instructor;
-import com.example.carschool.model.NotificationType;
-import com.example.carschool.model.TrainingStatus;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.CandidateRepository;
+import com.example.carschool.repo.InstructorChangeRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +17,8 @@ public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
+    @Autowired
+    private InstructorChangeRequestRepository instructorChangeRequestRepository;
 
 
     public List<Candidate> getByInstructor(Instructor instructor) {
@@ -82,6 +83,46 @@ public class CandidateService {
 
         }
         return candidates;
+    }
+
+
+    public List<InstructorChangeRequestDTO> getAllChangeRequests(){
+        List<InstructorChangeRequest> requests = instructorChangeRequestRepository.findAll();
+        return requests.stream().map(InstructorChangeRequestDTO::new).toList();
+    }
+
+
+    public List<InstructorChangeRequestDTO> getRequestsByCandidate(Candidate candidate){
+        return instructorChangeRequestRepository.findByCandidate(candidate).stream().map(InstructorChangeRequestDTO::new).toList();
+    }
+
+
+    public void createChangeRequest(InstructorChangeRequestDTO dto,Candidate candidate, Instructor instructor) {
+        InstructorChangeRequest request = new InstructorChangeRequest();
+        request.setCandidate(candidate);
+        request.setStatus(CarRequestStatus.PENDING);
+        request.setInstructor(instructor);
+        request.setReason(dto.getReason());
+        instructorChangeRequestRepository.save(request);
+    }
+
+
+    public void acceptRequest(Long id){
+        InstructorChangeRequest instructorChangeRequest = instructorChangeRequestRepository.findById(id).orElse(null);
+        if(instructorChangeRequest != null){
+            throw new IllegalArgumentException("Request doesnt exist");
+        }
+        instructorChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
+        instructorChangeRequestRepository.save(instructorChangeRequest);
+    }
+
+    public void declineRequest(Long id){
+        InstructorChangeRequest instructorChangeRequest = instructorChangeRequestRepository.findById(id).orElse(null);
+        if(instructorChangeRequest != null){
+            throw new IllegalArgumentException("Request doesnt exist");
+        }
+        instructorChangeRequest.setStatus(CarRequestStatus.DECLINED);
+        instructorChangeRequestRepository.save(instructorChangeRequest);
     }
 
 

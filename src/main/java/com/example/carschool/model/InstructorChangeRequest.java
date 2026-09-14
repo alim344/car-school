@@ -16,6 +16,7 @@ public class InstructorChangeRequest {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private CarRequestStatus status;
 
     @ManyToOne

@@ -98,6 +98,35 @@ export default function CandidateOwnProfile() {
 
  const [selectedExam, setSelectedExam] = useState(null);
 
+ const [instructor, setInstructor] = useState(null);
+    const [instructorLoading, setInstructorLoading] = useState(true);
+    const [instructorError, setInstructorError] = useState(null);
+
+    useEffect(() => {
+    let cancelled = false;
+    async function fetchInstructor() {
+        setInstructorLoading(true);
+        setInstructorError(null);
+        try {
+        const res = await axios.get(
+            "http://localhost:8080/candidate/get-inst-name",
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (!cancelled) setInstructor(res.data || null);
+        } catch (err) {
+        if (!cancelled) {
+            setInstructorError(
+            err.response?.data?.message || err.message || "Failed to load instructor."
+            );
+        }
+        } finally {
+        if (!cancelled) setInstructorLoading(false);
+        }
+    }
+    fetchInstructor();
+    return () => { cancelled = true; };
+    }, [token]);
+
 
   useEffect(() => {
    
@@ -335,6 +364,41 @@ export default function CandidateOwnProfile() {
       <hr className="candidate-own-profile__divider" />
 
       
+        <section className="candidate-own-profile__section">
+        <header className="candidate-own-profile__section-header">
+            <h2>Your instructor</h2>
+        </header>
+
+        {instructorLoading ? (
+            <div className="candidate-own-profile__instructor-card candidate-own-profile__instructor-card--loading">
+            Loading instructor…
+            </div>
+        ) : instructorError ? (
+            <div className="candidate-own-profile__instructor-card candidate-own-profile__instructor-card--error">
+            {instructorError}
+            </div>
+        ) : !instructor ? (
+            <div className="candidate-own-profile__instructor-card candidate-own-profile__instructor-card--empty">
+            <span className="candidate-own-profile__instructor-empty-icon">👤</span>
+            <p>No instructor assigned yet.</p>
+            </div>
+        ) : (
+            <div className="candidate-own-profile__instructor-card">
+            <div className="candidate-own-profile__instructor-body">
+                <h3 className="candidate-own-profile__instructor-name">
+                {instructor.name || "Unnamed instructor"}
+                </h3>
+                <p className="candidate-own-profile__instructor-email">
+                {instructor.email || "—"}
+                </p>
+            </div>
+
+            
+            </div>
+        )}
+        </section>
+
+      <hr className="candidate-own-profile__divider" />
 
 
       {examList.length > 0 && (
