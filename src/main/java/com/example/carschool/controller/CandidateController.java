@@ -98,7 +98,7 @@ public class CandidateController {
 
 
     @GetMapping("/change-get-candidate")
-    public ResponseEntity<List<InstructorChangeRequestDTO>> getByCandidate(HttpServletRequest request) {
+    public ResponseEntity<InstructorChangeRequestDTO> getByCandidate(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String email = tokenUtils.getEmailFromToken(token);
         Candidate candidate = candidateService.getByEmail(email);

@@ -10,5 +10,7 @@ public interface InstructorChangeRequestRepository extends JpaRepository<Instruc
 
     List<InstructorChangeRequest> findByCandidate(Candidate candidate);
 
+    InstructorChangeRequest findTopByCandidateOrderByDateDesc(Candidate candidate);
+
 
 }

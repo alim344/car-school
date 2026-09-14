@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter @Setter
 @NoArgsConstructor
@@ -29,5 +31,8 @@ public class InstructorChangeRequest {
 
     @Column(nullable = false)
     private String reason;
+
+    @Column
+    private LocalDate date;
 
 }

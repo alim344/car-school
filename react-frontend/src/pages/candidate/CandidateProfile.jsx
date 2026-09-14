@@ -3,6 +3,7 @@ import axios from "axios";
 import "../../style/CandidateProfile.css";
 import GradeLineChart from "../../components/GradeLineChart";
 import ExamDetailsModal from "../../components/ExamDetailsModal";
+import RequestInstructorModal from "../../components/RequestInstructorModal";
 
 const EXAM_STATUS_LABELS = {
   SCHEDULED: "Scheduled",
@@ -99,8 +100,35 @@ export default function CandidateOwnProfile() {
  const [selectedExam, setSelectedExam] = useState(null);
 
  const [instructor, setInstructor] = useState(null);
-    const [instructorLoading, setInstructorLoading] = useState(true);
-    const [instructorError, setInstructorError] = useState(null);
+  const [instructorLoading, setInstructorLoading] = useState(true);
+ const [instructorError, setInstructorError] = useState(null);
+
+ const [requestModalOpen, setRequestModalOpen] = useState(false);
+const [latestRequest, setLatestRequest] = useState(null);
+const [requestsLoading, setRequestsLoading] = useState(true);
+
+
+
+
+useEffect(() => {
+  let cancelled = false;
+  async function fetchRequest() {
+    setRequestsLoading(true);
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/candidate/change-get-candidate",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (!cancelled) setLatestRequest(res.data || null);
+    } catch  {
+      if (!cancelled) setLatestRequest(null);
+    } finally {
+      if (!cancelled) setRequestsLoading(false);
+    }
+  }
+  fetchRequest();
+  return () => { cancelled = true; };
+}, [token]);
 
     useEffect(() => {
     let cancelled = false;
@@ -172,6 +200,8 @@ export default function CandidateOwnProfile() {
     [profile]
   );
 
+
+
   const nextClass = useMemo(() => getNextClass(classes), [classes]);
 
   const isPractical = profile?.trainingStatus === "PRACTICAL";
@@ -185,7 +215,29 @@ export default function CandidateOwnProfile() {
         )
       )
     : 0;
+async function handleRequestInstructor({ reason }) {
+  await axios.post(
+    "http://localhost:8080/candidate/create-request",
+    { reason },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  setRequestModalOpen(false);
 
+  const res = await axios.get(
+    "http://localhost:8080/change-get-candidate",
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  setLatestRequest(res.data || null);
+}
+
+const canRequestNewInstructor =
+  !!instructor && !(latestRequest?.status === "PENDING");
+     
   if (loading) {
     return (
       <div className="candidate-own-profile">
@@ -367,7 +419,36 @@ export default function CandidateOwnProfile() {
         <section className="candidate-own-profile__section">
         <header className="candidate-own-profile__section-header">
             <h2>Your instructor</h2>
+            {!requestsLoading && canRequestNewInstructor && (
+                <button
+                type="button"
+                className="candidate-own-profile__request-btn"
+                onClick={() => setRequestModalOpen(true)}
+                disabled={instructorLoading}
+                >
+                Request new instructor
+                </button>
+            )}
+
+            {!requestsLoading && latestRequest && (
+                <div className="candidate-own-profile__request-status">
+                <span
+                    className={`candidate-own-profile__badge candidate-own-profile__badge--${latestRequest.status.toLowerCase()}`}
+                >
+                    {latestRequest.status}
+                </span>
+                <span className="candidate-own-profile__request-date">
+                    {formatDate(latestRequest.requestDate)}
+                </span>
+                </div>
+            )}
         </header>
+
+        {!requestsLoading && latestRequest?.reason && (
+            <p className="candidate-own-profile__request-reason">
+                "{latestRequest.reason}"
+            </p>
+            )}
 
         {instructorLoading ? (
             <div className="candidate-own-profile__instructor-card candidate-own-profile__instructor-card--loading">
@@ -469,6 +550,13 @@ export default function CandidateOwnProfile() {
         onClose={() => setSelectedExam(null)}
         onCancel={handleCancelExam}
         />
+
+        <RequestInstructorModal
+            isOpen={requestModalOpen}
+            onClose={() => setRequestModalOpen(false)}
+            onSubmit={handleRequestInstructor}
+            currentInstructor={instructor}
+            />
 
       
       

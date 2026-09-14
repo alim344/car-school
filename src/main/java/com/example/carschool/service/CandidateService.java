@@ -92,8 +92,8 @@ public class CandidateService {
     }
 
 
-    public List<InstructorChangeRequestDTO> getRequestsByCandidate(Candidate candidate){
-        return instructorChangeRequestRepository.findByCandidate(candidate).stream().map(InstructorChangeRequestDTO::new).toList();
+    public InstructorChangeRequestDTO getRequestsByCandidate(Candidate candidate){
+        return new InstructorChangeRequestDTO(instructorChangeRequestRepository.findTopByCandidateOrderByDateDesc(candidate));
     }
 
 

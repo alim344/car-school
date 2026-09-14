@@ -175,7 +175,7 @@ public class ScheduleController {
         var createdClass = scheduleService.createAClass(createClassDTO, instructor);
         classRequestService.deleteRequest(requestId);
         Candidate candidate = candidateService.getByEmail(createdClass.getCandidateEmail());
-        notificationService.createNotification(NotificationType.CLASS_REQUEST_ACCEPTED, createdClass.getId(),candidate.getId());
+        notificationService.createNotification(NotificationType.CLASS_REQUEST_ACCEPTED, createdClass.getId(),candidate.getId(),createClassDTO.getStartTime().toString());
         return ResponseEntity.ok(createdClass);
 
     }

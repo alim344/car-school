@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class InstructorChangeRequestDTO {
@@ -32,6 +34,8 @@ public class InstructorChangeRequestDTO {
 
 
     private String reason;
+    private LocalDate requestDate;
+    public InstructorChangeRequestDTO() {}
 
 
     public InstructorChangeRequestDTO(InstructorChangeRequest request) {
@@ -44,6 +48,7 @@ public class InstructorChangeRequestDTO {
         this.instructorId = request.getInstructor().getId();
         this.instructorName = request.getInstructor().getName() + " " + request.getInstructor().getLastname();
         this.instructorEmail = request.getInstructor().getEmail();
+        this.requestDate = request.getDate();
 
     }
 

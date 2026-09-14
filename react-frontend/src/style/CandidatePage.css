@@ -522,3 +522,267 @@
   color: #a78bfa;
   border-color: rgba(139, 92, 246, 0.25);
 }
+
+
+
+
+.candidate-own-profile__instructor-action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.candidate-own-profile__instructor-action-loading {
+  color: #64748b;
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+
+
+.candidate-own-profile__request-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(214, 251, 79, 0.25);
+  background: rgba(214, 251, 79, 0.08);
+  color: rgb(214, 251, 79);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.candidate-own-profile__request-btn:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgb(214, 251, 79),
+    rgba(214, 251, 79, 0.7)
+  );
+  color: #1f2937;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(214, 251, 79, 0.25);
+}
+
+.candidate-own-profile__request-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.candidate-own-profile__request-btn:focus-visible {
+  outline: 2px solid rgba(214, 251, 79, 0.55);
+  outline-offset: 2px;
+}
+
+.candidate-own-profile__request-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.candidate-own-profile__request-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.candidate-own-profile__request-date {
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+  font-weight: 600;
+}
+
+.candidate-own-profile__request-reason {
+  margin: 0 0 16px 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.18);
+  border-left: 4px solid #f59e0b;
+  font-size: 13px;
+  color: #cbd5e1;
+  font-style: italic;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+
+
+.candidate-own-profile__badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.candidate-own-profile__badge--pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.candidate-own-profile__badge--approved,
+.candidate-own-profile__badge--accepted {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.candidate-own-profile__badge--rejected,
+.candidate-own-profile__badge--failed {
+  background: rgba(220, 53, 69, 0.15);
+  color: #f87171;
+  border-color: rgba(220, 53, 69, 0.28);
+}
+
+.candidate-own-profile__badge--scheduled {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.28);
+}
+
+.candidate-own-profile__badge--completed,
+.candidate-own-profile__badge--ended {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.candidate-own-profile__badge--cancelled {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.candidate-own-profile__badge--started {
+  background: rgba(214, 251, 79, 0.12);
+  color: rgb(214, 251, 79);
+  border-color: rgba(214, 251, 79, 0.28);
+}
+
+.candidate-own-profile__badge--bad_end {
+  background: rgba(220, 53, 69, 0.15);
+  color: #f87171;
+  border-color: rgba(220, 53, 69, 0.28);
+}
+
+
+
+.candidate-own-profile__instructor-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid rgba(214, 251, 79, 0.6);
+  transition: all 0.25s ease;
+}
+
+.candidate-own-profile__instructor-card:hover {
+  border-color: rgba(214, 251, 79, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.candidate-own-profile__instructor-card--loading,
+.candidate-own-profile__instructor-card--error,
+.candidate-own-profile__instructor-card--empty {
+  justify-content: center;
+  font-size: 13px;
+  color: #94a3b8;
+  border-left-color: #64748b;
+  padding: 24px 18px;
+  flex-direction: column;
+  text-align: center;
+}
+
+.candidate-own-profile__instructor-card--error {
+  color: #f8d7da;
+  border-left-color: #dc3545;
+  background: rgba(248, 215, 218, 0.06);
+}
+
+.candidate-own-profile__instructor-card--empty p {
+  margin: 6px 0 0 0;
+}
+
+.candidate-own-profile__instructor-empty-icon {
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+.candidate-own-profile__instructor-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.candidate-own-profile__instructor-name {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.candidate-own-profile__instructor-email {
+  margin: 0;
+  font-size: 13px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.candidate-own-profile__exam-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  font-family: inherit;
+  color: inherit;
+  cursor: pointer;
+  width: 100%;
+  padding: 14px 16px;
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #17a2b8;
+  transition: all 0.25s ease;
+}
+
+.candidate-own-profile__exam-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(214, 251, 79, 0.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.candidate-own-profile__exam-card:focus-visible {
+  outline: 2px solid rgba(214, 251, 79, 0.55);
+  outline-offset: 2px;
+}
+
+.candidate-own-profile__exam-card--scheduled {
+  border-left-color: #3b82f6;
+}
+.candidate-own-profile__exam-card--completed {
+  border-left-color: #22c55e;
+}
+.candidate-own-profile__exam-card--failed {
+  border-left-color: #ef4444;
+}
+.candidate-own-profile__exam-card--cancelled {
+  border-left-color: #6b7280;
+}
