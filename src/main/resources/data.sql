@@ -511,17 +511,25 @@ ALTER TABLE vehicle ADD CONSTRAINT vehicle_status_check
 
 
 
-ALTER TABLE instructor_leave_request
-    DROP CONSTRAINT instructor_leave_request_status_check;
+ALTER TABLE candidate
+    DROP CONSTRAINT training_status;
 
 ALTER TABLE instructor_leave_request
     ADD CONSTRAINT instructor_leave_request_status_check
         CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'USED'));
 
 
+ALTER TABLE candidate
+    MODIFY COLUMN training_status ENUM(
+    'THEORY',
+    'WAITING_FOR_INSTRUCTOR',
+    'PRACTICAL',
+    'PASSED',
+    'PENDING',
+    'EXAM_SCHEDULED'
+    );
 
-
-
+ALTER TYPE trainingstatus ADD VALUE 'WAITING_FOR_INSTRUCTOR';
 
 UPDATE instructor SET annual_leave_allowance = 30 WHERE annual_leave_allowance IS NULL;
 

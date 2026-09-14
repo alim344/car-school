@@ -125,5 +125,9 @@ public class CandidateService {
         instructorChangeRequestRepository.save(instructorChangeRequest);
     }
 
+    public long countByInstructor(Instructor instructor){
+        return candidateRepository.countByInstructor(instructor);
+    }
+
 
 }

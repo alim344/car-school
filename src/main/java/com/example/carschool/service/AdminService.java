@@ -2,14 +2,16 @@ package com.example.carschool.service;
 
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.TimeDTO;
-import com.example.carschool.model.Admin;
-import com.example.carschool.model.ExamStatus;
+import com.example.carschool.dto.UsersDTO;
+import com.example.carschool.model.*;
 import com.example.carschool.repo.AdminRepository;
+import com.example.carschool.repo.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -17,6 +19,10 @@ public class AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private CandidateService candidateService;
+    @Autowired
+    private InstructorRepository instructorRepository;
 
 
     public Admin findByEmail(String email){
@@ -35,6 +41,38 @@ public class AdminService {
         }
         return dtos;
     }
+
+
+
+
+
+    //assign candidate to instructor
+
+
+    public List<UsersDTO> getCandidatesForAssignment(){
+        List<Candidate> candidates = candidateService.getCandidatesByStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
+        return candidates.stream().map(UsersDTO::new).toList();
+    }
+
+
+    public List<UsersDTO> getAvailableInstructors(){
+
+        List<Instructor> instructors = instructorRepository.findAll();
+        List<UsersDTO> dtos = new ArrayList<>();
+        for(Instructor i : instructors){
+            int currentCount = (int) candidateService.countByInstructor(i);
+            int free = i.getMaxCapacity() - currentCount;
+            if(free > 0){
+                dtos.add(new UsersDTO(i,free));
+            }
+
+        }
+        dtos.sort(Comparator.comparingInt(UsersDTO::getAvailableSpots).reversed());
+        return dtos;
+
+    }
+
+
 
 
 

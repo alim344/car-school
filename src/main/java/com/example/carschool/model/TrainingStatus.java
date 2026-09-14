@@ -1,5 +1,5 @@
 package com.example.carschool.model;
 
 public enum TrainingStatus {
-    THEORY, PRACTICAL, PASSED, PENDING, EXAM_SCHEDULED
+    THEORY, WAITING_FOR_INSTRUCTOR,PRACTICAL, PASSED, PENDING, EXAM_SCHEDULED
 }
