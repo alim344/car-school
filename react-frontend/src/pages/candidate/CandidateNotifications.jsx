@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../style/CandidateNotifications.css";
+import { useNavigate } from "react-router-dom";
 
 
 const TYPE_LABELS = {
@@ -14,6 +15,7 @@ const TYPE_LABELS = {
   EXAM_CANCELLED: "Exam cancelled",
   EXAM_PASS: "Exam passed",
   EXAM_FAIL: "Exam failed",
+  TIME_PREF_REMINDER: "Time preference reminder",
 };
 
 const TYPE_ICONS = {
@@ -28,6 +30,7 @@ const TYPE_ICONS = {
   EXAM_CANCELLED: "🚫",
   EXAM_PASS: "🎉",
   EXAM_FAIL: "💔",
+  TIME_PREF_REMINDER: "🕒",
 };
 
 const TYPE_CATEGORY = {
@@ -42,7 +45,43 @@ const TYPE_CATEGORY = {
   EXAM_CANCELLED: "exam",
   EXAM_PASS: "exam",
   EXAM_FAIL: "exam",
+  TIME_PREF_REMINDER: "class",
 };
+
+
+function getNotificationNavigation(notification) {
+  const { type, objectId } = notification;
+
+  switch (type) {
+    case "CLASS_SCHEDULED":
+    case "CLASS_CANCELLED":
+    case "CLASS_REQUEST_ACCEPTED":
+    case "CLASS_REQUEST_DENIED":
+      return { path: "/candidate", label: "Go to schedule" };
+
+    case "CLASS_FINISHED":
+      return objectId != null
+        ? { path: `/candidate/classes/${objectId}`, label: "View class" }
+        : null;
+
+    case "LAST_CLASS_REMINDER":
+    case "INSTRUCTOR_ON_LEAVE":
+      return null;
+
+    case "EXAM_SCHEDULED":
+    case "EXAM_CANCELLED":
+    case "EXAM_PASS":
+    case "EXAM_FAIL":
+      return { path: "/candidate/profile", label: "Go to profile" };
+
+    case "TIME_PREF_REMINDER":
+      return { path: "/candidate/preference", label: "Go to preferences" };
+
+    default:
+      return null;
+  }
+}
+
 
 const CATEGORY_FILTERS = [
   { value: "ALL", label: "All" },
@@ -52,6 +91,8 @@ const CATEGORY_FILTERS = [
 
 export default function CandidateNotifications() {
   const token = localStorage.getItem("userToken");
+
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -121,6 +162,7 @@ export default function CandidateNotifications() {
     });
     return c;
   }, [notifications]);
+
 
   return (
     <div className="candidate-notifications">
@@ -202,7 +244,7 @@ export default function CandidateNotifications() {
                 key={notif.id}
                 type="button"
                 className={`candidate-notifications__card candidate-notifications__card--${category}`}
-                onClick={() => setSelected(notif)}
+                 onClick={() => setSelected(notif)}
               >
                 <div
                   className={`candidate-notifications__icon candidate-notifications__icon--${category}`}
@@ -233,15 +275,20 @@ export default function CandidateNotifications() {
         <NotificationModal
           notification={selected}
           onClose={() => setSelected(null)}
+          onNavigate={(path) => {
+            setSelected(null);
+            navigate(path);
+          }}
         />
       )}
     </div>
   );
 }
 
-function NotificationModal({ notification, onClose }) {
+function NotificationModal({ notification, onClose,onNavigate }) {
   const category = TYPE_CATEGORY[notification.type] || "class";
   const icon = TYPE_ICONS[notification.type] || "🔔";
+  const nav = getNotificationNavigation(notification);
 
   function handleBackdropClick(e) {
     if (e.target === e.currentTarget) {
@@ -296,14 +343,7 @@ function NotificationModal({ notification, onClose }) {
             <p>{notification.body || "—"}</p>
           </div>
 
-          {notification.objectId != null && (
-            <div className="candidate-notifications__field">
-              <span className="candidate-notifications__field-label">
-                Related item
-              </span>
-              <span>#{notification.objectId}</span>
-            </div>
-          )}
+          
         </div>
 
         <div className="candidate-notifications__modal-actions">
@@ -314,6 +354,15 @@ function NotificationModal({ notification, onClose }) {
           >
             Close
           </button>
+          {nav && (
+            <button
+              type="button"
+              className="candidate-notifications__goto-btn"
+              onClick={() => onNavigate(nav.path)}
+            >
+              {nav.label} →
+            </button>
+          )}
         </div>
       </div>
     </div>
