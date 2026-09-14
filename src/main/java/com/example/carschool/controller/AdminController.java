@@ -1,13 +1,12 @@
 package com.example.carschool.controller;
 
 
+import com.example.carschool.dto.InstructorAssignmentDTO;
 import com.example.carschool.dto.UsersDTO;
 import com.example.carschool.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +27,16 @@ public class AdminController {
     public ResponseEntity<List<UsersDTO>> getAvailableInstructors(){
         return ResponseEntity.ok(adminService.getAvailableInstructors());
     }
+
+    @PatchMapping("/assign-inst")
+    public ResponseEntity<?> assignInstructor(@RequestBody InstructorAssignmentDTO dto){
+        try {
+            adminService.assignInstructor(dto);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
 }

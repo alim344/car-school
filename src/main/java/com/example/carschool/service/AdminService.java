@@ -1,5 +1,6 @@
 package com.example.carschool.service;
 
+import com.example.carschool.dto.InstructorAssignmentDTO;
 import com.example.carschool.dto.InstructorDTO;
 import com.example.carschool.dto.TimeDTO;
 import com.example.carschool.dto.UsersDTO;
@@ -8,6 +9,7 @@ import com.example.carschool.repo.AdminRepository;
 import com.example.carschool.repo.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -72,6 +74,18 @@ public class AdminService {
 
     }
 
+
+
+    @Transactional
+    public void assignInstructor(InstructorAssignmentDTO dto){
+
+        Instructor instructor = instructorRepository.findByEmail(dto.getInstructor_email());
+        if(instructor == null){
+            throw new IllegalArgumentException("instructor not found");
+        }
+        candidateService.assignInstructor(dto.getCandidate_emails(), instructor);
+
+    }
 
 
 

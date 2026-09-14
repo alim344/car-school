@@ -129,5 +129,18 @@ public class CandidateService {
         return candidateRepository.countByInstructor(instructor);
     }
 
+    public void assignInstructor(List<String> candidateEmails, Instructor instructor){
+
+
+        for(String email : candidateEmails){
+            Candidate candidate = getByEmail(email);
+            if(candidate.getCategory() != instructor.getCategory()){
+                throw new IllegalArgumentException("Categories dont match");
+            }
+            candidate.setInstructor(instructor);
+            candidateRepository.save(candidate);
+        }
+    }
+
 
 }
