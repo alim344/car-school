@@ -8,6 +8,7 @@ import com.example.carschool.repo.CandidateRepository;
 import com.example.carschool.repo.InstructorChangeRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,18 +108,21 @@ public class CandidateService {
     }
 
 
+    @Transactional
     public void acceptRequest(Long id){
         InstructorChangeRequest instructorChangeRequest = instructorChangeRequestRepository.findById(id).orElse(null);
-        if(instructorChangeRequest != null){
+        if(instructorChangeRequest == null){
             throw new IllegalArgumentException("Request doesnt exist");
         }
         instructorChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
+        Candidate candidate = instructorChangeRequest.getCandidate();
+        candidate.setStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
         instructorChangeRequestRepository.save(instructorChangeRequest);
     }
 
     public void declineRequest(Long id){
         InstructorChangeRequest instructorChangeRequest = instructorChangeRequestRepository.findById(id).orElse(null);
-        if(instructorChangeRequest != null){
+        if(instructorChangeRequest == null){
             throw new IllegalArgumentException("Request doesnt exist");
         }
         instructorChangeRequest.setStatus(CarRequestStatus.DECLINED);

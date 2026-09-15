@@ -143,6 +143,13 @@ export default function AssignAllReview() {
 
     return (
         <div className="assign-review">
+             <button
+                type="button"
+                className="assign-review__back-btn"
+                onClick={() => navigate("/admin/assign")}
+            >
+                ← Back to assignment
+            </button>
             <div className="assign-review__header">
                 <div className="assign-review__header-text">
                     <h1>Auto-Assignment Proposal</h1>

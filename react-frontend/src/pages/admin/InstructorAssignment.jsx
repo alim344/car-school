@@ -266,7 +266,7 @@ export default function InstructorAssignment() {
 
     const handleOpenCandidateRequests = () => {
    
-        alert("Candidate requests page coming soon.");
+        navigate("/admin/inst-req");
     };
 
     const handleAssignAll = () => {
