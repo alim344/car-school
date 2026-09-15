@@ -30,6 +30,7 @@ import InstructorFuelRecord from './pages/instructor/InstructorFuelRecord';
 import CandidateClasses from './pages/candidate/CandidateClasses';
 import CandidateOwnProfile from './pages/candidate/CandidateProfile';
 import InstructorAssignment from './pages/admin/InstructorAssignment';
+import AssignAllReview from './pages/admin/AssignAllReview';
 
 
 export default function App() {
@@ -182,6 +183,14 @@ export default function App() {
                 <InstructorAssignment />
             </AdminLayout>
         } />
+
+        <Route path="/admin/assign-all" element={
+            <AdminLayout>
+                <AssignAllReview />
+            </AdminLayout>
+        } />
+
+
 
 
       </Routes>

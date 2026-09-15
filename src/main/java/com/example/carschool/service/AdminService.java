@@ -122,8 +122,8 @@ public class AdminService {
             InstructorSlotDTO top = heap.poll();
             Instructor instructor = top.getInstructor();
 
-            c.setInstructor(instructor);
-            candidateService.save(c);
+            /*c.setInstructor(instructor);
+            candidateService.save(c);*/
 
             results.add(new AssignmentResultDTO(c.getEmail(), c.getName() + " " + c.getLastname(),instructor.getEmail(),instructor.getName() + " " + instructor.getLastname()));
 
@@ -141,6 +141,19 @@ public class AdminService {
 
     }
 
+
+    @Transactional
+    public void saveAllAssigned(List<AssignmentResultDTO> dtos){
+
+        for(AssignmentResultDTO dto : dtos){
+            Candidate candidate = candidateService.getByEmail(dto.getCandidateEmail());
+            Instructor instructor = instructorRepository.findByEmail(dto.getInstructorEmail());
+            candidate.setStatus(TrainingStatus.PRACTICAL);
+            candidate.setInstructor(instructor);
+            candidateService.save(candidate);
+        }
+
+    }
 
 
 

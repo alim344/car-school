@@ -45,7 +45,13 @@ public class AdminController {
     @PatchMapping("/assign-all")
     public ResponseEntity<List<AssignmentResultDTO>> assignAll(){
         return ResponseEntity.ok(adminService.assignAll());
-
     }
+
+    @PatchMapping("/save-assigned")
+    public ResponseEntity<?> saveAllAssigned(@RequestBody List<AssignmentResultDTO> dtos){
+        adminService.saveAllAssigned(dtos);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

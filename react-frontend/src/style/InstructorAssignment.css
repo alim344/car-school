@@ -4,6 +4,24 @@
     margin: 0 auto;
 }
 
+.inst-assign__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.inst-assign__header-text h1 {
+    margin: 0 0 4px;
+}
+
+.inst-assign__header-actions {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
 .inst-assign__header h1 {
     margin: 0 0 4px;
     color: rgb(214, 251, 79);

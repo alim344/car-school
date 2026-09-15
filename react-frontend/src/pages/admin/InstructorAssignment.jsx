@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../style/InstructorAssignment.css";
+import { useNavigate } from "react-router-dom";
 
 export default function InstructorAssignment() {
     const token = localStorage.getItem("userToken");
+    const navigate = useNavigate();
 
     const [candidates, setCandidates] = useState([]);
     const [instructors, setInstructors] = useState([]);
@@ -262,14 +264,51 @@ export default function InstructorAssignment() {
         );
     }
 
+    const handleOpenCandidateRequests = () => {
+   
+        alert("Candidate requests page coming soon.");
+    };
+
+    const handleAssignAll = () => {
+          navigate("/admin/assign-all");
+    };
+
+
     return (
         <div className="inst-assign">
             <div className="inst-assign__header">
-                <h1>Instructor Assignment</h1>
-                <p className="inst-assign__subtitle">
-                    Pick one instructor, then choose the candidates to assign.
-                    
-                </p>
+                <div className="inst-assign__header-text">
+                    <h1>Instructor Assignment</h1>
+                    <p className="inst-assign__subtitle">
+                        Pick one instructor, then choose the candidates to assign.
+                        {selectedInstructor && (
+                            <>
+                                {" "}
+                                Selected: <strong>{selectedInstructor.name}</strong>{" "}
+                                ({selectedCandidateEmails.length}/{maxSelectable}) · Category{" "}
+                                <strong>{selectedInstructor.category}</strong>
+                            </>
+                        )}
+                    </p>
+                </div>
+
+                <div className="inst-assign__header-actions">
+                    <button
+                        type="button"
+                        className="inst-assign__btn inst-assign__btn--ghost"
+                        onClick={handleOpenCandidateRequests}
+                    >
+                        Candidate Requests
+                    </button>
+                    <button
+                        type="button"
+                        className="inst-assign__btn inst-assign__btn--primary"
+                        onClick={handleAssignAll}
+
+                    >
+                        Assign All
+                    </button>
+                </div>
             </div>
 
             <div className="inst-assign__filter-row inst-assign__filter-row--page">
