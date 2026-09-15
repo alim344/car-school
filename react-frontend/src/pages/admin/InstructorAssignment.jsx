@@ -17,6 +17,26 @@ export default function InstructorAssignment() {
     const [searchCandidate, setSearchCandidate] = useState("");
     const [searchInstructor, setSearchInstructor] = useState("");
 
+    const [categoryFilter, setCategoryFilter] = useState("ALL");
+
+
+
+
+    const CATEGORY_ORDER = [
+        "AM", "A1", "A2", "A",
+        "B1", "B", "BE",
+        "C1", "C1E", "C", "CE",
+        "D1", "D1E", "D", "DE",
+        "F", "M",
+    ];
+
+    const allCategories = useMemo(() => {
+        const set = new Set();
+        candidates.forEach(c => c.category && set.add(c.category));
+        instructors.forEach(i => i.category && set.add(i.category));
+        return CATEGORY_ORDER.filter(cat => set.has(cat));
+    }, [candidates, instructors]);
+
     useEffect(() => {
         let cancelled = false;
 
@@ -65,39 +85,70 @@ export default function InstructorAssignment() {
 
     const filteredCandidates = useMemo(() => {
         const t = searchCandidate.trim().toLowerCase();
-        if (!t) return candidates;
-        return candidates.filter(c =>
-            (c.name || "").toLowerCase().includes(t) ||
-            (c.email || "").toLowerCase().includes(t)
-        );
-    }, [candidates, searchCandidate]);
+        return candidates.filter(c => {
+            if (categoryFilter !== "ALL" && c.category !== categoryFilter) {
+                return false;
+            }
+            if (
+                t &&
+                !(c.name || "").toLowerCase().includes(t) &&
+                !(c.email || "").toLowerCase().includes(t)
+            ) {
+                return false;
+            }
+            return true;
+        });
+    }, [candidates, searchCandidate, categoryFilter]);
 
     const filteredInstructors = useMemo(() => {
         const t = searchInstructor.trim().toLowerCase();
-        if (!t) return instructors;
-        return instructors.filter(i =>
-            (i.name || "").toLowerCase().includes(t) ||
-            (i.email || "").toLowerCase().includes(t)
-        );
-    }, [instructors, searchInstructor]);
+        return instructors.filter(i => {
+            if (categoryFilter !== "ALL" && i.category !== categoryFilter) {
+                return false;
+            }
+            if (
+                t &&
+                !(i.name || "").toLowerCase().includes(t) &&
+                !(i.email || "").toLowerCase().includes(t)
+            ) {
+                return false;
+            }
+            return true;
+        });
+    }, [instructors, searchInstructor, categoryFilter]);
 
     const handleSelectInstructor = (instructor) => {
         if (selectedInstructorId === instructor.id) {
-  
             setSelectedInstructorId(null);
             setSelectedCandidateEmails([]);
+            setCategoryFilter("ALL");
             return;
         }
+
         setSelectedInstructorId(instructor.id);
-   
+        setCategoryFilter(instructor.category ?? "ALL");
+
+        const matching = candidates.filter(c => c.category === instructor.category);
+        const allowedEmails = new Set(matching.map(c => c.email));
+
         setSelectedCandidateEmails(prev =>
-            prev.slice(0, instructor.availableSpots ?? 0)
+            prev
+                .filter(email => allowedEmails.has(email))
+                .slice(0, instructor.availableSpots ?? 0)
         );
     };
 
     const handleToggleCandidate = (candidate) => {
         if (!selectedInstructor) {
             alert("Pick an instructor first.");
+            return;
+        }
+
+         if (candidate.category !== selectedInstructor.category) {
+            alert(
+                `This candidate is in category ${candidate.category}, but ` +
+                `${selectedInstructor.name} teaches category ${selectedInstructor.category}.`
+            );
             return;
         }
 
@@ -195,6 +246,7 @@ export default function InstructorAssignment() {
     const handleCancel = () => {
         setSelectedInstructorId(null);
         setSelectedCandidateEmails([]);
+        setCategoryFilter("ALL");
     };
 
   
@@ -220,6 +272,31 @@ export default function InstructorAssignment() {
                 </p>
             </div>
 
+            <div className="inst-assign__filter-row inst-assign__filter-row--page">
+                <span className="inst-assign__filter-label">Category:</span>
+                <button
+                    type="button"
+                    className={`inst-assign__filter-pill ${
+                        categoryFilter === "ALL" ? "inst-assign__filter-pill--active" : ""
+                    }`}
+                    onClick={() => setCategoryFilter("ALL")}
+                >
+                    All
+                </button>
+                {allCategories.map(cat => (
+                    <button
+                        key={cat}
+                        type="button"
+                        className={`inst-assign__filter-pill ${
+                            categoryFilter === cat ? "inst-assign__filter-pill--active" : ""
+                        }`}
+                        onClick={() => setCategoryFilter(cat)}
+                    >
+                        {cat}
+                    </button>
+                ))}
+            </div>
+
             <div className="inst-assign__columns">
                 <section className="inst-assign__panel">
                     <div className="inst-assign__panel-header">
@@ -229,13 +306,17 @@ export default function InstructorAssignment() {
                         </span>
                     </div>
 
-                    <input
-                        type="text"
-                        placeholder="Search instructors…"
-                        value={searchInstructor}
-                        onChange={e => setSearchInstructor(e.target.value)}
-                        className="inst-assign__search"
-                    />
+                    
+
+                <input
+                    type="text"
+                    placeholder="Search instructors…"
+                    value={searchInstructor}
+                    onChange={e => setSearchInstructor(e.target.value)}
+                    className="inst-assign__search"
+                />
+
+                    
 
                     <div className="inst-assign__list">
                         {filteredInstructors.length === 0 && (
