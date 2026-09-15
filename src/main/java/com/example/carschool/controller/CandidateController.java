@@ -105,6 +105,17 @@ public class CandidateController {
         return ResponseEntity.ok(candidateService.getRequestsByCandidate(candidate));
     }
 
+    @PatchMapping("/freeCandidates")
+    public ResponseEntity<?> freeCandidates(List<String> candidate_emails) {
+        candidateService.freeCandidates(candidate_emails);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<CandidateDTO>> getALlCandidates(){
+        return ResponseEntity.ok(candidateService.getALl());
+    }
 
 
 }

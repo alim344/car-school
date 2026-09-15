@@ -117,6 +117,7 @@ public class CandidateService {
         instructorChangeRequest.setStatus(CarRequestStatus.ACCEPTED);
         Candidate candidate = instructorChangeRequest.getCandidate();
         candidate.setStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
+        candidateRepository.save(candidate);
         instructorChangeRequestRepository.save(instructorChangeRequest);
     }
 
@@ -145,6 +146,19 @@ public class CandidateService {
             candidate.setStatus(TrainingStatus.PRACTICAL);
             candidateRepository.save(candidate);
         }
+    }
+
+    public void freeCandidates(List<String> emails){
+
+        for(String email : emails){
+            Candidate candidate = getByEmail(email);
+            candidate.setStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
+            candidateRepository.save(candidate);
+        }
+    }
+
+    public List<CandidateDTO> getALl(){
+        return candidateRepository.findAll().stream().map(CandidateDTO::new).toList();
     }
 
 
