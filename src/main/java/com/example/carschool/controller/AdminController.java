@@ -1,6 +1,7 @@
 package com.example.carschool.controller;
 
 
+import com.example.carschool.dto.AssignmentResultDTO;
 import com.example.carschool.dto.InstructorAssignmentDTO;
 import com.example.carschool.dto.UsersDTO;
 import com.example.carschool.service.AdminService;
@@ -38,5 +39,13 @@ public class AdminController {
         }
     }
 
+
+
+
+    @PatchMapping("/assign-all")
+    public ResponseEntity<List<AssignmentResultDTO>> assignAll(){
+        return ResponseEntity.ok(adminService.assignAll());
+
+    }
 
 }

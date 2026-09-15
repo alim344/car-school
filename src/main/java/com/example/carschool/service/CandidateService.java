@@ -126,7 +126,7 @@ public class CandidateService {
     }
 
     public long countByInstructor(Instructor instructor){
-        return candidateRepository.countByInstructor(instructor);
+        return candidateRepository.countByInstructorAndStatus(instructor,TrainingStatus.PRACTICAL);
     }
 
     public void assignInstructor(List<String> candidateEmails, Instructor instructor){

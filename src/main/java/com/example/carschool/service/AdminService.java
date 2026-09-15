@@ -1,9 +1,6 @@
 package com.example.carschool.service;
 
-import com.example.carschool.dto.InstructorAssignmentDTO;
-import com.example.carschool.dto.InstructorDTO;
-import com.example.carschool.dto.TimeDTO;
-import com.example.carschool.dto.UsersDTO;
+import com.example.carschool.dto.*;
 import com.example.carschool.model.*;
 import com.example.carschool.repo.AdminRepository;
 import com.example.carschool.repo.InstructorRepository;
@@ -12,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AdminService {
@@ -76,7 +71,7 @@ public class AdminService {
 
 
 
-    @Transactional
+
     public void assignInstructor(InstructorAssignmentDTO dto){
 
         Instructor instructor = instructorRepository.findByEmail(dto.getInstructor_email());
@@ -84,6 +79,65 @@ public class AdminService {
             throw new IllegalArgumentException("instructor not found");
         }
         candidateService.assignInstructor(dto.getCandidate_emails(), instructor);
+
+    }
+
+
+
+    @Transactional
+    public List<AssignmentResultDTO> assignAll(){
+
+        List<Candidate> candidates = candidateService.getCandidatesByStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
+        List<Instructor> instructors = instructorRepository.findAll();
+
+
+        candidates.sort(Comparator.comparing(Candidate::getTheoryPassedDate));
+
+        Collections.shuffle(instructors);
+
+        Map<Category, PriorityQueue<InstructorSlotDTO>> heapsByCategory = new HashMap<>();
+
+        for(Instructor i : instructors){
+             int currentCount = (int) candidateService.countByInstructor(i);
+             int free = i.getMaxCapacity() - currentCount;
+             if(free <= 0){
+                 continue;
+             }
+
+             heapsByCategory.computeIfAbsent(i.getCategory(),c-> new PriorityQueue<>(Comparator.comparingInt(InstructorSlotDTO::getFreeSlots).reversed()))
+                     .add(new InstructorSlotDTO(i,free));
+
+        }
+
+
+        List<AssignmentResultDTO> results = new ArrayList<>();
+
+        for(Candidate c : candidates){
+            PriorityQueue<InstructorSlotDTO> heap = heapsByCategory.get(c.getCategory());
+
+            if(heap == null || heap.isEmpty()){
+                continue;
+            }
+
+            InstructorSlotDTO top = heap.poll();
+            Instructor instructor = top.getInstructor();
+
+            c.setInstructor(instructor);
+            candidateService.save(c);
+
+            results.add(new AssignmentResultDTO(c.getEmail(), c.getName() + " " + c.getLastname(),instructor.getEmail(),instructor.getName() + " " + instructor.getLastname()));
+
+            top.decrement();
+
+            if(top.getFreeSlots() > 0){
+                heap.add(top);
+            }
+
+        }
+
+        return results;
+
+
 
     }
 
