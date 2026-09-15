@@ -32,6 +32,7 @@ import CandidateOwnProfile from './pages/candidate/CandidateProfile';
 import InstructorAssignment from './pages/admin/InstructorAssignment';
 import AssignAllReview from './pages/admin/AssignAllReview';
 import InstructorChangeRequests from './pages/admin/InstructorChangeRequests';
+import AllCandidates from './pages/admin/AllCandidates';
 
 
 export default function App() {
@@ -194,6 +195,12 @@ export default function App() {
         <Route path="/admin/inst-req" element={
             <AdminLayout>
                 <InstructorChangeRequests />
+            </AdminLayout>
+        } />
+
+        <Route path="/admin/candidates" element={
+            <AdminLayout>
+                <AllCandidates />
             </AdminLayout>
         } />
 

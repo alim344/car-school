@@ -17,6 +17,9 @@ public class CandidateDTO {
     private Integer numberOfClassesLeft;
     private TrainingStatus trainingStatus;
 
+    private String instructor_name;
+    private String instructor_email;
+
     public CandidateDTO() {
 
     }
@@ -29,6 +32,10 @@ public class CandidateDTO {
         this.email = candidate.getEmail();
         this.trainingStatus = candidate.getStatus();
         this.numberOfClassesLeft = candidate.getTotalRequiredClasses() - candidate.getNumberOfCompletedClasses();
+        if(candidate.getInstructor() != null) {
+            this.instructor_name = candidate.getInstructor().getName() + " " + candidate.getInstructor().getLastname();
+            this.instructor_email = candidate.getInstructor().getEmail();
+        }
     }
 
 
