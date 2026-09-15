@@ -138,6 +138,7 @@ public class CandidateService {
                 throw new IllegalArgumentException("Categories dont match");
             }
             candidate.setInstructor(instructor);
+            candidate.setStatus(TrainingStatus.PRACTICAL);
             candidateRepository.save(candidate);
         }
     }

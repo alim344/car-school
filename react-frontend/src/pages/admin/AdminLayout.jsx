@@ -1,12 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 import NavBar from '../../components/NavBar';
 import '../../style/CandidateLayout.css'
 
 export default function AdminLayout({ children }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const location = useLocation();
+
 
   const menuItems = [
     { id: 'schedule', label: 'Schedule',  path: '/admin' },
@@ -14,13 +15,22 @@ export default function AdminLayout({ children }) {
     { id: 'vehicles', label: 'Vehicles',  path: '/admin/vehicles' },
     {id: 'vehicle-request', label: 'Vehicle Requests', path: '/admin/vehicle-requests'},
     { id: 'instructor-leaves', label: 'Leave Requests',  path: '/admin/leaves' },
+    { id: 'instructor-assign', label: 'Assign Instructor',  path: '/admin/assign' },
     { id: 'profile', label: 'Profile',  path: '/candidate/profile' }
     
    
   ];
 
+  const activeTab = menuItems
+    .filter((item) =>
+      item.path === '/admin'
+        ? location.pathname === '/admin'
+        : location.pathname.startsWith(item.path)
+    )
+    .sort((a, b) => b.path.length - a.path.length)[0]?.id || 'scheduler';
+
   const handleTabClick = (tabId, path) => {
-    setActiveTab(tabId);
+   
     navigate(path);
   };
 

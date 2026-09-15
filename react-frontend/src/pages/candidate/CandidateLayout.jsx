@@ -21,11 +21,11 @@ export default function InstructorLayout({ children }) {
 
   const activeTab = menuItems
     .filter((item) =>
-      item.path === '/instructor'
-        ? location.pathname === '/instructor'
+      item.path === '/candidate'
+        ? location.pathname === '/candidate'
         : location.pathname.startsWith(item.path)
     )
-    .sort((a, b) => b.path.length - a.path.length)[0]?.id || 'dashboard';
+    .sort((a, b) => b.path.length - a.path.length)[0]?.id || 'schedule';
 
  
 

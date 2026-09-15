@@ -29,6 +29,7 @@ import FinishedPracticalClass from './components/FinishedPracticalClass';
 import InstructorFuelRecord from './pages/instructor/InstructorFuelRecord';
 import CandidateClasses from './pages/candidate/CandidateClasses';
 import CandidateOwnProfile from './pages/candidate/CandidateProfile';
+import InstructorAssignment from './pages/admin/InstructorAssignment';
 
 
 export default function App() {
@@ -175,6 +176,13 @@ export default function App() {
                 <AdminLeaveRequests />
             </AdminLayout>
         } />
+
+          <Route path="/admin/assign" element={
+            <AdminLayout>
+                <InstructorAssignment />
+            </AdminLayout>
+        } />
+
 
       </Routes>
   );

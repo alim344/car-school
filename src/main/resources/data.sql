@@ -505,7 +505,18 @@ ALTER TABLE vehicle ADD CONSTRAINT vehicle_status_check
 
 
 
+ALTER TABLE candidate DROP CONSTRAINT candidate_status_check;
 
+ALTER TABLE candidate ADD CONSTRAINT candidate_status_check
+    CHECK (status IN (
+                      'THEORY',
+                      'WAITING_FOR_INSTRUCTOR',
+                      'PRACTICAL',
+                      'EXAM_SCHEDULED',
+                      'PASSED',
+                      'PENDING'
+        -- add every value currently in your TrainingStatus enum
+        ));
 
 
 
