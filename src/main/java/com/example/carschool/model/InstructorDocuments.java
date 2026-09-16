@@ -26,5 +26,12 @@ public class InstructorDocuments {
     @JoinColumn(name = "instructor_id", nullable = false)
     private Instructor instructor;
 
+    public InstructorDocuments() {}
+    public InstructorDocuments(DocumentType documentType, LocalDate expiryDate, Instructor instructor) {
+        this.documentType = documentType;
+        this.expiryDate = expiryDate;
+        this.instructor = instructor;
+    }
+
 
 }

@@ -116,6 +116,16 @@ export default function InstructorCandidates() {
 
       {!loading && !error && candidates.length > 0 && (
         <div className="instructor-candidates__toolbar">
+
+            <div className="instructor-candidates__search">
+                <input
+                  type="text"
+                  placeholder="Search by name or email…"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                 />
+           </div>
+
           <div className="instructor-candidates__tabs">
             <button
               type="button"
@@ -148,14 +158,7 @@ export default function InstructorCandidates() {
             ))}
           </div>
 
-          <div className="instructor-candidates__search">
-            <input
-              type="text"
-              placeholder="Search by name or email…"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+         
         </div>
       )}
 

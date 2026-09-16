@@ -35,4 +35,17 @@ public class FuelRecord {
     @JoinColumn(name = "instructor_id", nullable = false)
     private Instructor instructor;
 
+    public FuelRecord() {
+    }
+
+    public FuelRecord(LocalDate date, Double liters,Double totalCost, Integer mileage, Vehicle vehicle, Instructor instructor ){
+        this.refuelDate = date;
+        this.liters = liters;
+        this.totalCost = totalCost;
+        this.mileageAtRefuel = mileage;
+        this.vehicle = vehicle;
+        this.instructor = instructor;
+
+    }
+
 }

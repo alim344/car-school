@@ -42,4 +42,8 @@ public class Candidate extends User{
     @Column
     private LocalDate theoryPassedDate;
 
+    public Candidate(){}
+
+
+
 }

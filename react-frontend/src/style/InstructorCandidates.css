@@ -1,3 +1,7 @@
+/* =========================
+   PAGE
+========================= */
+
 .instructor-candidates {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
   min-height: 100vh;
@@ -6,7 +10,20 @@
   color: #e2e8f0;
 }
 
+/* =========================
+   HEADER
+========================= */
 
+.instructor-candidates__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 20px 0;
+  border-bottom: 2px solid rgba(214, 251, 79, 0.15);
+}
 
 .instructor-candidates__header h1 {
   font-size: 32px;
@@ -23,19 +40,27 @@
   margin: 0;
 }
 
+/* =========================
+   TOOLBAR
+========================= */
+
 .instructor-candidates__toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
+  height: auto;
   background: linear-gradient(145deg, #1a2332, #243447);
-  padding: 14px 20px;
+  padding: 14px 18px;
   border-radius: 16px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   border: 1px solid rgba(214, 251, 79, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
+
+/* =========================
+   TABS
+========================= */
 
 .instructor-candidates__tabs {
   display: flex;
@@ -86,14 +111,19 @@
   background: rgba(31, 41, 55, 0.15);
 }
 
+/* =========================
+   SEARCH
+========================= */
+
 .instructor-candidates__search {
-  flex: 1 1 220px;
-  min-width: 180px;
-  max-width: 340px;
+  width: 100%;
+  max-width: 320px;
+  flex: 0 0 auto;
 }
 
 .instructor-candidates__search input {
   width: 100%;
+  box-sizing: border-box;
   padding: 10px 14px;
   border: 2px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
@@ -114,6 +144,10 @@
   box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.1);
   background: rgba(255, 255, 255, 0.06);
 }
+
+/* =========================
+   ERROR / EMPTY
+========================= */
 
 .instructor-candidates__error {
   background: rgba(248, 215, 218, 0.12);
@@ -145,6 +179,10 @@
   font-size: 16px;
 }
 
+/* =========================
+   GROUPS
+========================= */
+
 .instructor-candidates__groups {
   display: flex;
   flex-direction: column;
@@ -170,8 +208,6 @@
   gap: 12px;
 }
 
-
-
 .instructor-candidates__group-title h2 {
   margin: 0;
   font-size: 18px;
@@ -188,15 +224,17 @@
   border-bottom-color: rgba(245, 158, 11, 0.25);
 }
 
-
 .instructor-candidates__group--exam_scheduled .instructor-candidates__group-header {
   border-bottom-color: rgba(23, 162, 184, 0.25);
 }
 
-
 .instructor-candidates__group--passed .instructor-candidates__group-header {
   border-bottom-color: rgba(139, 92, 246, 0.25);
 }
+
+/* =========================
+   GRID / CARDS
+========================= */
 
 .instructor-candidates__grid {
   display: grid;
@@ -260,6 +298,10 @@
   transform: translateY(0);
 }
 
+/* =========================
+   AVATAR
+========================= */
+
 .instructor-candidates__avatar {
   flex-shrink: 0;
   width: 52px;
@@ -277,7 +319,6 @@
   border: 2px solid rgba(214, 251, 79, 0.25);
   position: relative;
 }
-
 
 .instructor-candidates__avatar-fallback {
   width: 100%;
@@ -327,6 +368,10 @@
   background: rgba(139, 92, 246, 0.12);
   color: #a78bfa;
 }
+
+/* =========================
+   CARD BODY
+========================= */
 
 .instructor-candidates__card-body {
   flex: 1;
@@ -378,6 +423,10 @@
   font-weight: 600;
 }
 
+/* =========================
+   CHEVRON
+========================= */
+
 .instructor-candidates__chevron {
   flex-shrink: 0;
   font-size: 24px;
@@ -390,6 +439,10 @@
   color: rgb(214, 251, 79);
   transform: translateX(4px);
 }
+
+/* =========================
+   STATUS BADGES
+========================= */
 
 .instructor-candidates__badge {
   display: inline-block;
@@ -424,16 +477,4 @@
   background: rgba(139, 92, 246, 0.15);
   color: #a78bfa;
   border: 1px solid rgba(139, 92, 246, 0.25);
-}
-
-
-.instructor-candidates__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 24px;
-  padding: 20px 0;
-  border-bottom: 2px solid rgba(214, 251, 79, 0.15);
 }
