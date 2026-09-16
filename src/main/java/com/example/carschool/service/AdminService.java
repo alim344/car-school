@@ -167,5 +167,25 @@ public class AdminService {
         return dtos;
     }
 
+    @Transactional
+    public void inactivate(String instructor_email){
+        Instructor instructor = instructorRepository.findByEmail(instructor_email);
+        List<Candidate> candidates = candidateService.getActiveCandidatesByInstructor(instructor);
+        candidates.forEach(c->{
+            c.setStatus(TrainingStatus.WAITING_FOR_INSTRUCTOR);
+            candidateService.save(c);
+        });
+        instructor.setActive(false);
+        instructorRepository.save(instructor);
+    }
+
+
+    public void activate(String instructor_email){
+        Instructor instructor = instructorRepository.findByEmail(instructor_email);
+        instructor.setActive(true);
+        instructorRepository.save(instructor);
+    }
+
+
 
 }

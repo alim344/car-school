@@ -12,6 +12,7 @@ public class InstructorCandidatesDTO {
 
     private String instructorName;
     private String instructorEmail;
+    private boolean active;
 
     List<CandidateDTO> candidates;
 
@@ -21,6 +22,7 @@ public class InstructorCandidatesDTO {
         this.instructorName = instructor.getName() + " " + instructor.getLastname();
         this.instructorEmail = instructor.getEmail();
         this.candidates = candidates;
+        this.active = instructor.isActive();
 
     }
 

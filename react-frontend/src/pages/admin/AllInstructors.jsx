@@ -17,6 +17,10 @@ export default function AllInstructors() {
     const [searchTerm, setSearchTerm] = useState("");
     const [freeing, setFreeing] = useState(null);  
 
+    const [deactivating, setDeactivating] = useState(null); 
+    const [activating, setActivating] = useState(null); 
+
+
     useEffect(() => {
         let cancelled = false;
 
@@ -100,6 +104,72 @@ export default function AllInstructors() {
         }
     };
 
+
+    const handleActivate = async (group) => {
+            if (!window.confirm(
+                `Reactivate ${group.instructorName}?\n\nThey will be able to log in and receive candidates again.`
+            )) return;
+
+            setActivating(group.instructorEmail);
+            try {
+                const res = await fetch(
+                    `http://localhost:8080/admin/activate/${encodeURIComponent(group.instructorEmail)}`,
+                    {
+                        method: "PATCH",
+                        headers: { Authorization: `Bearer ${token}` }
+                    }
+                );
+                if (!res.ok) {
+                    const msg = await res.text().catch(() => "");
+                    throw new Error(msg || `HTTP ${res.status}`);
+                }
+
+                setGroups(prev =>
+                    prev.map(g =>
+                        g.instructorEmail === group.instructorEmail
+                            ? { ...g, active: true }
+                            : g
+                    )
+                );
+            } catch (err) {
+                console.error("Activate failed:", err);
+                alert("Could not activate: " + (err.message || "unknown error"));
+            } finally {
+                setActivating(null);
+            }
+        };
+
+
+    const handleDeactivate = async (group) => {
+        if (!window.confirm(
+            `Deactivate ${group.instructorName}?\n\nThey will no longer be able to log in or receive candidates.`
+        )) return;
+
+        setDeactivating(group.instructorEmail);
+        try {
+            const res = await fetch(
+                `http://localhost:8080/admin/inactivate/${encodeURIComponent(group.instructorEmail)}`,
+                {
+                    method: "PATCH",
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            if (!res.ok) {
+                const msg = await res.text().catch(() => "");
+                throw new Error(msg || `HTTP ${res.status}`);
+            }
+
+            setExpandedEmail(prev =>
+                prev === group.instructorEmail ? null : prev
+            );
+        } catch (err) {
+            console.error("Deactivate failed:", err);
+            alert("Could not deactivate: " + (err.message || "unknown error"));
+        } finally {
+            setDeactivating(null);
+        }
+    };
+
     const handleViewCandidates = (group) => {
         setExpandedEmail(prev =>
             prev === group.instructorEmail ? null : group.instructorEmail
@@ -165,12 +235,17 @@ export default function AllInstructors() {
                     return (
                         <section
                             key={group.instructorEmail}
-                            className="all-instructors__group"
+                            className={`all-instructors__group ${!group.active ? "all-instructors__group--inactive" : ""}`}
                         >
                             <header className="all-instructors__group-header">
                                 <div className="all-instructors__group-info">
                                     <span className="all-instructors__group-name">
                                         {group.instructorName}
+                                         {!group.active && (
+                                                <span className="all-instructors__inactive-tag">
+                                                    INACTIVE
+                                                </span>
+                                            )}
                                     </span>
                                     <span className="all-instructors__group-email">
                                         {group.instructorEmail}
@@ -209,6 +284,29 @@ export default function AllInstructors() {
                                             {busy ? "Freeing…" : "Free candidates"}
                                         </button>
                                     )}
+                                     {group.active ? (
+                                            <button
+                                                type="button"
+                                                className="all-instructors__deactivate-btn"
+                                                onClick={() => handleDeactivate(group)}
+                                                disabled={deactivating === group.instructorEmail}
+                                                title="Deactivate this instructor"
+                                            >
+                                                {deactivating === group.instructorEmail
+                                                    ? "…"
+                                                    : "Deactivate"}
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="all-instructors__activate-btn"
+                                                onClick={() => handleActivate(group)}
+                                                disabled={activating === group.instructorEmail}
+                                                title="Reactivate this instructor"
+                                            >
+                                                {activating === group.instructorEmail ? "…" : "Reactivate"}
+                                            </button>
+                                        )}
                                 </div>
                             </header>
 

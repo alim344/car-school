@@ -33,4 +33,7 @@ public class Instructor extends User{
     @Column
     @Enumerated(EnumType.STRING)
     private Category category;
+
+    @Column
+    private boolean active = true;
 }

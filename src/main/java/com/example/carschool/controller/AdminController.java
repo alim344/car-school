@@ -59,5 +59,19 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getInstructorCandidates());
     }
 
+    @PatchMapping("/inactivate/{email}")
+    public ResponseEntity<?> inactivate(@PathVariable String email){
+        adminService.inactivate(email);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @PatchMapping("/activate/{email}")
+    public ResponseEntity<?> activate(@PathVariable String email){
+        adminService.activate(email);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }
