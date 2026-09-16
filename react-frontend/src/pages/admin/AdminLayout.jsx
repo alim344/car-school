@@ -16,7 +16,8 @@ export default function AdminLayout({ children }) {
     {id: 'vehicle-request', label: 'Vehicle Requests', path: '/admin/vehicle-requests'},
     { id: 'instructor-leaves', label: 'Leave Requests',  path: '/admin/leaves' },
     { id: 'instructor-assign', label: 'Assign Instructor',  path: '/admin/assign' },
-    { id: 'all-candidates', label: 'Candidates',  path: '/admin/candidates' }
+    { id: 'all-candidates', label: 'Candidates',  path: '/admin/candidates' },
+    { id: 'all-instructors', label: 'Instructors',  path: '/admin/instructors' },
     
    
   ];

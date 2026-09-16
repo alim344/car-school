@@ -106,7 +106,7 @@ public class CandidateController {
     }
 
     @PatchMapping("/freeCandidates")
-    public ResponseEntity<?> freeCandidates(List<String> candidate_emails) {
+    public ResponseEntity<?> freeCandidates(@RequestBody List<String> candidate_emails) {
         candidateService.freeCandidates(candidate_emails);
         return ResponseEntity.ok().build();
     }

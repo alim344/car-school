@@ -155,7 +155,17 @@ public class AdminService {
 
     }
 
+    public List<InstructorCandidatesDTO> getInstructorCandidates(){
+        List<InstructorCandidatesDTO> dtos = new ArrayList<>();
+        List<Instructor> instructors = instructorRepository.findAll();
+        for(Instructor i : instructors){
+            List<Candidate> candidates = candidateService.getActiveCandidatesByInstructor(i);
+            List<CandidateDTO> candidateDTOS = candidates.stream().map(CandidateDTO::new).toList();
+            dtos.add(new InstructorCandidatesDTO(i,candidateDTOS));
 
+        }
+        return dtos;
+    }
 
 
 }

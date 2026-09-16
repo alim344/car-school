@@ -3,6 +3,7 @@ package com.example.carschool.controller;
 
 import com.example.carschool.dto.AssignmentResultDTO;
 import com.example.carschool.dto.InstructorAssignmentDTO;
+import com.example.carschool.dto.InstructorCandidatesDTO;
 import com.example.carschool.dto.UsersDTO;
 import com.example.carschool.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class AdminController {
     public ResponseEntity<?> saveAllAssigned(@RequestBody List<AssignmentResultDTO> dtos){
         adminService.saveAllAssigned(dtos);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/inst-cand")
+    public ResponseEntity<List<InstructorCandidatesDTO>> getInstructorsCandidates(){
+        return ResponseEntity.ok(adminService.getInstructorCandidates());
     }
 
 
