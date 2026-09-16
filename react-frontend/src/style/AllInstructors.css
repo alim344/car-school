@@ -327,7 +327,6 @@
 }
 
 
-/* Deactivate button — always visible, danger action */
 .all-instructors__deactivate-btn {
     padding: 6px 14px;
     border-radius: 8px;
@@ -357,7 +356,6 @@
 }
 
 
-/* Inactive group — muted, dashed accent, reduced contrast */
 .all-instructors__group--inactive {
     opacity: 0.65;
     border-color: rgba(148, 163, 184, 0.15);
@@ -377,7 +375,6 @@
     color: #94a3b8;
 }
 
-/* "INACTIVE" tag next to the name */
 .all-instructors__inactive-tag {
     display: inline-block;
     margin-left: 8px;
@@ -393,7 +390,6 @@
     vertical-align: middle;
 }
 
-/* Static "Inactive" label where the Deactivate button would be */
 .all-instructors__inactive-label {
     padding: 6px 14px;
     border-radius: 8px;
@@ -405,7 +401,6 @@
     white-space: nowrap;
 }
 
-/* Optional Reactivate button (if you add the endpoint) */
 .all-instructors__activate-btn {
     padding: 6px 14px;
     border-radius: 8px;
@@ -455,4 +450,85 @@
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+}
+
+
+.all-instructors__select-count {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(214, 251, 79, 0.12);
+    color: rgb(214, 251, 79);
+    border: 1px solid rgba(214, 251, 79, 0.25);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.all-instructors__select-all-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+    font-family: inherit;
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.all-instructors__select-all-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(214, 251, 79, 0.4);
+    color: #e2e8f0;
+}
+
+.all-instructors__cancel-btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+    font-family: inherit;
+    background: transparent;
+    color: #94a3b8;
+    border: 2px solid rgba(148, 163, 184, 0.25);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.all-instructors__cancel-btn:hover:not(:disabled) {
+    background: rgba(148, 163, 184, 0.08);
+    border-color: rgba(148, 163, 184, 0.5);
+    color: #cbd5e1;
+}
+
+.all-instructors__cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.all-instructors__candidate--selectable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.all-instructors__candidate--selectable:hover {
+    background: rgba(214, 251, 79, 0.04);
+}
+
+.all-instructors__candidate--checked {
+    background: rgba(214, 251, 79, 0.08);
+    border-left: 3px solid rgb(214, 251, 79);
+    padding-left: 17px; 
+}
+
+.all-instructors__candidate-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: rgb(214, 251, 79);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 4px;
 }

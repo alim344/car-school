@@ -57,6 +57,9 @@ public class AdminService {
         List<Instructor> instructors = instructorRepository.findAll();
         List<UsersDTO> dtos = new ArrayList<>();
         for(Instructor i : instructors){
+            if(!i.isActive()){
+                continue;
+            }
             int currentCount = (int) candidateService.countByInstructor(i);
             int free = i.getMaxCapacity() - currentCount;
             if(free > 0){

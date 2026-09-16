@@ -20,6 +20,9 @@ export default function AllInstructors() {
     const [deactivating, setDeactivating] = useState(null); 
     const [activating, setActivating] = useState(null); 
 
+    const [selectingFor, setSelectingFor] = useState(null);       
+    const [selectedEmails, setSelectedEmails] = useState([]);      
+
 
     useEffect(() => {
         let cancelled = false;
@@ -62,47 +65,78 @@ export default function AllInstructors() {
         [groups]
     );
 
-    const handleFreeCandidates = async (group) => {
-        const emails = (group.candidates || []).map(c => c.email);
-        if (emails.length === 0) return;
+        const startSelecting = (group) => {
+            setSelectingFor(group.instructorEmail);
+            setSelectedEmails([]);
+        };
 
-        if (!window.confirm(
-            `Free all ${emails.length} candidate${emails.length === 1 ? "" : "s"} assigned to ${group.instructorName}?`
-        )) return;
+        const cancelSelecting = () => {
+            setSelectingFor(null);
+            setSelectedEmails([]);
+        };
 
-        setFreeing(group.instructorEmail);
-        try {
-            const res = await fetch(
-                "http://localhost:8080/candidate/freeCandidates",
-                {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(emails),
+        const toggleCandidateSelection = (email) => {
+            setSelectedEmails(prev =>
+                prev.includes(email)
+                    ? prev.filter(e => e !== email)
+                    : [...prev, email]
+            );
+        };
+
+        const toggleSelectAll = (group) => {
+            const emails = (group.candidates || []).map(c => c.email);
+            setSelectedEmails(prev =>
+                prev.length === emails.length ? [] : emails
+            );
+        };
+
+        const handleFreeSelected = async (group) => {
+            if (selectedEmails.length === 0) return;
+
+            if (!window.confirm(
+                `Free ${selectedEmails.length} candidate${selectedEmails.length === 1 ? "" : "s"} from ${group.instructorName}?`
+            )) return;
+
+            setFreeing(group.instructorEmail);
+            try {
+                const res = await fetch(
+                    "http://localhost:8080/candidate/freeCandidates",
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(selectedEmails),
+                    }
+                );
+                if (!res.ok) {
+                    const msg = await res.text().catch(() => "");
+                    throw new Error(msg || `HTTP ${res.status}`);
                 }
-            );
-            if (!res.ok) {
-                const msg = await res.text().catch(() => "");
-                throw new Error(msg || `HTTP ${res.status}`);
-            }
 
-      
-            setGroups(prev =>
-                prev.map(g =>
-                    g.instructorEmail === group.instructorEmail
-                        ? { ...g, candidates: [] }
-                        : g
-                )
-            );
-        } catch (err) {
-            console.error("Free candidates failed:", err);
-            alert("Could not free candidates: " + (err.message || "unknown error"));
-        } finally {
-            setFreeing(null);
-        }
-    };
+                setGroups(prev =>
+                    prev.map(g =>
+                        g.instructorEmail === group.instructorEmail
+                            ? {
+                                ...g,
+                                candidates: (g.candidates || []).filter(
+                                    c => !selectedEmails.includes(c.email)
+                                ),
+                            }
+                            : g
+                    )
+                );
+
+                setSelectingFor(null);
+                setSelectedEmails([]);
+            } catch (err) {
+                console.error("Free candidates failed:", err);
+                alert("Could not free candidates: " + (err.message || "unknown error"));
+            } finally {
+                setFreeing(null);
+            }
+        };
 
 
     const handleActivate = async (group) => {
@@ -159,9 +193,24 @@ export default function AllInstructors() {
                 throw new Error(msg || `HTTP ${res.status}`);
             }
 
+             setGroups(prev =>
+                    prev.map(g =>
+                        g.instructorEmail === group.instructorEmail
+                            ? { ...g, active: false, candidates: [] }
+                            : g
+                    )
+                );
+
+
             setExpandedEmail(prev =>
                 prev === group.instructorEmail ? null : prev
             );
+
+
+             if (selectingFor === group.instructorEmail) {
+                setSelectingFor(null);
+                setSelectedEmails([]);
+            }
         } catch (err) {
             console.error("Deactivate failed:", err);
             alert("Could not deactivate: " + (err.message || "unknown error"));
@@ -231,6 +280,7 @@ export default function AllInstructors() {
                     const candidates = group.candidates || [];
                     const expanded = expandedEmail === group.instructorEmail;
                     const busy = freeing === group.instructorEmail;
+                    const isSelecting = selectingFor === group.instructorEmail;
 
                     return (
                         <section
@@ -253,98 +303,172 @@ export default function AllInstructors() {
                                 </div>
 
                                 <div className="all-instructors__group-actions">
-                                    <span
-                                        className={`all-instructors__count ${
-                                            candidates.length === 0
-                                                ? "all-instructors__count--empty"
-                                                : ""
-                                        }`}
-                                    >
-                                        {candidates.length} candidate
-                                        {candidates.length === 1 ? "" : "s"}
-                                    </span>
+                                    {!isSelecting && (
+                                        <>
+                                            <span
+                                                className={`all-instructors__count ${
+                                                    candidates.length === 0
+                                                        ? "all-instructors__count--empty"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {candidates.length} candidate
+                                                {candidates.length === 1 ? "" : "s"}
+                                            </span>
 
-                                    {candidates.length > 0 && (
-                                        <button
-                                            type="button"
-                                            className="all-instructors__view-btn"
-                                            onClick={() => handleViewCandidates(group)}
-                                        >
-                                            {expanded ? "Hide" : "View candidates"}
-                                        </button>
+                                            {candidates.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    className="all-instructors__view-btn"
+                                                    onClick={() => handleViewCandidates(group)}
+                                                >
+                                                    {expanded ? "Hide" : "View candidates"}
+                                                </button>
+                                            )}
+
+                                            {candidates.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    className="all-instructors__free-btn"
+                                                    onClick={() => startSelecting(group)}
+                                                >
+                                                    Free candidates
+                                                </button>
+                                            )}
+
+                                            {group.active ? (
+                                                <button
+                                                    type="button"
+                                                    className="all-instructors__deactivate-btn"
+                                                    onClick={() => handleDeactivate(group)}
+                                                    disabled={deactivating === group.instructorEmail}
+                                                    title="Deactivate this instructor"
+                                                >
+                                                    {deactivating === group.instructorEmail ? "…" : "Deactivate"}
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    className="all-instructors__activate-btn"
+                                                    onClick={() => handleActivate(group)}
+                                                    disabled={activating === group.instructorEmail}
+                                                    title="Reactivate this instructor"
+                                                >
+                                                    {activating === group.instructorEmail ? "…" : "Reactivate"}
+                                                </button>
+                                            )}
+                                        </>
                                     )}
 
-                                    {candidates.length > 0 && (
-                                        <button
-                                            type="button"
-                                            className="all-instructors__free-btn"
-                                            onClick={() => handleFreeCandidates(group)}
-                                            disabled={busy}
-                                        >
-                                            {busy ? "Freeing…" : "Free candidates"}
-                                        </button>
+                                    {isSelecting && (
+                                        <>
+                                            <span className="all-instructors__select-count">
+                                                {selectedEmails.length} of {candidates.length} selected
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                className="all-instructors__select-all-btn"
+                                                onClick={() => toggleSelectAll(group)}
+                                            >
+                                                {selectedEmails.length === candidates.length
+                                                    ? "Clear all"
+                                                    : "Select all"}
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="all-instructors__free-btn"
+                                                onClick={() => handleFreeSelected(group)}
+                                                disabled={
+                                                    selectedEmails.length === 0 || busy
+                                                }
+                                            >
+                                                {busy
+                                                    ? "Freeing…"
+                                                    : `Free selected (${selectedEmails.length})`}
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                className="all-instructors__cancel-btn"
+                                                onClick={cancelSelecting}
+                                                disabled={busy}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </>
                                     )}
-                                     {group.active ? (
-                                            <button
-                                                type="button"
-                                                className="all-instructors__deactivate-btn"
-                                                onClick={() => handleDeactivate(group)}
-                                                disabled={deactivating === group.instructorEmail}
-                                                title="Deactivate this instructor"
-                                            >
-                                                {deactivating === group.instructorEmail
-                                                    ? "…"
-                                                    : "Deactivate"}
-                                            </button>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                className="all-instructors__activate-btn"
-                                                onClick={() => handleActivate(group)}
-                                                disabled={activating === group.instructorEmail}
-                                                title="Reactivate this instructor"
-                                            >
-                                                {activating === group.instructorEmail ? "…" : "Reactivate"}
-                                            </button>
-                                        )}
                                 </div>
                             </header>
 
-                            {expanded && candidates.length > 0 && (
+                           {(expanded || isSelecting) && candidates.length > 0 && (
                                 <ul className="all-instructors__candidate-list">
-                                    {candidates.map(c => (
-                                        <li
-                                            key={c.email}
-                                            className="all-instructors__candidate"
-                                        >
-                                            <div className="all-instructors__candidate-info">
-                                                <span className="all-instructors__candidate-name">
-                                                    {c.firstName} {c.lastName}
-                                                </span>
-                                                <span className="all-instructors__candidate-email">
-                                                    {c.email}
-                                                </span>
-                                            </div>
+                                    {candidates.map(c => {
+                                        const checked = selectedEmails.includes(c.email);
+                                        return (
+                                            <li
+                                                key={c.email}
+                                                className={`all-instructors__candidate ${
+                                                    isSelecting ? "all-instructors__candidate--selectable" : ""
+                                                } ${checked ? "all-instructors__candidate--checked" : ""}`}
+                                                onClick={
+                                                    isSelecting
+                                                        ? () => toggleCandidateSelection(c.email)
+                                                        : undefined
+                                                }
+                                                role={isSelecting ? "button" : undefined}
+                                                tabIndex={isSelecting ? 0 : undefined}
+                                                onKeyDown={
+                                                    isSelecting
+                                                        ? (e) => {
+                                                            if (e.key === "Enter" || e.key === " ") {
+                                                                e.preventDefault();
+                                                                toggleCandidateSelection(c.email);
+                                                            }
+                                                        }
+                                                        : undefined
+                                                }
+                                            >
+                                                {isSelecting && (
+                                                    <input
+                                                        type="checkbox"
+                                                        className="all-instructors__candidate-checkbox"
+                                                        checked={checked}
+                                                        onChange={() => toggleCandidateSelection(c.email)}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    />
+                                                )}
 
-                                            <div className="all-instructors__candidate-meta">
-                                                <span className="all-instructors__candidate-chip">
-                                                    {c.category || "—"}
-                                                </span>
-                                                <span
-                                                    className={`all-instructors__status all-instructors__status--${(
-                                                        c.trainingStatus || ""
-                                                    ).toLowerCase()}`}
-                                                >
-                                                    {TRAINING_STATUS_LABELS[c.trainingStatus] ||
-                                                        c.trainingStatus ||
-                                                        "—"}
-                                                </span>
-                                                <span className="all-instructors__candidate-left">
-                                                    {c.numberOfClassesLeft ?? 0} left
-                                                </span>
-                                            </div>
-                                        </li>
-                                    ))}
+                                                <div className="all-instructors__candidate-info">
+                                                    <span className="all-instructors__candidate-name">
+                                                        {c.firstName} {c.lastName}
+                                                    </span>
+                                                    <span className="all-instructors__candidate-email">
+                                                        {c.email}
+                                                    </span>
+                                                </div>
+
+                                                <div className="all-instructors__candidate-meta">
+                                                    <span className="all-instructors__candidate-chip">
+                                                        {c.category || "—"}
+                                                    </span>
+                                                    <span
+                                                        className={`all-instructors__status all-instructors__status--${(
+                                                            c.trainingStatus || ""
+                                                        ).toLowerCase()}`}
+                                                    >
+                                                        {TRAINING_STATUS_LABELS[c.trainingStatus] ||
+                                                            c.trainingStatus ||
+                                                            "—"}
+                                                    </span>
+                                                    <span className="all-instructors__candidate-left">
+                                                        {c.numberOfClassesLeft ?? 0} left
+                                                    </span>
+                                                </div>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             )}
 
