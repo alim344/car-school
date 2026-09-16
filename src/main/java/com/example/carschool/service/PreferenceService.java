@@ -217,6 +217,11 @@ public class PreferenceService {
 
     }
 
+    public void noPrefByEmail(String email) {
+        Candidate candidate = candidateService.getByEmail(email);
+        addNoPreference(candidate);
+    }
+
     @Transactional
     public void setNoPreference(Candidate candidate) {
 

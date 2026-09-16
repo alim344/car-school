@@ -144,6 +144,7 @@ public class CandidateService {
             }
             candidate.setInstructor(instructor);
             candidate.setStatus(TrainingStatus.PRACTICAL);
+
             candidateRepository.save(candidate);
         }
     }

@@ -61,7 +61,7 @@ public class AdminService {
                 continue;
             }
             int currentCount = (int) candidateService.countByInstructor(i);
-            int free = i.getMaxCapacity() - currentCount;
+            int free = i. getMaxCapacity() - currentCount;
             if(free > 0){
                 dtos.add(new UsersDTO(i,free));
             }
