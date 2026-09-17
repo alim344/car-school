@@ -196,14 +196,14 @@ public class PracticalClassService {
                 practicalClassRepository
                         .existsByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(
                                 instructor,
-                                startTime,endTime
+                                endTime,startTime
                         );
 
 
     }
 
 
-    public List<PracticalClass> getByInstructorAndWeek(Instructor instructor){
+  /*  public List<PracticalClass> getByInstructorAndWeek(Instructor instructor){
 
         LocalDate today = LocalDate.now();
 
@@ -215,6 +215,17 @@ public class PracticalClassService {
 
         return practicalClassRepository.findByInstructorAndScheduledStartTimeLessThanAndScheduledEndTimeGreaterThan(instructor, start, end);
     }
+*/
+  public List<PracticalClass> getByInstructorAndWeek(Instructor instructor){
+      LocalDate today = LocalDate.now();
+      LocalDate weekStartDate = today.with(java.time.temporal.TemporalAdjusters.next(DayOfWeek.MONDAY));
+      LocalDate endOfWeek = weekStartDate.plusDays(6);
+      LocalDateTime start = weekStartDate.atStartOfDay();
+      LocalDateTime end = endOfWeek.atTime(LocalTime.MAX);
+
+      return practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor, start, end);
+  }
+
 
     @Transactional
     public List<PracticalClassDTO> cancelByDay(Instructor instructor){
@@ -247,8 +258,8 @@ public class PracticalClassService {
 
 
     @Transactional
-    public void cancelClasses(LocalDateTime startTime, LocalDateTime endTime){
-       List<PracticalClass> pclasses =  practicalClassRepository.findByScheduledStartTimeBetween(startTime,endTime);
+    public void cancelClasses(LocalDateTime startTime, LocalDateTime endTime,Instructor instructor){
+       List<PracticalClass> pclasses =  practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor,startTime,endTime);
        for(PracticalClass pc : pclasses){
            pc.setClassStatus(ClassStatus.CANCELLED);
            practicalClassRepository.save(pc);

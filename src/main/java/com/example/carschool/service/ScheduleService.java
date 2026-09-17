@@ -163,6 +163,10 @@ public class ScheduleService {
                 continue;
             }
 
+            if (practicalClassService.classExists(instructor, shiftedEnd, shiftedStart)) {
+                continue;
+            }
+
 
 
 

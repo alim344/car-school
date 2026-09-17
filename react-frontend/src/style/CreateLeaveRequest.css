@@ -102,8 +102,8 @@
 }
 
 .form-select option {
-    background: #2a3a4f;
-    color: #f0f4f8;
+    background: #f0f4f8;
+    color: #2a3a4f;;
     padding: 10px;
     font-size: 14px;
 }

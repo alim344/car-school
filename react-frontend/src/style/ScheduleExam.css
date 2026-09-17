@@ -142,8 +142,8 @@
 }
 
 .form-select option {
-    background: #1a2332;
-    color: #e2e8f0;
+    background: #e2e8f0;
+    color: #1a2332;
 }
 
 .form-select:disabled {

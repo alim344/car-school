@@ -72,7 +72,7 @@ public class ScheduleGeneratorService {
             }
         }
 
-        // PASS 2: Assign 2nd Class for every candidate
+
         for (Candidate candidate : sortedCandidates) {
             if (candidateClassCounts.get(candidate.getId()) < 2) {
                 boolean scheduled = scheduleNextClassForCandidate(

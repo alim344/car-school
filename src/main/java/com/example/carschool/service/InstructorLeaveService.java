@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +98,7 @@ public class InstructorLeaveService {
         }
 
         if(dto.isAccepted()){
-            practicalClassService.cancelClasses(request.getStartDate().atTime(0 ,0),request.getEndDate().atTime(0 ,0));
+            practicalClassService.cancelClasses(request.getStartDate().atTime(0 ,0),request.getEndDate().atTime(LocalTime.MAX),request.getInstructor());
             checkLeaveLimit(request.getStartDate(), request.getEndDate(), request.getInstructor());
             request.setStatus(LeaveStatus.APPROVED);
             if(request.getType() == LeaveType.SICK ){

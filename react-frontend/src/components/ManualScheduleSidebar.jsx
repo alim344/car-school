@@ -24,6 +24,17 @@ export default function ManualScheduleSidebar({
         };
     };
 
+    const formatLocalDateTime = (date) => {
+        if (!date) return "";
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        const hh = String(date.getHours()).padStart(2, "0");
+        const mm = String(date.getMinutes()).padStart(2, "0");
+        const ss = String(date.getSeconds()).padStart(2, "0");
+        return `${y}-${m}-${d}T${hh}:${mm}:${ss}`;
+    };
+
     const handleAddDraft = () => {
         if (!selectedCandidate) {
             alert('Please select a candidate first.');
@@ -37,8 +48,8 @@ export default function ManualScheduleSidebar({
         const draft = {
             candidateEmail: selectedCandidate.candidateEmail,
             candidateName: selectedCandidate.name,
-            startTime: newClassStart.toISOString(),
-            endTime: newClassEnd.toISOString(),
+            startTime: formatLocalDateTime(newClassStart),
+            endTime: formatLocalDateTime(newClassEnd),
             location: location
         };
 
