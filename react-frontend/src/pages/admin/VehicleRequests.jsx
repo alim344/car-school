@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import axios from "axios";
-import "../../style/VehicleRequest.css"
+import "../../style/VehicleRequest.css";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function VehicleRequests() {
     const token = localStorage.getItem("userToken");
@@ -11,6 +12,23 @@ export default function VehicleRequests() {
     const [searchTerm, setSearchTerm] = useState("");
     const [instructorSearchTerm, setInstructorSearchTerm] = useState("");
     const [processingId, setProcessingId] = useState(null);
+
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
 
     const hasFetched = useRef(false);
 
@@ -104,72 +122,54 @@ export default function VehicleRequests() {
         }
     };
 
-    const handleAccept = async (request) => {
-        if (!window.confirm(`Accept request from ${request.instructor_name} for vehicle ${request.registrationNumber}?`)) {
-            return;
-        }
+    const handleAccept = (request) => {
+        askConfirm(
+            `Accept request from ${request.instructor_name} for vehicle ${request.registrationNumber}?`,
+            async () => {
+                setProcessingId(request.id);
+                try {
+                    await axios.patch(
+                        "http://localhost:8080/car-request/accept",
+                        request,
+                        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+                    );
 
-        setProcessingId(request.id);
-        try {
-            await axios.patch(
-                "http://localhost:8080/car-request/accept",
-                request,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                    setRequests(prev =>
+                        prev.map(r => r.id === request.id ? { ...r, status: "ACCEPTED" } : r)
+                    );
+                } catch (error) {
+                    console.error("Error accepting request:", error);
+                    alert("Failed to accept request. Please try again.");
+                } finally {
+                    setProcessingId(null);
                 }
-            );
-
-            setRequests(prev =>
-                prev.map(r =>
-                    r.id === request.id
-                        ? { ...r, status: "ACCEPTED" }
-                        : r
-                )
-            );
-
-        } catch (error) {
-            console.error("Error accepting request:", error);
-            alert("Failed to accept request. Please try again.");
-        } finally {
-            setProcessingId(null);
-        }
+            }
+        );
     };
 
-    const handleDecline = async (request) => {
-        if (!window.confirm(`Decline request from ${request.instructor_name} for vehicle ${request.registrationNumber}?`)) {
-            return;
-        }
+    const handleDecline = (request) => {
+        askConfirm(
+            `Decline request from ${request.instructor_name} for vehicle ${request.registrationNumber}?`,
+            async () => {
+                setProcessingId(request.id);
+                try {
+                    await axios.patch(
+                        "http://localhost:8080/car-request/decline",
+                        request,
+                        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+                    );
 
-        setProcessingId(request.id);
-        try {
-            await axios.patch(
-                "http://localhost:8080/car-request/decline",
-                request,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                    setRequests(prev =>
+                        prev.map(r => r.id === request.id ? { ...r, status: "DECLINED" } : r)
+                    );
+                } catch (error) {
+                    console.error("Error declining request:", error);
+                    alert("Failed to decline request. Please try again.");
+                } finally {
+                    setProcessingId(null);
                 }
-            );
-
-            setRequests(prev =>
-                prev.map(r =>
-                    r.id === request.id
-                        ? { ...r, status: "DECLINED" }
-                        : r
-                )
-            );
-
-        } catch (error) {
-            console.error("Error declining request:", error);
-            alert("Failed to decline request. Please try again.");
-        } finally {
-            setProcessingId(null);
-        }
+            }
+        );
     };
 
     const handleFilterChange = (filterKey) => {
@@ -311,6 +311,12 @@ export default function VehicleRequests() {
                     )}
                 </div>
             )}
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

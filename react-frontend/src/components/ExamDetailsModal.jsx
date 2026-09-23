@@ -1,9 +1,11 @@
 import "../style/ExamDetailsModal.css";
+import ConfirmModal from "./ConfirmModal";
 import { useState } from "react";
 
 export default function ExamDetailsModal({ isOpen, exam, onClose,onCancel }) {
 
     const [isCancelling, setIsCancelling] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     if (!isOpen || !exam) return null;
 
@@ -36,11 +38,12 @@ export default function ExamDetailsModal({ isOpen, exam, onClose,onCancel }) {
         });
     };
 
-    const handleCancel = async () => {
-        if (!window.confirm(`Are you sure you want to cancel the exam for ${exam.candidate_name}?`)) {
-            return;
-        }
+    const handleCancel = () => {
+        setConfirmOpen(true);
+    };
 
+    const confirmCancel = async () => {
+        setConfirmOpen(false);
         setIsCancelling(true);
         try {
             await onCancel(exam);
@@ -139,6 +142,13 @@ export default function ExamDetailsModal({ isOpen, exam, onClose,onCancel }) {
 
                 
             </div>
+
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={`Are you sure you want to cancel the exam for ${exam.candidate_name}?`}
+                onConfirm={confirmCancel}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

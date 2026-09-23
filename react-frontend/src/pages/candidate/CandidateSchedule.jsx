@@ -181,7 +181,6 @@ export default function CandidateSchedule(){
 
             setClassToDecline(null);
 
-            alert("Reschedule request submitted successfully.");
 
         } catch (error) {
 
@@ -280,7 +279,6 @@ export default function CandidateSchedule(){
                 );
 
                 setSelectedClass(null);
-                alert("Class cancelled successfully.");
 
             } catch (error) {
                 console.error("Error cancelling class:", error);

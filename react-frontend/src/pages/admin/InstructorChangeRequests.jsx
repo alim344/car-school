@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../style/InstructorChangeRequests.css";
 import { useNavigate } from "react-router-dom";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const STATUS_FILTERS = [
     { value: "ALL", label: "All" },
@@ -21,19 +22,32 @@ export default function InstructorChangeRequests() {
     const navigate = useNavigate();
 
     const [requests, setRequests] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  
     const [actingOn, setActingOn] = useState(null); 
 
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
+
     useEffect(() => {
         let cancelled = false;
 
         async function load() {
-            setLoading(true);
-            setError(null);
+  
             try {
                 const res = await fetch(
                     "http://localhost:8080/candidate/change-getALl",
@@ -53,10 +67,8 @@ export default function InstructorChangeRequests() {
                     setRequests(data);
                 }
             } catch (err) {
-                if (!cancelled) setError(err.message || "Failed to load requests.");
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
+                if (!cancelled) alert(err.message || "Failed to load requests.");
+            } 
         }
 
         load();
@@ -95,69 +107,53 @@ export default function InstructorChangeRequests() {
         );
     };
 
-    const handleAccept = async (request) => {
+    const handleAccept = (request) => {
         if (request.status !== "PENDING") return;
-        if (!window.confirm(`Accept change request from ${request.candidateName}?`)) return;
 
-        setActingOn(request.id);
-        try {
-            const res = await fetch(
-                `http://localhost:8080/candidate/change-accept/${request.id}`,
-                {
-                    method: "PATCH",
-                    headers: { Authorization: `Bearer ${token}` }
+        askConfirm(`Accept change request from ${request.candidateName}?`, async () => {
+            setActingOn(request.id);
+            try {
+                const res = await fetch(
+                    `http://localhost:8080/candidate/change-accept/${request.id}`,
+                    { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (!res.ok) {
+                    const msg = await res.text().catch(() => "");
+                    throw new Error(msg || `HTTP ${res.status}`);
                 }
-            );
-            if (!res.ok) {
-                const msg = await res.text().catch(() => "");
-                throw new Error(msg || `HTTP ${res.status}`);
+                setStatusLocally(request.id, "ACCEPTED");
+            } catch (err) {
+                console.error("Accept failed:", err);
+                alert("Could not accept: " + (err.message || "unknown error"));
+            } finally {
+                setActingOn(null);
             }
-            setStatusLocally(request.id, "ACCEPTED");
-        } catch (err) {
-            console.error("Accept failed:", err);
-            alert("Could not accept: " + (err.message || "unknown error"));
-        } finally {
-            setActingOn(null);
-        }
+        });
     };
 
-    const handleDecline = async (request) => {
+    const handleDecline = (request) => {
         if (request.status !== "PENDING") return;
-        if (!window.confirm(`Decline change request from ${request.candidateName}?`)) return;
 
-        setActingOn(request.id);
-        try {
-            const res = await fetch(
-                `http://localhost:8080/candidate/change-decline/${request.id}`,
-                {
-                    method: "PATCH",
-                    headers: { Authorization: `Bearer ${token}` }
+        askConfirm(`Decline change request from ${request.candidateName}?`, async () => {
+            setActingOn(request.id);
+            try {
+                const res = await fetch(
+                    `http://localhost:8080/candidate/change-decline/${request.id}`,
+                    { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+                );
+                if (!res.ok) {
+                    const msg = await res.text().catch(() => "");
+                    throw new Error(msg || `HTTP ${res.status}`);
                 }
-            );
-            if (!res.ok) {
-                const msg = await res.text().catch(() => "");
-                throw new Error(msg || `HTTP ${res.status}`);
+                setStatusLocally(request.id, "DECLINED");
+            } catch (err) {
+                console.error("Decline failed:", err);
+                alert("Could not decline: " + (err.message || "unknown error"));
+            } finally {
+                setActingOn(null);
             }
-            setStatusLocally(request.id, "DECLINED");
-        } catch (err) {
-            console.error("Decline failed:", err);
-            alert("Could not decline: " + (err.message || "unknown error"));
-        } finally {
-            setActingOn(null);
-        }
+        });
     };
-
-    if (loading) {
-        return <div className="chg-req"><p>Loading requests…</p></div>;
-    }
-
-    if (error) {
-        return (
-            <div className="chg-req">
-                <div className="chg-req__error">Error: {error}</div>
-            </div>
-        );
-    }
 
     return (
         <div className="chg-req">
@@ -304,6 +300,12 @@ export default function InstructorChangeRequests() {
                     })}
                 </div>
             )}
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

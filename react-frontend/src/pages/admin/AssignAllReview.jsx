@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../style/AssignAllReview.css";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function AssignAllReview() {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function AssignAllReview() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
 
     useEffect(() => {
@@ -102,7 +104,7 @@ export default function AssignAllReview() {
                 throw new Error(msg || `HTTP ${res.status}`);
             }
 
-            alert("Assignments saved.");
+       
             navigate("/admin/assign");
         } catch (err) {
             console.error("Save failed:", err);
@@ -117,9 +119,7 @@ export default function AssignAllReview() {
             navigate("/admin/assign");
             return;
         }
-        if (window.confirm("Discard this proposal and go back?")) {
-            navigate("/admin/assign");
-        }
+        setConfirmOpen(true);
     };
 
     if (loading) {
@@ -254,6 +254,15 @@ export default function AssignAllReview() {
                     </button>
                 </div>
             )}
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message="Discard this proposal and go back?"
+                onConfirm={() => {
+                    setConfirmOpen(false);
+                    navigate("/admin/assign");
+                }}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

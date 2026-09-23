@@ -236,7 +236,6 @@ export default function InstructorAssignment() {
 
             setSelectedCandidateEmails([]);
             setSelectedInstructorId(null);
-            alert("Candidates assigned successfully.");
         } catch (err) {
             console.error("Error assigning:", err);
             alert("Could not assign: " + (err.message || "unknown error"));

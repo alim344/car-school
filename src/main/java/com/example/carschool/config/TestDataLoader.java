@@ -971,44 +971,42 @@ public class TestDataLoader implements CommandLineRunner {
 
 
 
-        makeExam(martaPesic, a1, LocalDateTime.of(2026, 1, 3, 10, 0), ExamStatus.CANCELLED, null);
-        makeExam(martaPesic, a1, LocalDateTime.of(2026, 1, 10, 10, 0), ExamStatus.COMPLETED, 88);
+        makeExam(martaPesic, a1, LocalDateTime.of(2026, 9, 1, 10, 0), ExamStatus.CANCELLED, null);
+        makeExam(martaPesic, a1, LocalDateTime.of(2026, 9, 3, 10, 0), ExamStatus.COMPLETED, 88);
 
-        makeExam(goranJovanovic, a2, LocalDateTime.of(2026, 1, 15, 9, 0), ExamStatus.COMPLETED, 91);
+        makeExam(goranJovanovic, a2, LocalDateTime.of(2026, 9, 4, 9, 0), ExamStatus.COMPLETED, 91);
 
-        makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 1, 20, 11, 0), ExamStatus.FAILED, 32);
-        makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 2, 3, 11, 0), ExamStatus.COMPLETED, 85);
+        makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 9, 5, 11, 0), ExamStatus.FAILED, 32);
+        makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 9, 8, 11, 0), ExamStatus.COMPLETED, 85);
 
-        makeExam(teodoraMilovanovic, a1, LocalDateTime.of(2026, 2, 18, 9, 0), ExamStatus.COMPLETED, 90);
+        makeExam(teodoraMilovanovic, a1, LocalDateTime.of(2026, 9, 9, 9, 0), ExamStatus.COMPLETED, 90);
 
-        makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 2, 18, 13, 0), ExamStatus.FAILED, 38);
-        makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 3, 5, 13, 0), ExamStatus.COMPLETED, 87);
+        makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 9, 10, 13, 0), ExamStatus.FAILED, 38);
+        makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 9, 12, 13, 0), ExamStatus.COMPLETED, 87);
 
-        makeExam(sofijaRadenkovic, a3, LocalDateTime.of(2026, 3, 20, 10, 0), ExamStatus.COMPLETED, 95);
+        makeExam(sofijaRadenkovic, a3, LocalDateTime.of(2026, 9, 15, 10, 0), ExamStatus.COMPLETED, 95);
 
-        makeExam(darioPavkov, a1, LocalDateTime.of(2026, 1, 12, 9, 0), ExamStatus.COMPLETED, 89);
+        makeExam(darioPavkov, a1, LocalDateTime.of(2026, 9, 16, 9, 0), ExamStatus.COMPLETED, 89);
 
-        makeExam(ljubicaRankovic, a2, LocalDateTime.of(2026, 1, 6, 10, 0), ExamStatus.FAILED, 29);
-        makeExam(ljubicaRankovic, a2, LocalDateTime.of(2026, 1, 20, 10, 0), ExamStatus.COMPLETED, 84);
+        makeExam(ljubicaRankovic, a2, LocalDateTime.of(2026, 9, 17, 10, 0), ExamStatus.FAILED, 29);
+        makeExam(ljubicaRankovic, a2, LocalDateTime.of(2026, 9, 18, 10, 0), ExamStatus.COMPLETED, 84);
 
-        makeExam(nikolaGojkovic, a3, LocalDateTime.of(2026, 2, 5, 9, 0), ExamStatus.COMPLETED, 92);
-
-
-
-        makeExam(vukasinJovicic, a1, LocalDateTime.of(2026, 2, 10, 10, 0), ExamStatus.FAILED, 35);
-        makeExam(vukasinJovicic, a1, LocalDateTime.of(2026, 2, 25, 10, 0), ExamStatus.SCHEDULED, null);
-
-        makeExam(elenaVukasinovic, a2, LocalDateTime.of(2026, 3, 10, 9, 0), ExamStatus.SCHEDULED, null);
-
-        makeExam(filipKrunic, a3, LocalDateTime.of(2026, 2, 19, 11, 0), ExamStatus.SCHEDULED, null);
-
-        makeExam(jovanaStevic, a1, LocalDateTime.of(2026, 3, 4, 9, 0), ExamStatus.SCHEDULED, null);
-
-        makeExam(aleksandarGavrilovic, a2, LocalDateTime.of(2026, 3, 19, 13, 0), ExamStatus.SCHEDULED, null);
-
-        makeExam(bojanaStefanovic, a3, LocalDateTime.of(2026, 4, 2, 10, 0), ExamStatus.SCHEDULED, null);
+        makeExam(nikolaGojkovic, a3, LocalDateTime.of(2026, 9, 19, 9, 0), ExamStatus.COMPLETED, 92);
 
 
+
+        makeExam(vukasinJovicic, a1, LocalDateTime.of(2026, 9, 22, 10, 0), ExamStatus.FAILED, 35);
+        makeExam(vukasinJovicic, a1, LocalDateTime.of(2026, 9, 26, 10, 0), ExamStatus.SCHEDULED, null);
+
+        makeExam(elenaVukasinovic, a2, LocalDateTime.of(2026, 9, 29, 9, 0), ExamStatus.SCHEDULED, null);
+
+        makeExam(filipKrunic, a3, LocalDateTime.of(2026, 9, 30, 11, 0), ExamStatus.SCHEDULED, null);
+
+        makeExam(jovanaStevic, a1, LocalDateTime.of(2026, 10, 1, 9, 0), ExamStatus.SCHEDULED, null);
+
+        makeExam(aleksandarGavrilovic, a2, LocalDateTime.of(2026, 10, 2, 13, 0), ExamStatus.SCHEDULED, null);
+
+        makeExam(bojanaStefanovic, a3, LocalDateTime.of(2026, 10, 5, 10, 0), ExamStatus.SCHEDULED, null);
 
         //prefernces for candidate that are practical
 

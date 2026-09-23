@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "../../style/AllInstructors.css";
+import ConfirmModal from "../../components/ConfirmModal";
+
 
 const TRAINING_STATUS_LABELS = {
     PRACTICAL: "Practical",
@@ -22,6 +24,21 @@ export default function AllInstructors() {
 
     const [selectingFor, setSelectingFor] = useState(null);       
     const [selectedEmails, setSelectedEmails] = useState([]);      
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
 
 
     useEffect(() => {
@@ -90,134 +107,127 @@ export default function AllInstructors() {
             );
         };
 
-        const handleFreeSelected = async (group) => {
+        const handleFreeSelected = (group) => {
             if (selectedEmails.length === 0) return;
 
-            if (!window.confirm(
-                `Free ${selectedEmails.length} candidate${selectedEmails.length === 1 ? "" : "s"} from ${group.instructorName}?`
-            )) return;
-
-            setFreeing(group.instructorEmail);
-            try {
-                const res = await fetch(
-                    "http://localhost:8080/candidate/freeCandidates",
-                    {
-                        method: "PATCH",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                        body: JSON.stringify(selectedEmails),
-                    }
-                );
-                if (!res.ok) {
-                    const msg = await res.text().catch(() => "");
-                    throw new Error(msg || `HTTP ${res.status}`);
-                }
-
-                setGroups(prev =>
-                    prev.map(g =>
-                        g.instructorEmail === group.instructorEmail
-                            ? {
-                                ...g,
-                                candidates: (g.candidates || []).filter(
-                                    c => !selectedEmails.includes(c.email)
-                                ),
+            askConfirm(
+                `Free ${selectedEmails.length} candidate${selectedEmails.length === 1 ? "" : "s"} from ${group.instructorName}?`,
+                async () => {
+                    setFreeing(group.instructorEmail);
+                    try {
+                        const res = await fetch(
+                            "http://localhost:8080/candidate/freeCandidates",
+                            {
+                                method: "PATCH",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                },
+                                body: JSON.stringify(selectedEmails),
                             }
-                            : g
-                    )
-                );
+                        );
+                        if (!res.ok) {
+                            const msg = await res.text().catch(() => "");
+                            throw new Error(msg || `HTTP ${res.status}`);
+                        }
 
-                setSelectingFor(null);
-                setSelectedEmails([]);
-            } catch (err) {
-                console.error("Free candidates failed:", err);
-                alert("Could not free candidates: " + (err.message || "unknown error"));
-            } finally {
-                setFreeing(null);
-            }
-        };
+                        setGroups(prev =>
+                            prev.map(g =>
+                                g.instructorEmail === group.instructorEmail
+                                    ? {
+                                        ...g,
+                                        candidates: (g.candidates || []).filter(
+                                            c => !selectedEmails.includes(c.email)
+                                        ),
+                                    }
+                                    : g
+                            )
+                        );
 
-
-    const handleActivate = async (group) => {
-            if (!window.confirm(
-                `Reactivate ${group.instructorName}?\n\nThey will be able to log in and receive candidates again.`
-            )) return;
-
-            setActivating(group.instructorEmail);
-            try {
-                const res = await fetch(
-                    `http://localhost:8080/admin/activate/${encodeURIComponent(group.instructorEmail)}`,
-                    {
-                        method: "PATCH",
-                        headers: { Authorization: `Bearer ${token}` }
+                        setSelectingFor(null);
+                        setSelectedEmails([]);
+                    } catch (err) {
+                        console.error("Free candidates failed:", err);
+                        alert("Could not free candidates: " + (err.message || "unknown error"));
+                    } finally {
+                        setFreeing(null);
                     }
-                );
-                if (!res.ok) {
-                    const msg = await res.text().catch(() => "");
-                    throw new Error(msg || `HTTP ${res.status}`);
                 }
-
-                setGroups(prev =>
-                    prev.map(g =>
-                        g.instructorEmail === group.instructorEmail
-                            ? { ...g, active: true }
-                            : g
-                    )
-                );
-            } catch (err) {
-                console.error("Activate failed:", err);
-                alert("Could not activate: " + (err.message || "unknown error"));
-            } finally {
-                setActivating(null);
-            }
+            );
         };
 
+        const handleActivate = (group) => {
+            askConfirm(
+                `Reactivate ${group.instructorName}?\n\nThey will be able to log in and receive candidates again.`,
+                async () => {
+                    setActivating(group.instructorEmail);
+                    try {
+                        const res = await fetch(
+                            `http://localhost:8080/admin/activate/${encodeURIComponent(group.instructorEmail)}`,
+                            { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+                        );
+                        if (!res.ok) {
+                            const msg = await res.text().catch(() => "");
+                            throw new Error(msg || `HTTP ${res.status}`);
+                        }
 
-    const handleDeactivate = async (group) => {
-        if (!window.confirm(
-            `Deactivate ${group.instructorName}?\n\nThey will no longer be able to log in or receive candidates.`
-        )) return;
-
-        setDeactivating(group.instructorEmail);
-        try {
-            const res = await fetch(
-                `http://localhost:8080/admin/inactivate/${encodeURIComponent(group.instructorEmail)}`,
-                {
-                    method: "PATCH",
-                    headers: { Authorization: `Bearer ${token}` }
+                        setGroups(prev =>
+                            prev.map(g =>
+                                g.instructorEmail === group.instructorEmail
+                                    ? { ...g, active: true }
+                                    : g
+                            )
+                        );
+                    } catch (err) {
+                        console.error("Activate failed:", err);
+                        alert("Could not activate: " + (err.message || "unknown error"));
+                    } finally {
+                        setActivating(null);
+                    }
                 }
             );
-            if (!res.ok) {
-                const msg = await res.text().catch(() => "");
-                throw new Error(msg || `HTTP ${res.status}`);
-            }
+        };
 
-             setGroups(prev =>
-                    prev.map(g =>
-                        g.instructorEmail === group.instructorEmail
-                            ? { ...g, active: false, candidates: [] }
-                            : g
-                    )
-                );
+        const handleDeactivate = (group) => {
+            askConfirm(
+                `Deactivate ${group.instructorName}?\n\nThey will no longer be able to log in or receive candidates.`,
+                async () => {
+                    setDeactivating(group.instructorEmail);
+                    try {
+                        const res = await fetch(
+                            `http://localhost:8080/admin/inactivate/${encodeURIComponent(group.instructorEmail)}`,
+                            { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }
+                        );
+                        if (!res.ok) {
+                            const msg = await res.text().catch(() => "");
+                            throw new Error(msg || `HTTP ${res.status}`);
+                        }
 
+                        setGroups(prev =>
+                            prev.map(g =>
+                                g.instructorEmail === group.instructorEmail
+                                    ? { ...g, active: false, candidates: [] }
+                                    : g
+                            )
+                        );
 
-            setExpandedEmail(prev =>
-                prev === group.instructorEmail ? null : prev
+                        setExpandedEmail(prev =>
+                            prev === group.instructorEmail ? null : prev
+                        );
+
+                        if (selectingFor === group.instructorEmail) {
+                            setSelectingFor(null);
+                            setSelectedEmails([]);
+                        }
+                    } catch (err) {
+                        console.error("Deactivate failed:", err);
+                        alert("Could not deactivate: " + (err.message || "unknown error"));
+                    } finally {
+                        setDeactivating(null);
+                    }
+                }
             );
-
-
-             if (selectingFor === group.instructorEmail) {
-                setSelectingFor(null);
-                setSelectedEmails([]);
-            }
-        } catch (err) {
-            console.error("Deactivate failed:", err);
-            alert("Could not deactivate: " + (err.message || "unknown error"));
-        } finally {
-            setDeactivating(null);
-        }
-    };
+        };
 
     const handleViewCandidates = (group) => {
         setExpandedEmail(prev =>
@@ -481,6 +491,12 @@ export default function AllInstructors() {
                     );
                 })}
             </div>
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../style/VehicleDetailsModal.css";
+import ConfirmModal from "./ConfirmModal";
 
 export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign, onFix }) {
 
@@ -9,6 +10,7 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
     const [malfunctionError, setMalfunctionError] = useState(null);
 
     const [fixing, setFixing] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
      const token = localStorage.getItem("userToken");
 
@@ -98,31 +100,25 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
         }
     };
 
-     const handleFix = async () => {
-        if (!window.confirm(`Are you sure you want to mark vehicle ${vehicle.registrationNumber} as fixed?`)) {
-            return;
-        }
+     const handleFix = () => {
+        setConfirmOpen(true);
+    };
 
+    const confirmFix = async () => {
+        setConfirmOpen(false);
         setFixing(true);
         try {
             await axios.patch(
                 `http://localhost:8080/vehicle/fix/${vehicle.id}`,
                 {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            
             if (onFix) {
                 onFix(vehicle.id);
             }
 
-          
             onClose();
-
         } catch (error) {
             console.error("Error fixing vehicle:", error);
             alert("Failed to mark vehicle as fixed. Please try again.");
@@ -263,6 +259,13 @@ export default function VehicleDetailsModal({ isOpen, vehicle, onClose, onAssign
                     </button>
                 </div>
             </div>
+
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={`Are you sure you want to mark vehicle ${vehicle.registrationNumber} as fixed?`}
+                onConfirm={confirmFix}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }
