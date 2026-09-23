@@ -3,6 +3,7 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import '../../style/InstructorDashboard.css'
 import SessionClassCard from "../../components/SessionClassCard";
+import ConfirmModal from "../../components/ConfirmModal";
 
 function InfoCard({title,number}){
 
@@ -110,6 +111,9 @@ export default function InstructorDashboard() {
     const [loading,setLoading] = useState(true);
     const [error,setError] = useState(null);
     const [isCancellingAll, setIsCancellingAll] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);   
     const token  = localStorage.getItem("userToken");
 
     function sortByStartTime(classes) {
@@ -150,6 +154,18 @@ export default function InstructorDashboard() {
         fetchDashboard();
 
     },[]);
+
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action); 
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
 
      const updateClassStatus = (classId, newStatus) => {
         setDashboardData(prev => ({
@@ -209,63 +225,42 @@ export default function InstructorDashboard() {
         }
     };
 
-    const handleCancel = async (classId) => {
-        const confirmed = window.confirm("Are you sure you want to cancel this class?");
-        if (!confirmed) return;
-
-        try{
-            
-            await axios.patch(`http://localhost:8080/practical-class/cancel/${classId}`,  {},                                    // empty request body
-            {                                      
-                headers: {
-                    Authorization: `Bearer ${token}`
+    const handleCancel = (classId) => {
+        askConfirm(
+            "Are you sure you want to cancel this class?",
+            async () => {
+                try {
+                    await axios.patch(`http://localhost:8080/practical-class/cancel/${classId}`, {}, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    updateClassStatus(classId, "CANCELLED");
+                } catch (error) {
+                    alert(error);
                 }
-            });
-            updateClassStatus(classId,"CANCELLED");
-
-        }catch(error){
-            alert(error);
-        }
-    };
-
-
-     const handleCancelAllToday = async () => {
-        const confirmed = window.confirm(
-            "Are you sure you want to cancel ALL remaining classes for today?\n\n" +
-            "This action cannot be undone."
+            }
         );
-        
-        if (!confirmed) return;
-
-        setIsCancellingAll(true);
-
-        try {
-            const response = await axios.patch(
-                'http://localhost:8080/practical-class/cancelToday',
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            // Refresh the dashboard to show updated data
-            await refreshDashboard();
-
-            const cancelledCount = response.data?.length || 0;
-            alert(`✅ Successfully cancelled ${cancelledCount} class(es) for today.`);
-
-        } catch (error) {
-            console.error("Error cancelling all classes:", error);
-            alert("Failed to cancel classes. Please try again.");
-        } finally {
-            setIsCancellingAll(false);
-        }
     };
 
 
-
+    const handleCancelAllToday = () => {
+        askConfirm(
+            "Are you sure you want to cancel ALL remaining classes for today?\n\nThis action cannot be undone.",
+            async () => {
+                setIsCancellingAll(true);
+                try {
+                    await axios.patch('http://localhost:8080/practical-class/cancelToday', {}, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    await refreshDashboard();
+                } catch (error) {
+                    console.error("Error cancelling all classes:", error);
+                    alert("Failed to cancel classes. Please try again.");
+                } finally {
+                    setIsCancellingAll(false);
+                }
+            }
+        );
+    };
 
 
 
@@ -406,7 +401,12 @@ export default function InstructorDashboard() {
             </div>
 
 
-            
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
 
         </div>
 

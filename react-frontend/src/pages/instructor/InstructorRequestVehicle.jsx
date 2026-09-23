@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../style/InstructorRequestVehicle.css";
+import ConfirmModal from "../../components/ConfirmModal";
+
 
 export default function InstructorRequestVehicle() {
     const navigate = useNavigate();
@@ -17,6 +19,22 @@ export default function InstructorRequestVehicle() {
 
     const [latestRequest, setLatestRequest] = useState(null);
     const [loadingRequest, setLoadingRequest] = useState(false);
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
 
     const hasFetched = useRef(false);
 
@@ -104,49 +122,37 @@ export default function InstructorRequestVehicle() {
         setSelectedVehicle(null);
     };
 
-    const handleRequestClick = async (vehicle) => {
+    const handleRequestClick = (vehicle) => {
         if (latestRequest?.status === 'PENDING') {
             alert("You have a pending request. Please wait for it to be resolved before making a new request.");
             return;
         }
 
-        if (!window.confirm(`Are you sure you want to request vehicle ${vehicle.registrationNumber}?`)) {
-            return;
-        }
+        askConfirm(`Are you sure you want to request vehicle ${vehicle.registrationNumber}?`, async () => {
+            try {
+                const instructorEmail = localStorage.getItem("userEmail");
+                const requestData = {
+                    instructor_email: instructorEmail,
+                    vehicle_id: vehicle.id
+                };
 
-        try {
-            const instructorEmail = localStorage.getItem("userEmail");
+                await axios.post(
+                    "http://localhost:8080/car-request/inst/create",
+                    requestData,
+                    { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+                );
 
-            const requestData = {
-                instructor_email: instructorEmail,
-                vehicle_id: vehicle.id
-            };
-
-            await axios.post(
-                "http://localhost:8080/car-request/inst/create",
-                requestData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
-
-            alert(`Request for vehicle ${vehicle.registrationNumber} submitted successfully!`);
-
-          
-            await fetchLatestRequest();
-
-        } catch (error) {
-            console.error("Error creating request:", error);
-            alert(error.response?.data?.message || "Failed to submit request. Please try again.");
-        }
+                await fetchLatestRequest();
+            } catch (error) {
+                console.error("Error creating request:", error);
+                alert(error.response?.data?.message || "Failed to submit request. Please try again.");
+            }
+        });
     };
 
 
 
-   const handlePickUp = async () => {
+    const handlePickUp = () => {
         if (!latestRequest) {
             alert("No request found.");
             return;
@@ -162,42 +168,31 @@ export default function InstructorRequestVehicle() {
             return;
         }
 
-        if (!window.confirm(`Are you sure you want to pick up this vehicle?`)) {
-            return;
-        }
+        askConfirm("Are you sure you want to pick up this vehicle?", async () => {
+            setLoadingRequest(true);
+            try {
+                const payload = {
+                    id: latestRequest.id,
+                    instructor_email: latestRequest.instructor_email,
+                    vehicle_id: latestRequest.vehicle_id
+                };
 
-        setLoadingRequest(true);
-        try {
-            const payload = {
-                id: latestRequest.id,
-                instructor_email: latestRequest.instructor_email,
-                vehicle_id: latestRequest.vehicle_id
-            };
+                await axios.patch(
+                    "http://localhost:8080/car-request/inst/set-primary-car",
+                    payload,
+                    { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+                );
 
-            await axios.patch(
-                "http://localhost:8080/car-request/inst/set-primary-car",
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
-
-            alert("Vehicle picked up successfully!");
-
-            await fetchLatestRequest();
-            await fetchVehicles();
-
-        } catch (error) {
-            console.error("Error picking up vehicle:", error);
-            alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
-        } finally {
-            setLoadingRequest(false);
-        }
+                await fetchLatestRequest();
+                await fetchVehicles();
+            } catch (error) {
+                console.error("Error picking up vehicle:", error);
+                alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
+            } finally {
+                setLoadingRequest(false);
+            }
+        });
     };
-
 
 
 
@@ -457,6 +452,13 @@ export default function InstructorRequestVehicle() {
                     </div>
                 </div>
             )}
+
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

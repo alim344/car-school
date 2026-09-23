@@ -123,7 +123,6 @@ export default function SessionClassCard({ pc, onEndClass, onInterruptClass }) {
             setShowEndModal(false);
             setShowLastClassModal(false);
             setShowExtraClassesModal(false);
-            alert("Class ended successfully!");
             if (onEndClass) onEndClass(pc);
         } catch (error) {
             console.error("Error ending class:", error);

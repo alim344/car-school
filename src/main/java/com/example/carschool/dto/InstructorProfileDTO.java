@@ -25,10 +25,16 @@ public class InstructorProfileDTO {
         this.name = instructor.getName() + " " + instructor.getLastname();
         this.email = instructor.getEmail();
         this.category = instructor.getCategory();
-        this.activeVehicleRegistration = instructor.getVehicle().getRegistrationNumber();
-        this.activeVehicle_id = instructor.getVehicle().getId();
-        this.primaryVehicleRegistration = instructor.getPrimaryVehicle().getRegistrationNumber();
-        this.primaryVehicle_id = instructor.getPrimaryVehicle().getId();
+
+        if(instructor.getVehicle() != null) {
+            this.activeVehicleRegistration = instructor.getVehicle().getRegistrationNumber();
+            this.activeVehicle_id = instructor.getVehicle().getId();
+        }
+        if(instructor.getPrimaryVehicle() != null) {
+            this.primaryVehicleRegistration = instructor.getPrimaryVehicle().getRegistrationNumber();
+            this.primaryVehicle_id = instructor.getPrimaryVehicle().getId();
+        }
+
         this.documents = documents;
 
     }

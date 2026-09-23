@@ -955,8 +955,8 @@ public class TestDataLoader implements CommandLineRunner {
 
         InstructorLeaveRequest leave3 = new InstructorLeaveRequest();
         leave3.setInstructor(i1);
-        leave3.setStartDate(LocalDate.of(2026, 10, 1));
-        leave3.setEndDate(LocalDate.of(2026, 10, 6));
+        leave3.setStartDate(LocalDate.of(2026, 10, 5));
+        leave3.setEndDate(LocalDate.of(2026, 10, 9));
         leave3.setType(LeaveType.VACATION);
         leave3.setStatus(LeaveStatus.APPROVED);
         leave3.setReason("Autumn break");
@@ -1014,7 +1014,7 @@ public class TestDataLoader implements CommandLineRunner {
 
 
 
-        LocalDate weekStart = LocalDate.of(2026, 9, 21); // Monday next week
+        LocalDate weekStart = LocalDate.of(2026, 9, 28); // Monday next week
 
         double[][] novisadCoords = {
                 {45.2395,19.8410},{45.2450,19.8350},{45.2570,19.8150},{45.2520,19.7990},
@@ -2292,19 +2292,18 @@ public class TestDataLoader implements CommandLineRunner {
         System.out.println("Successfully saved all " + manualClasses.size() + " manual current-week classes!");
     }*/
 
-
     private void createManualCurrentWeekClasses(List<Route> routes) {
         if (routes == null || routes.isEmpty()) return;
 
-        LocalDate monday = LocalDate.of(2026, 9, 14);
+        LocalDate monday = LocalDate.of(2026, 9, 21);
         LocalDate tuesday = monday.plusDays(1);
         LocalDate wednesday = monday.plusDays(2);
         LocalDate thursday = monday.plusDays(3);
         LocalDate friday = monday.plusDays(4);
         LocalDate saturday = monday.plusDays(5);
 
-        // Current time cutoff: Thursday, Sept 17, 2026 at 09:00 AM
-        LocalDateTime nowCutoff = LocalDateTime.of(2026, 9, 17, 9, 0);
+       
+        LocalDateTime nowCutoff = LocalDateTime.of(2026, 9, 22, 19, 28);
 
         // Helper method to build and configure a class with past/future logic
         java.util.function.BiConsumer<Candidate, LocalDateTime[]> addClass = (candidate, timeSlot) -> {
@@ -2322,7 +2321,7 @@ public class TestDataLoader implements CommandLineRunner {
             c.setRoute(routes.get((int) (Math.random() * routes.size())));
             c.setLocation(candidate.getLocation() != null ? candidate.getLocation() : "Centar, Novi Sad");
 
-            // If the class starts before Thursday 09:00 AM, mark it as completed/ended with grade & comments
+            // If the class starts before Tuesday 19:28 PM, mark it as completed/ended with grade & comments
             if (timeSlot[0].isBefore(nowCutoff)) {
                 c.setClassStatus(ClassStatus.ENDED);
                 c.setActualStartTime(timeSlot[0]);
@@ -2372,10 +2371,10 @@ public class TestDataLoader implements CommandLineRunner {
         addClass.accept(saraS, new LocalDateTime[]{ wednesday.atTime(17, 0), wednesday.atTime(18, 30) });
 
         // --- THURSDAY ---
-        addClass.accept(aleksandra, new LocalDateTime[]{ thursday.atTime(7, 0), thursday.atTime(8, 30) }); // Before 9 AM -> ENDED
-        addClass.accept(petar, new LocalDateTime[]{ thursday.atTime(10, 0), thursday.atTime(11, 30) });      // After 9 AM -> ACCEPTED
-        addClass.accept(luka, new LocalDateTime[]{ thursday.atTime(14, 30), thursday.atTime(16, 0) });      // After 9 AM -> ACCEPTED
-        addClass.accept(tanja, new LocalDateTime[]{ thursday.atTime(16, 0), thursday.atTime(17, 30) });     // After 9 AM -> ACCEPTED
+        addClass.accept(aleksandra, new LocalDateTime[]{ thursday.atTime(7, 0), thursday.atTime(8, 30) });
+        addClass.accept(petar, new LocalDateTime[]{ thursday.atTime(10, 0), thursday.atTime(11, 30) });
+        addClass.accept(luka, new LocalDateTime[]{ thursday.atTime(14, 30), thursday.atTime(16, 0) });
+        addClass.accept(tanja, new LocalDateTime[]{ thursday.atTime(16, 0), thursday.atTime(17, 30) });
 
         // --- FRIDAY ---
         addClass.accept(ivana, new LocalDateTime[]{ friday.atTime(8, 0), friday.atTime(9, 30) });
@@ -2400,6 +2399,7 @@ public class TestDataLoader implements CommandLineRunner {
         Candidate vuk       = candidateRepository.findByEmail("vuk.spasojevic@mail.com");
         Candidate katarina  = candidateRepository.findByEmail("katarina.blagojevic@mail.com");
         Candidate nemanja   = candidateRepository.findByEmail("nemanja.gavric@mail.com");
+
         // --- MONDAY (i2) ---
         addClass.accept(stefan, new LocalDateTime[]{ monday.atTime(8, 0), monday.atTime(9, 30) });
         addClass.accept(marijaS, new LocalDateTime[]{ monday.atTime(9, 30), monday.atTime(11, 0) });
@@ -2419,10 +2419,10 @@ public class TestDataLoader implements CommandLineRunner {
         addClass.accept(nemanja, new LocalDateTime[]{ wednesday.atTime(17, 0), wednesday.atTime(18, 30) });
 
         // --- THURSDAY (i2) ---
-        addClass.accept(dario, new LocalDateTime[]{ thursday.atTime(7, 0), thursday.atTime(8, 30) });    // Before 9 AM -> ENDED
-        addClass.accept(jovana, new LocalDateTime[]{ thursday.atTime(10, 0), thursday.atTime(11, 30) });  // After 9 AM -> ACCEPTED
-        addClass.accept(vuk, new LocalDateTime[]{ thursday.atTime(14, 30), thursday.atTime(16, 0) });     // After 9 AM -> ACCEPTED
-        addClass.accept(stefan, new LocalDateTime[]{ thursday.atTime(16, 0), thursday.atTime(17, 30) });    // After 9 AM -> ACCEPTED
+        addClass.accept(dario, new LocalDateTime[]{ thursday.atTime(7, 0), thursday.atTime(8, 30) });
+        addClass.accept(jovana, new LocalDateTime[]{ thursday.atTime(10, 0), thursday.atTime(11, 30) });
+        addClass.accept(vuk, new LocalDateTime[]{ thursday.atTime(14, 30), thursday.atTime(16, 0) });
+        addClass.accept(stefan, new LocalDateTime[]{ thursday.atTime(16, 0), thursday.atTime(17, 30) });
 
         // --- FRIDAY (i2) ---
         addClass.accept(katarina, new LocalDateTime[]{ friday.atTime(8, 0), friday.atTime(9, 30) });

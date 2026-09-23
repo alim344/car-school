@@ -5,6 +5,7 @@ import CreateClassModal from "../../components/CreateClassModal";
 import MakeScheduleModal from "../../components/MakeScheduleModal";
 import ManualScheduleSidebar from "../../components/ManualScheduleSidebar";
 import AlgScheduleModal from "../../components/AlgScheduleModal";
+import ConfirmModal from "../../components/ConfirmModal";
 
 import "../../style/InstructorSchedule.css";
 
@@ -57,6 +58,8 @@ export default function InstructorSchedule() {
 
     
    const [leaves, setLeaves] = useState([]);
+
+   const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
 
     const token = localStorage.getItem("userToken");
 
@@ -644,16 +647,16 @@ export default function InstructorSchedule() {
 
     
 
+    
     const handleExitManualMode = () => {
         if (manualDrafts.length > 0) {
-            const confirmed = window.confirm(
-                "You have unsaved classes. Are you sure you want to leave?"
-            );
-            if (!confirmed) {
-                return;
-            }
+            setExitConfirmOpen(true);
+            return;
         }
+        doExitManualMode();
+    };
 
+    const doExitManualMode = () => {
         setManualMode(false);
         setSelectedCandidateEmail("");
         setCandidatePreferences([]);
@@ -728,7 +731,6 @@ export default function InstructorSchedule() {
             );
 
             setSelectedClass(null);
-            alert("Class cancelled successfully.");
 
         } catch (error) {
             console.error("Error cancelling class:", error);
@@ -928,7 +930,13 @@ export default function InstructorSchedule() {
                 />
             )}
 
-           
+            <ConfirmModal
+                isOpen={exitConfirmOpen}
+                message="You have unsaved classes. Are you sure you want to leave?"
+                onConfirm={() => { setExitConfirmOpen(false); doExitManualMode(); }}
+                onCancel={() => setExitConfirmOpen(false)}
+            />
+                    
 
            
         </div>

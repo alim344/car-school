@@ -1,0 +1,112 @@
+
+
+.confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  animation: confirmFadeIn 0.18s ease-out;
+}
+
+
+.confirm-modal-box {
+  background: linear-gradient(145deg, #1a2332, #243447);
+  border: 1px solid rgba(214, 251, 79, 0.15);
+  border-radius: 20px;
+  padding: 32px 36px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  animation: confirmSlideUp 0.25s ease-out;
+}
+
+
+.confirm-modal-message {
+  color: #e2e8f0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  margin: 0 0 28px 0;
+  text-align: center;
+}
+
+.confirm-modal-message::before {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  border-radius: 3px;
+  background: rgb(214, 251, 79);
+  margin: 0 auto 18px;
+}
+
+
+.confirm-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.confirm-modal-no,
+.confirm-modal-yes {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+  border: 2px solid transparent;
+  outline: none;
+}
+
+
+.confirm-modal-no {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.confirm-modal-no:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+.confirm-modal-no:active {
+  transform: translateY(0);
+}
+
+
+.confirm-modal-yes {
+  background: linear-gradient(135deg, rgb(214, 251, 79), rgba(214, 251, 79, 0.6));
+  color: #1f2937;
+  border-color: rgb(214, 251, 79);
+  box-shadow: 0 4px 16px rgba(214, 251, 79, 0.15);
+}
+
+.confirm-modal-yes:hover {
+  background: linear-gradient(135deg, #e8ff8a, rgb(214, 251, 79));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(214, 251, 79, 0.3);
+}
+
+.confirm-modal-yes:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(214, 251, 79, 0.2);
+}
+
+.confirm-modal-no:focus-visible,
+.confirm-modal-yes:focus-visible {
+  box-shadow: 0 0 0 3px rgba(214, 251, 79, 0.25);
+}

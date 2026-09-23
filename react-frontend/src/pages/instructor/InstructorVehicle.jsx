@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../style/InstructorVehicle.css";
+import ConfirmModal from "../../components/ConfirmModal";
 
 export default function InstructorVehicle() {
     
@@ -30,6 +31,22 @@ export default function InstructorVehicle() {
     const [latestRequest, setLatestRequest] = useState(null);
 
     const hasFetched = useRef(false);
+
+
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [confirmMessage, setConfirmMessage] = useState("");
+    const [confirmAction, setConfirmAction] = useState(null);
+
+    const askConfirm = (message, action) => {
+        setConfirmMessage(message);
+        setConfirmAction(() => action);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmYes = () => {
+        setConfirmOpen(false);
+        confirmAction?.();
+    };
 
     
     const fetchMalfunctionInfo = async (vehicleId) => {
@@ -188,152 +205,100 @@ export default function InstructorVehicle() {
         }
     };
 
-    const handleReportOutOfService = async (vehicleId) => {
-        if (!window.confirm("Are you sure you want to report this vehicle as out of service?")) {
-            return;
-        }
-
-        setReportingOutOfService(true);
-        try {
-            await axios.patch(
-                `http://localhost:8080/vehicle/inst/out-of-service/${vehicleId}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setVehicles(prev =>
-                prev.map(v =>
-                    v.id === vehicleId
-                        ? { ...v, status: "OUT_OF_SERVICE" }
-                        : v
-                )
-            );
-            
-            await fetchMalfunctionInfo(vehicleId);
-
-        } catch (error) {
-            console.error("Error reporting out of service:", error);
-            alert("Failed to report vehicle as out of service. Please try again.");
-        } finally {
-            setReportingOutOfService(false);
-        }
+    const handleReportOutOfService = (vehicleId) => {
+        askConfirm("Are you sure you want to report this vehicle as out of service?", async () => {
+            setReportingOutOfService(true);
+            try {
+                await axios.patch(
+                    `http://localhost:8080/vehicle/inst/out-of-service/${vehicleId}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setVehicles(prev =>
+                    prev.map(v => v.id === vehicleId ? { ...v, status: "OUT_OF_SERVICE" } : v)
+                );
+                await fetchMalfunctionInfo(vehicleId);
+            } catch (error) {
+                console.error("Error reporting out of service:", error);
+                alert("Failed to report vehicle as out of service. Please try again.");
+            } finally {
+                setReportingOutOfService(false);
+            }
+        });
     };
 
-    const handleMakeReserveAvailable = async (vehicleId) => {
-        if (!window.confirm("Are you sure you want to make this reserve vehicle available?")) {
-            return;
-        }
-
-        setProcessingAction(true);
-        try {
-            await axios.patch(
-                `http://localhost:8080/vehicle/make-reserve-available/${vehicleId}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setVehicles(prev =>
-                prev.map(v =>
-                    v.id === vehicleId
-                        ? { ...v, status: "AVAILABLE" }
-                        : v
-                )
-            );
-        } catch (error) {
-            console.error("Error setting reserve vehicle available:", error);
-            alert(error.response?.data?.message || "Failed to make reserve vehicle available.");
-        } finally {
-            setProcessingAction(false);
-        }
+    const handleMakeReserveAvailable = (vehicleId) => {
+        askConfirm("Are you sure you want to make this reserve vehicle available?", async () => {
+            setProcessingAction(true);
+            try {
+                await axios.patch(
+                    `http://localhost:8080/vehicle/make-reserve-available/${vehicleId}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setVehicles(prev =>
+                    prev.map(v => v.id === vehicleId ? { ...v, status: "AVAILABLE" } : v)
+                );
+            } catch (error) {
+                console.error("Error setting reserve vehicle available:", error);
+                alert(error.response?.data?.message || "Failed to make reserve vehicle available.");
+            } finally {
+                setProcessingAction(false);
+            }
+        });
     };
 
-    const handleActivateVehicle = async (vehicleId) => {
-        if (!window.confirm("Are you sure you want to activate this primary vehicle?")) {
-            return;
-        }
-
-        setProcessingAction(true);
-        try {
-            await axios.patch(
-                `http://localhost:8080/vehicle/activate/${vehicleId}`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setVehicles(prev =>
-                prev.map(v =>
-                    v.id === vehicleId
-                        ? { ...v, status: "IN_USE" }
-                        : v
-                )
-            );
-        } catch (error) {
-            console.error("Error activating primary vehicle:", error);
-            alert(error.response?.data?.message || "Failed to activate primary vehicle. Make sure you don't already have an active vehicle.");
-        } finally {
-            setProcessingAction(false);
-        }
+   const handleActivateVehicle = (vehicleId) => {
+        askConfirm("Are you sure you want to activate this primary vehicle?", async () => {
+            setProcessingAction(true);
+            try {
+                await axios.patch(
+                    `http://localhost:8080/vehicle/activate/${vehicleId}`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+                setVehicles(prev =>
+                    prev.map(v => v.id === vehicleId ? { ...v, status: "IN_USE" } : v)
+                );
+            } catch (error) {
+                console.error("Error activating primary vehicle:", error);
+                alert(error.response?.data?.message || "Failed to activate primary vehicle. Make sure you don't already have an active vehicle.");
+            } finally {
+                setProcessingAction(false);
+            }
+        });
     };
 
-    const handlePickUp = async (vehicleId) => {
-        if (!window.confirm(`Are you sure you want to pick up this vehicle?`)) {
-            return;
-        }
-
-        if (!latestRequest) {
-            alert("No request found for this vehicle.");
-            return;
-        }
-
-        setProcessingAction(true);
-        try {
-            const payload = {
-                id: latestRequest.id,
-                instructor_email: latestRequest.instructor_email,
-                vehicle_id: vehicleId
-            };
-
-            await axios.patch(
-                "http://localhost:8080/car-request/inst/set-primary-car",
-                payload,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
-                }
-            );
-
-            setVehicles(prev =>
-                prev.map(v =>
-                    v.id === vehicleId
-                        ? { ...v, status: "IN_USE" }
-                        : v
-                )
-            );
-
-            setLatestRequest(null);
-
-            alert("Vehicle picked up successfully!");
-
-        } catch (error) {
-            console.error("Error picking up vehicle:", error);
-            alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
-        } finally {
-            setProcessingAction(false);
-        }
+    const handlePickUp = (vehicleId) => {
+        askConfirm("Are you sure you want to pick up this vehicle?", async () => {
+            if (!latestRequest) {
+                alert("No request found for this vehicle.");
+                return;
+            }
+            setProcessingAction(true);
+            try {
+                const payload = {
+                    id: latestRequest.id,
+                    instructor_email: latestRequest.instructor_email,
+                    vehicle_id: vehicleId
+                };
+                await axios.patch(
+                    "http://localhost:8080/car-request/inst/set-primary-car",
+                    payload,
+                    { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+                );
+                setVehicles(prev =>
+                    prev.map(v => v.id === vehicleId ? { ...v, status: "IN_USE" } : v)
+                );
+                setLatestRequest(null);
+                alert("Vehicle picked up successfully!");
+            } catch (error) {
+                console.error("Error picking up vehicle:", error);
+                alert(error.response?.data?.message || "Failed to pick up vehicle. Please try again.");
+            } finally {
+                setProcessingAction(false);
+            }
+        });
     };
 
 
@@ -620,6 +585,12 @@ export default function InstructorVehicle() {
                     </div>
                 </div>
             )}
+            <ConfirmModal
+                isOpen={confirmOpen}
+                message={confirmMessage}
+                onConfirm={handleConfirmYes}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     );
 }

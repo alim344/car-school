@@ -194,8 +194,7 @@ const fetchLeaveRequests = useCallback(async () => {
             );
 
             setIsModalOpen(false);
-            await fetchLeaveRequests(); // Refresh the list
-            alert(' Leave request submitted successfully!');
+            await fetchLeaveRequests(); 
 
         } catch (error) {
             console.error("Error creating leave request:", error);
