@@ -6,6 +6,7 @@ import MakeScheduleModal from "../../components/MakeScheduleModal";
 import ManualScheduleSidebar from "../../components/ManualScheduleSidebar";
 import AlgScheduleModal from "../../components/AlgScheduleModal";
 import ConfirmModal from "../../components/ConfirmModal";
+import CancelClassesModal from "../../components/CancelClassesModal";
 
 import "../../style/InstructorSchedule.css";
 
@@ -61,7 +62,20 @@ export default function InstructorSchedule() {
 
    const [exitConfirmOpen, setExitConfirmOpen] = useState(false);
 
+    const [cancelClassesModalOpen, setCancelClassesModalOpen] = useState(false);
+
     const token = localStorage.getItem("userToken");
+
+    const handleClassesCancelled = (cancelledClasses) => {
+        const cancelledIds = new Set(cancelledClasses.map(c => c.id));
+        setClasses(prev =>
+            prev.map(cls =>
+                cancelledIds.has(cls.id)
+                    ? { ...cls, classStatus: "CANCELLED" }
+                    : cls
+            )
+        );
+    };
 
 
     useEffect(() => {
@@ -779,6 +793,13 @@ export default function InstructorSchedule() {
                             + Create a Class
                         </button>
 
+                        <button
+                            className="cancel-classes-button"
+                            onClick={() => setCancelClassesModalOpen(true)}
+                        >
+                            🚫 Cancel Classes
+                        </button>
+
                         <div className="requests-section">
                             <div className="requests-header">
                                 <h3>Requests</h3>
@@ -935,6 +956,13 @@ export default function InstructorSchedule() {
                 message="You have unsaved classes. Are you sure you want to leave?"
                 onConfirm={() => { setExitConfirmOpen(false); doExitManualMode(); }}
                 onCancel={() => setExitConfirmOpen(false)}
+            />
+
+            <CancelClassesModal
+                isOpen={cancelClassesModalOpen}
+                onClose={() => setCancelClassesModalOpen(false)}
+                token={token}
+                onCancelled={handleClassesCancelled}
             />
                     
 

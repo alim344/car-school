@@ -258,14 +258,16 @@ public class PracticalClassService {
 
 
     @Transactional
-    public void cancelClasses(LocalDateTime startTime, LocalDateTime endTime,Instructor instructor){
+    public List<PracticalClassDTO> cancelClasses(LocalDateTime startTime, LocalDateTime endTime,Instructor instructor){
        List<PracticalClass> pclasses =  practicalClassRepository.findByInstructorAndScheduledStartTimeBetween(instructor,startTime,endTime);
+       List<PracticalClassDTO> dtos = new ArrayList<>();
        for(PracticalClass pc : pclasses){
            pc.setClassStatus(ClassStatus.CANCELLED);
            practicalClassRepository.save(pc);
            notificationService.createNotification(NotificationType.CLASS_CANCELLED,pc.getId(),pc.getCandidate().getId(),pc.getScheduledStartTime().toString());
-
+            dtos.add(new PracticalClassDTO(pc));
        }
+       return dtos;
     }
 
     public PracticalClass saveClass(PracticalClass pc){

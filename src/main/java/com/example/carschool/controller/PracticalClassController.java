@@ -101,4 +101,15 @@ public class PracticalClassController {
         return ResponseEntity.ok(practicalClassService.getByCandidate(email));
     }
 
+    @PatchMapping("/cancel-period")
+    public ResponseEntity<List<PracticalClassDTO>> cancelClasses(@RequestBody CancelPeriodDTO dto, HttpServletRequest request) {
+        String token = tokenUtils.getToken(request);
+        String email = tokenUtils.getEmailFromToken(token);
+        Instructor instructor = instructorService.findByEmail(email);
+
+
+
+        return ResponseEntity.ok(practicalClassService.cancelClasses(dto.getStartTime(), dto.getEndTime(), instructor));
+    }
+
 }

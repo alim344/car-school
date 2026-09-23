@@ -1,0 +1,25 @@
+.cancel-classes-modal {
+    max-width: 420px;
+    width: 90%;
+}
+
+.cancel-classes-form {
+    padding: 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cancel-classes-hint {
+    margin: 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.cancel-classes-error {
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
