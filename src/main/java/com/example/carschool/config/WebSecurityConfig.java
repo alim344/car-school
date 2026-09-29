@@ -69,15 +69,24 @@ public class WebSecurityConfig {
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(restAuthenticationEntryPoint));
 
         http.authorizeHttpRequests(auth -> auth
+
+
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/api/foo").permitAll()
-                .requestMatchers("/schedule/cand/*","/pref/**","/p-exam/cand/*","/practical-class/report","/practical-class/getProfile","/candidate/change-get-candidate","/leave/cand-get").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/practical-class/**","/instructor/dashboard","/route/*","/schedule/inst/*","/p-exam/inst/*", "/vehicle/inst/**","/car-request/inst/*","/fuel/**").hasAuthority("ROLE_INSTRUCTOR")
+
                 .requestMatchers("/practical-class/cancel/*").hasAnyAuthority("ROLE_CANDIDATE","ROLE_INSTRUCTOR")
-                .requestMatchers("/p-exam/admin/*","/instructor/getAll","/candidate/pending","/car-request/*","/admin/**", "/candidate/getAll","/candidate/freeCandidates","/instructor/inactivate/*").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/vehicle/inst/out-of-service/*","/vehicle/***","/leave/**").hasAnyAuthority("ROLE_INSTRUCTOR", "ROLE_ADMIN")
+                .requestMatchers("/vehicle/inst/out-of-service/*").hasAnyAuthority("ROLE_INSTRUCTOR","ROLE_ADMIN")
                 .requestMatchers("/p-exam/cancel").hasAnyAuthority("ROLE_CANDIDATE","ROLE_ADMIN")
+
+                .requestMatchers("/schedule/cand/**","/pref/**","/p-exam/cand/**","/practical-class/report","/practical-class/getProfile","/candidate/change-get-candidate","/leave/cand-get").hasAuthority("ROLE_CANDIDATE")
+
+                .requestMatchers("/practical-class/**","/instructor/dashboard","/route/*","/schedule/inst/*","/p-exam/inst/*","/vehicle/inst/**","/car-request/inst/*","/fuel/**").hasAuthority("ROLE_INSTRUCTOR")
+
+                .requestMatchers("/p-exam/admin/*","/instructor/getAll","/candidate/pending","/car-request/*","/admin/**","/candidate/getAll","/candidate/freeCandidates","/instructor/inactivate/*").hasAuthority("ROLE_ADMIN")
+
+                .requestMatchers("/vehicle/**","/leave/**").hasAnyAuthority("ROLE_INSTRUCTOR","ROLE_ADMIN")
+
                 .requestMatchers(
                         "/favicon.ico",
                         "/webjars/**",

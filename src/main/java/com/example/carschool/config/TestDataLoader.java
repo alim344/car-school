@@ -781,9 +781,11 @@ public class TestDataLoader implements CommandLineRunner {
                 LocalDateTime.now().minusMonths(2), Category.B, TrainingStatus.PRACTICAL, i1,
                 "Klisa, Novi Sad", LocalDate.of(2026,4,30), 40, 40, candidateRole));
 
-        practicalCandidates.add(makeCandidate("tamara.vukovic","Tamara","Vuković","tamara.vukovic@mail.com",
+        Candidate tamaraVukovic = makeCandidate("tamara.vukovic","Tamara","Vuković","tamara.vukovic@mail.com",
                 LocalDateTime.now().minusMonths(1), Category.B, TrainingStatus.PRACTICAL, i1,
-                "Sajmište, Novi Sad", LocalDate.of(2026,5,4), 12, 40, candidateRole));
+                "Sajmište, Novi Sad", LocalDate.of(2026,5,4), 12, 40, candidateRole);
+
+        practicalCandidates.add(tamaraVukovic);
 
         practicalCandidates.add(makeCandidate("luka.antic","Luka","Antić","luka.antic@mail.com",
                 LocalDateTime.now().minusMonths(1), Category.B, TrainingStatus.PRACTICAL, i1,
@@ -931,8 +933,8 @@ public class TestDataLoader implements CommandLineRunner {
 
         InstructorLeaveRequest leave1 = new InstructorLeaveRequest();
         leave1.setInstructor(i2);
-        leave1.setStartDate(LocalDate.of(2026, 9, 22));
-        leave1.setEndDate(LocalDate.of(2026, 9, 22));
+        leave1.setStartDate(LocalDate.of(2026, 9, 30));
+        leave1.setEndDate(LocalDate.of(2026, 9, 30));
         leave1.setType(LeaveType.PERSONAL);
         leave1.setStatus(LeaveStatus.APPROVED);
         leave1.setReason("Wedding");
@@ -979,7 +981,7 @@ public class TestDataLoader implements CommandLineRunner {
         makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 9, 5, 11, 0), ExamStatus.FAILED, 32);
         makeExam(vanjaKrstic, a3, LocalDateTime.of(2026, 9, 8, 11, 0), ExamStatus.COMPLETED, 85);
 
-        makeExam(teodoraMilovanovic, a1, LocalDateTime.of(2026, 9, 9, 9, 0), ExamStatus.COMPLETED, 90);
+        makeExam(teodoraMilovanovic, a1, LocalDateTime.of(2026, 9, 24, 9, 0), ExamStatus.COMPLETED, 90);
 
         makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 9, 10, 13, 0), ExamStatus.FAILED, 38);
         makeExam(aleksaStamenkovic, a2, LocalDateTime.of(2026, 9, 12, 13, 0), ExamStatus.COMPLETED, 87);
@@ -1073,11 +1075,13 @@ public class TestDataLoader implements CommandLineRunner {
         createVukasinLocationNotes(vukasinJovicic,r1);
 
 
+
         List<Route> allRoutes = routeRepository.findAll();
         List<InstructorLeaveRequest> allLeaves = instructorLeaveRequestRepository.findAll();
 
         generatePracticalClassesForCandidates(practicalCandidates, allRoutes, allLeaves);
         createManualCurrentWeekClasses( allRoutes);
+        createTamaraLocationNotes(tamaraVukovic, r2, r3);
 
     }
 
@@ -2371,8 +2375,7 @@ public class TestDataLoader implements CommandLineRunner {
         // --- THURSDAY ---
         addClass.accept(aleksandra, new LocalDateTime[]{ thursday.atTime(7, 0), thursday.atTime(8, 30) });
         addClass.accept(petar, new LocalDateTime[]{ thursday.atTime(10, 0), thursday.atTime(11, 30) });
-        addClass.accept(luka, new LocalDateTime[]{ thursday.atTime(14, 30), thursday.atTime(16, 0) });
-        addClass.accept(tanja, new LocalDateTime[]{ thursday.atTime(16, 0), thursday.atTime(17, 30) });
+        addClass.accept(tanja, new LocalDateTime[]{ thursday.atTime(20, 30), thursday.atTime(21, 0) });
 
         // --- FRIDAY ---
         addClass.accept(ivana, new LocalDateTime[]{ friday.atTime(8, 0), friday.atTime(9, 30) });
@@ -2434,4 +2437,87 @@ public class TestDataLoader implements CommandLineRunner {
 
         System.out.println("Successfully created all manual current-week classes with past/future status applied!");
     }
+
+
+
+    private void createTamaraLocationNotes(
+            Candidate tamaraVukovic, Route r2, Route r3
+    ) {
+
+        List<PracticalClass> tamaraClasses =
+                practicalClassRepository
+                        .findAll()
+                        .stream()
+                        .filter(pc ->
+                                pc.getCandidate()
+                                        .getId()
+                                        .equals(tamaraVukovic.getId())
+                        )
+                        .sorted(
+                                (a, b) ->
+                                        a.getScheduledStartTime()
+                                                .compareTo(
+                                                        b.getScheduledStartTime()
+                                                )
+                        )
+                        .toList();
+
+        if (tamaraClasses.size() < 2) {
+            System.out.println(
+                    "Tamara does not have enough practical classes."
+            );
+            return;
+        }
+
+        // Poslednja dva časa: prethodni čas -> ruta r2, poslednji čas -> ruta r3
+        PracticalClass classPrev = tamaraClasses.get(tamaraClasses.size() - 2);
+        PracticalClass classLast = tamaraClasses.get(tamaraClasses.size() - 1);
+
+        classPrev.setRoute(r2);
+        classLast.setRoute(r3);
+        practicalClassRepository.saveAll(List.of(classPrev, classLast));
+
+        // ---- Prethodni čas (ruta r2) ----
+        LocationNote notePrev_1 = new LocationNote(classPrev, 45.2545, 19.8210,
+                "Kandidatkinja sigurno kreće sa mesta i pravilno koristi pokazivač pravca pri uključivanju."
+        );
+
+        LocationNote notePrev_2 = new LocationNote(classPrev, 45.2601, 19.8305,
+                "Dobro održava bezbednosno rastojanje od vozila ispred, uz blagu nesigurnost pri promeni stepena prenosa."
+        );
+
+        LocationNote notePrev_3 = new LocationNote(classPrev, 45.2665, 19.8390,
+                "Vežbano paralelno parkiranje. Potrebno je više vežbe u procenjivanju razmaka od ivičnjaka."
+        );
+
+        // ---- Poslednji čas (ruta r3) ----
+        LocationNote noteLast_1 = new LocationNote(classLast, 45.2480, 19.8420,
+                "Ušla u kružni tok bez davanja prvenstva vozilima koja se već kreću u njemu. Obratiti pažnju na prednost prolaza!"
+        );
+
+        LocationNote noteLast_2 = new LocationNote(classLast, 45.2455, 19.8365,
+                "Prebrzo ušla u krivinu, vozilo je zauzelo deo suprotne trake. Smanjiti brzinu pre krivine."
+        );
+
+        LocationNote noteLast_3 = new LocationNote(classLast, 45.2395, 19.8340,
+                "Nije se uverila u prelazak pešaka na obeleženom pešačkom prelazu. Pratiti pešake i znakove bolje!"
+        );
+
+        locationNoteRepository.saveAll(
+                List.of(
+                        notePrev_1,
+                        notePrev_2,
+                        notePrev_3,
+                        noteLast_1,
+                        noteLast_2,
+                        noteLast_3
+                )
+        );
+
+        System.out.println(
+                "Created 6 location notes for Tamara Vuković."
+        );
+    }
+
+
 }
