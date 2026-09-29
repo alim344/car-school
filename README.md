@@ -1,3 +1,4 @@
 # car-school
 
-[![Demo video](https://img.youtube.com/vi/9zMPwvaMAVY/0.jpg)](https://youtu.be/9zMPwvaMAVY)
+[![Demo video](thumbnail.png)](https://youtu.be/9zMPwvaMAVY)
+▶️ [Pogledaj demo video](https://youtu.be/9zMPwvaMAVY)
